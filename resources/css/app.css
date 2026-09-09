@@ -150,8 +150,7 @@
     font-size: 16px;
 
     cursor: pointer;
-<<<<<<< HEAD
-=======
+
 }
 
 /* =========================
@@ -688,5 +687,4 @@
         grid-template-columns: 1fr; 
     } 
 
->>>>>>> dbc7e2e1e3083e14d5f4a33d4bcde8977cfaa68d
 }

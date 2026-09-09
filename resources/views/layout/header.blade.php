@@ -81,7 +81,7 @@
                         <div class="dropdown-header">Services</div>
                         <ul class="dropdown-list">
                             <li>
-                                <a href="{{ route('services.doctor') }}" class="{{ request()->routeIs('services.doctor') ? 'active-sub' : '' }}">
+                                <a href="{{ route('user.doctor.index') }}" class="{{ request()->routeIs('user.doctor.index') ? 'active-sub' : '' }}">
                                     Doctor & Therapist
                                 </a>
                             </li>

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DoctorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,3 +106,20 @@ Route::get('/contact', function () {
 Route::get('/community', function () {
     return view('user.community');
 })->name('community');
+
+// Route untuk Admin
+Route::prefix('admin')->name('admin.')->group(function () {
+    // Portal Admin & Tambah Dokter (Route yang sudah ada)
+    Route::get('/doctor/add', [DoctorController::class, 'adminIndex'])->name('doctor.add');
+    Route::post('/doctor/store', [DoctorController::class, 'store'])->name('doctor.store');
+    // Route Edit & Update Dokter
+    Route::get('/doctor/{id}/edit', [DoctorController::class, 'edit'])->name('doctor.edit');
+    Route::put('/doctor/{id}/update', [DoctorController::class, 'update'])->name('doctor.update');
+    // Route Hapus Dokter
+    Route::delete('/doctor/{id}/destroy', [DoctorController::class, 'destroy'])->name('doctor.destroy');
+});
+
+// Route untuk User Services -> Doctor & Therapist
+Route::get('/services/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('services.doctor');
+Route::get('/services/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('user.doctor.index');
+Route::get('/services/doctor-and-therapist/{id}', [DoctorController::class, 'show'])->name('user.doctor.show');
