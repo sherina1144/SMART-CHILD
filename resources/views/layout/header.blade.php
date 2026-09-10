@@ -1,3 +1,7 @@
+
+
+@vite(['resources/css/app.css', 'resources/js/app.js'])
+
 <header class="navbar-header">
     <div class="navbar-container">
         <!-- Logo -->
@@ -79,7 +83,7 @@
                         <div class="dropdown-header">Services</div>
                         <ul class="dropdown-list">
                             <li>
-                                <a href="{{ route('services.doctor') }}" class="{{ request()->routeIs('services.doctor') ? 'active-sub' : '' }}">
+
                                     Doctor & Therapist
                                 </a>
                             </li>
@@ -96,12 +100,14 @@
                         </ul>
                     </div>
                 </li>
+
                 <!-- Menu Community -->
                 <li class="nav-item">
                     <a href="{{ route('community') }}" class="nav-link {{ request()->routeIs('community') ? 'active' : '' }}">
                         Community
                     </a>
                 </li>
+
                 <!-- Dropdown: Partnership -->
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link {{ request()->routeIs('partnership.*') ? 'active' : '' }}">
@@ -164,7 +170,6 @@
         position: relative;
         width: 100%;
         z-index: 1000;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.02);
     }
 
     .navbar-container {
@@ -297,8 +302,7 @@
     }
 
     .dropdown-list a.active-sub {
-    color: #f26d5b; 
-    font-weight: 700;
+
     }
 
     .nav-actions {
