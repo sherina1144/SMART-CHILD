@@ -192,7 +192,7 @@
 
         <!-- Tombol Aksi -->
         <div class="action-footer">
-            <a href="#" class="btn-schedule">Jadwalkan Konsultasi</a>
+            <a href="{{ route('user.consultation.create', $doctor->doctor_id) }}" class="btn-schedule">Jadwalkan Konsultasi</a>
         </div>
     </div>
 

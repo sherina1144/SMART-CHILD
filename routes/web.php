@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\ConsultationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -107,7 +108,14 @@ Route::get('/community', function () {
     return view('user.community');
 })->name('community');
 
-// Route untuk Admin
+
+/*
+|--------------------------------------------------------------------------
+| SERVICES
+|--------------------------------------------------------------------------
+*/
+
+// Route untuk Admin tambah dokter dll
 Route::prefix('admin')->name('admin.')->group(function () {
     // Portal Admin & Tambah Dokter (Route yang sudah ada)
     Route::get('/doctor/add', [DoctorController::class, 'adminIndex'])->name('doctor.add');
@@ -123,3 +131,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::get('/services/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('services.doctor');
 Route::get('/services/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('user.doctor.index');
 Route::get('/services/doctor-and-therapist/{id}', [DoctorController::class, 'show'])->name('user.doctor.show');
+
+// Route admin consultations
+Route::get('/admin/consultations', [ConsultationController::class, 'indexAdmin'])->name('admin.consultation.index');
+
+// Route user untuk book consultations
+Route::get('/services/book-consultation/{doctor_id?}', [ConsultationController::class, 'create'])->name('user.consultation.create');
+Route::post('/services/book-consultation/store', [ConsultationController::class, 'store'])->name('user.consultation.store');
+Route::get('/user/consultation/receipt/{id}', [ConsultationController::class, 'showReceipt'])->name('user.consultation.receipt');
