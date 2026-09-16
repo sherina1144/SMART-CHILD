@@ -18,6 +18,26 @@ Route::get('/about', function () {
     return view('user.about');
 })->name('about');
 
+//dashboard admin
+Route::get('/admin/dashboard', function () {
+    return view('layout.dashboard_admin');
+});
+
+// Dashboard Admin
+Route::get('/admin/dashboard', function () {
+    return view('layout.dashboard_admin');
+});
+
+// Halaman Doctor and Therapist
+Route::get('/admin/tambah-doctor', function () {
+    return view('admin.tambah_doctor');
+});
+
+// Halaman Book Consultation
+Route::get('/admin/daftar-consultation', function () {
+    return view('admin.daftar_consultation');
+});
+
 /*
 |--------------------------------------------------------------------------
 | DEVELOPMENT
@@ -127,13 +147,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/doctor/{id}/destroy', [DoctorController::class, 'destroy'])->name('doctor.destroy');
 });
 
+// Route admin consultations
+Route::get('/admin/consultations', [ConsultationController::class, 'indexAdmin'])->name('admin.consultation.index');
+
+
 // Route untuk User Services -> Doctor & Therapist
 Route::get('/services/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('services.doctor');
 Route::get('/services/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('user.doctor.index');
 Route::get('/services/doctor-and-therapist/{id}', [DoctorController::class, 'show'])->name('user.doctor.show');
-
-// Route admin consultations
-Route::get('/admin/consultations', [ConsultationController::class, 'indexAdmin'])->name('admin.consultation.index');
 
 // Route user untuk book consultations
 Route::get('/services/book-consultation/{doctor_id?}', [ConsultationController::class, 'create'])->name('user.consultation.create');

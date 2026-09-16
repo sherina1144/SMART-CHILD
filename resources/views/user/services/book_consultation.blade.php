@@ -620,7 +620,7 @@
         <form action="{{ route('user.consultation.store') }}" method="POST">
             @csrf
             <!-- Hidden inputs untuk menangkap data pilihan JS -->
-            <input type="hidden" name="doctor_id" value="{{ $selectedDoctor->doctor_id ?? 1 }}">
+            <input type="hidden" name="doctor_id" value="{{ $selectedDoctor->doctor_id ?? '' }}" required>
             <input type="hidden" name="consultation_type" id="input_consultation_type" value="Online">
             <input type="hidden" name="booking_date" id="input_booking_date">
             <input type="hidden" name="booking_time" id="input_booking_time" value="10:00">
@@ -632,19 +632,26 @@
                         <i class="fa-solid fa-user-doctor"></i> Dokter / Terapis yang dipilih
                     </div>
 
-                    <!-- Dokter Terpilih -->
+                    <!-- Dokter Terpilih / Pilihan Dokter -->
                     <div class="doctor-selected-card">
-                        <a href="{{ route('user.doctor.index') }}" class="btn-change-doctor">Ubah Dokter / Terapis</a>
-                        <img src="{{ isset($selectedDoctor->foto) ? asset('storage/' . $selectedDoctor->foto) : 'https://via.placeholder.com/80' }}" alt="Dokter">
-                        <div class="doctor-selected-info">
-                            <h3>{{ $selectedDoctor->nama_lengkap ?? 'dr. Park Jongseong, Sp.A' }}</h3>
-                            <p>{{ $selectedDoctor->kategori ?? 'Dokter Spesialis Anak' }}</p>
-                            <div class="doctor-meta">
-                                <span><i class="fa-solid fa-star"></i> {{ $selectedDoctor->rating ?? '4.9' }}</span>
-                                <span>{{ $selectedDoctor->lama_pengalaman ?? '8' }} tahun pengalaman</span>
+                        @if(isset($selectedDoctor) && $selectedDoctor)
+                            <a href="{{ route('user.doctor.index') }}" class="btn-change-doctor">Ubah Dokter / Terapis</a>
+                            <img src="{{ isset($selectedDoctor->foto) ? asset('storage/' . $selectedDoctor->foto) : 'https://via.placeholder.com/80' }}" alt="Dokter">
+                            <div class="doctor-selected-info">
+                                <h3>{{ $selectedDoctor->nama_lengkap }}</h3>
+                                <p>{{ $selectedDoctor->kategori }}</p>
+                                <div class="doctor-meta">
+                                    <span><i class="fa-solid fa-star"></i> {{ $selectedDoctor->rating ?? '5.0' }}</span>
+                                    <span>{{ $selectedDoctor->lama_pengalaman ?? '0' }} tahun pengalaman</span>
+                                </div>
+                                <span class="badge-specialist">Spesialisasi: {{ $selectedDoctor->spesialisasi ?? 'Tumbuh kembang anak' }}</span>
                             </div>
-                            <span class="badge-specialist">Spesialisasi: Tumbuh kembang anak dan nutrisi anak</span>
-                        </div>
+                        @else
+                            <div class="doctor-placeholder" style="width: 100%; text-align: center; padding: 15px 0;">
+                                <p style="margin-bottom: 12px; color: #666; font-weight: 500;">Silakan pilih Dokter atau Terapis terlebih dahulu untuk melanjutkan booking.</p>
+                                <a href="{{ route('user.doctor.index') }}" class="btn-change-doctor" style="position: static; display: inline-block;">Pilih Dokter / Terapis</a>
+                            </div>
+                        @endif
                     </div>
 
                     <!-- Opsi Jenis Konsultasi -->

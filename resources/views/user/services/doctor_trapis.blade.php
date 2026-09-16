@@ -162,7 +162,7 @@
 </head>
 <body>
 
- @include('layout.header')
+    @include('layout.header')
 
     <main class="doctor-grid">
         @foreach($doctors as $doctor)

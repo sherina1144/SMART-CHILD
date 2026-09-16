@@ -19,7 +19,6 @@ class ConsultationController extends Controller
     }
 
     // Memproses data simpan booking
-    // Memproses data simpan booking
     public function store(Request $request)
     {
         $request->validate([
