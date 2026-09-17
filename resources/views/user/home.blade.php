@@ -1,5 +1,6 @@
-@include('layout.header')
+@extends('layout.app')
 
+@section('content')
 <main class="home-page">
 
     <!-- =========================
@@ -292,4 +293,5 @@
 </main>
 
 
-@include('layout.footer')
+</main>
+@endsection

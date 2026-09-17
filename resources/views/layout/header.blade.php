@@ -1,5 +1,3 @@
-@vite(['resources/css/app.css', 'resources/js/app.js'])
-
 <header class="navbar-header">
     <div class="navbar-container">
         <!-- Logo -->
@@ -12,10 +10,12 @@
         <nav class="nav-menu">
             <ul class="nav-list">
                 <li class="nav-item">
-                    <a href="{{ route('home') }}" class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
+                    <a href="{{ route('home') }}"
+                        class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('about') }}" class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}">About</a>
+                    <a href="{{ route('about') }}"
+                        class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}">About</a>
                 </li>
 
                 <!-- Dropdown: Development -->
@@ -27,17 +27,20 @@
                         <div class="dropdown-header">Development</div>
                         <ul class="dropdown-list">
                             <li>
-                                <a href="{{ route('development.child') }}" class="{{ request()->routeIs('development.child') ? 'active-sub' : '' }}">
+                                <a href="{{ route('development.child') }}"
+                                    class="{{ request()->routeIs('development.child') ? 'active-sub' : '' }}">
                                     Child Development
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('development.assessment') }}" class="{{ request()->routeIs('development.assessment') ? 'active-sub' : '' }}">
+                                <a href="{{ route('development.assessment') }}"
+                                    class="{{ request()->routeIs('development.assessment') ? 'active-sub' : '' }}">
                                     Assessment
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('development.recommendation') }}" class="{{ request()->routeIs('development.recommendation') ? 'active-sub' : '' }}">
+                                <a href="{{ route('development.recommendation') }}"
+                                    class="{{ request()->routeIs('development.recommendation') ? 'active-sub' : '' }}">
                                     Smart Recommendation
                                 </a>
                             </li>
@@ -54,17 +57,20 @@
                         <div class="dropdown-header">Shop</div>
                         <ul class="dropdown-list">
                             <li>
-                                <a href="{{ route('shop.byage') }}" class="{{ request()->routeIs('shop.byage') ? 'active-sub' : '' }}">
+                                <a href="{{ route('shop.byage') }}"
+                                    class="{{ request()->routeIs('shop.byage') ? 'active-sub' : '' }}">
                                     Shop By Age
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('shop.bydevelopment') }}" class="{{ request()->routeIs('shop.bydevelopment') ? 'active-sub' : '' }}">
+                                <a href="{{ route('shop.bydevelopment') }}"
+                                    class="{{ request()->routeIs('shop.bydevelopment') ? 'active-sub' : '' }}">
                                     Shop By Development
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('shop.smartbox') }}" class="{{ request()->routeIs('shop.smartbox') ? 'active-sub' : '' }}">
+                                <a href="{{ route('shop.smartbox') }}"
+                                    class="{{ request()->routeIs('shop.smartbox') ? 'active-sub' : '' }}">
                                     Smart Child Box
                                 </a>
                             </li>
@@ -81,17 +87,20 @@
                         <div class="dropdown-header">Services</div>
                         <ul class="dropdown-list">
                             <li>
-                                <a href="{{ route('user.doctor.index') }}" class="{{ request()->routeIs('user.doctor.index') ? 'active-sub' : '' }}">
+                                <a href="{{ route('user.doctor.index') }}"
+                                    class="{{ request()->routeIs('user.doctor.index') ? 'active-sub' : '' }}">
                                     Doctor & Therapist
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('services.book_consultation') }}" class="{{ request()->routeIs('services.book_consultation') ? 'active-sub' : '' }}">
+                                <a href="{{ route('services.book_consultation') }}"
+                                    class="{{ request()->routeIs('services.book_consultation') ? 'active-sub' : '' }}">
                                     Book Consultation
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('services.parenting_academy') }}" class="{{ request()->routeIs('services.parenting_academy') ? 'active-sub' : '' }}">
+                                <a href="{{ route('services.parenting_academy') }}"
+                                    class="{{ request()->routeIs('services.parenting_academy') ? 'active-sub' : '' }}">
                                     Parenting Academy
                                 </a>
                             </li>
@@ -101,7 +110,8 @@
 
                 <!-- Menu Community -->
                 <li class="nav-item">
-                    <a href="{{ route('community') }}" class="nav-link {{ request()->routeIs('community') ? 'active' : '' }}">
+                    <a href="{{ route('community') }}"
+                        class="nav-link {{ request()->routeIs('community') ? 'active' : '' }}">
                         Community
                     </a>
                 </li>
@@ -115,12 +125,14 @@
                         <div class="dropdown-header">Partnership</div>
                         <ul class="dropdown-list">
                             <li>
-                                <a href="{{ route('partnership.school') }}" class="{{ request()->routeIs('partnership.school') ? 'active-sub' : '' }}">
+                                <a href="{{ route('partnership.school') }}"
+                                    class="{{ request()->routeIs('partnership.school') ? 'active-sub' : '' }}">
                                     School Partnership
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('partnership.business') }}" class="{{ request()->routeIs('partnership.business') ? 'active-sub' : '' }}">
+                                <a href="{{ route('partnership.business') }}"
+                                    class="{{ request()->routeIs('partnership.business') ? 'active-sub' : '' }}">
                                     Business Partner
                                 </a>
                             </li>
@@ -129,7 +141,8 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('contact.us') }}" class="nav-link {{ request()->routeIs('contact.us') ? 'active' : '' }}">Contact</a>
+                    <a href="{{ route('contact.us') }}"
+                        class="nav-link {{ request()->routeIs('contact.us') ? 'active' : '' }}">Contact</a>
                 </li>
             </ul>
         </nav>
@@ -137,13 +150,15 @@
         <!-- Right Icons -->
         <div class="nav-actions">
             <button type="button" class="action-btn search-btn" aria-label="Search">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
             </button>
             <a href="#" class="action-btn cart-btn" aria-label="Cart">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="9" cy="21" r="1"></circle>
                     <circle cx="20" cy="21" r="1"></circle>
                     <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
@@ -155,13 +170,6 @@
 </header>
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    }
-
     .navbar-header {
         background-color: #ffffff;
         border-bottom: 1px solid #f0f0f0;
@@ -205,6 +213,8 @@
         align-items: center;
         list-style: none;
         gap: 2rem;
+        margin: 0;
+        padding: 0;
     }
 
     .nav-item {
@@ -283,6 +293,8 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
+        margin: 0;
+        padding: 0;
     }
 
     .dropdown-list a {

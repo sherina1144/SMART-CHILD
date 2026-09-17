@@ -665,6 +665,7 @@
                 <div class="section-title">
                     <i class="fa-solid fa-headset"></i> Jenis Konsultasi
                 </div>
+
                 <div class="consult-type-options">
                     <div class="type-card active" onclick="selectType('Online', this)">
                         <div class="type-icon"><i class="fa-solid fa-video"></i></div>
@@ -673,6 +674,7 @@
                             <p>Konsultasi melalui video call</p>
                         </div>
                     </div>
+
                     <div class="type-card" onclick="selectType('Offline', this)">
                         <div class="type-icon"><i class="fa-solid fa-building-user"></i></div>
                         <div class="type-info">
@@ -684,15 +686,20 @@
 
                 <!-- 3.3. Bagian Tanggal dan Jam -->
                 <div class="date-time-wrapper">
+
                     <!-- Kalender -->
                     <div>
-                        <div class="section-title"><i class="fa-regular fa-calendar"></i> Pilih Tanggal</div>
+                        <div class="section-title">
+                            <i class="fa-regular fa-calendar"></i> Pilih Tanggal
+                        </div>
+
                         <div class="calendar-box">
                             <div class="calendar-header">
                                 <span id="prevMonth" style="cursor: pointer; padding: 0 8px;">&lt;</span>
                                 <span id="monthYearTitle" style="font-weight: 600;">-</span>
                                 <span id="nextMonth" style="cursor: pointer; padding: 0 8px;">&gt;</span>
                             </div>
+
                             <div class="calendar-grid" id="calendarDays">
                                 <!-- Rendered dynamically by JS -->
                             </div>
@@ -701,17 +708,31 @@
 
                     <!-- Jam Tersedia -->
                     <div>
-                        <div class="section-title"><i class="fa-regular fa-clock"></i> Pilih Waktu Tersedia</div>
-                        <div class="time-grid">
+                        <div class="section-title">
+                            <i class="fa-regular fa-clock"></i> Pilih Waktu Tersedia
+                        </div>
+
+                        <!-- ID ditambahkan agar cocok dengan renderTimeSlots() -->
+                        <div class="time-grid" id="timeSlotsContainer">
                             @if(isset($selectedDoctor) && $selectedDoctor->schedules && $selectedDoctor->schedules->count() > 0)
+
                                 @foreach($selectedDoctor->schedules as $sch)
                                     @php
                                         $rawTime = date('H:i:s', strtotime($sch->start_time));
                                         $displayTime = date('H:i', strtotime($sch->start_time));
                                     @endphp
-                                    <div class="time-btn" data-time="{{ $rawTime }}" onclick="selectTime('{{ $rawTime }}', this)">{{ $displayTime }}</div>
+
+                                    <div
+                                        class="time-btn"
+                                        data-time="{{ $rawTime }}"
+                                        onclick="selectTime('{{ $rawTime }}', this)"
+                                    >
+                                        {{ $displayTime }}
+                                    </div>
                                 @endforeach
+
                             @else
+
                                 <div class="time-btn active" data-time="09:00:00" onclick="selectTime('09:00', this)">09:00</div>
                                 <div class="time-btn" data-time="09:30:00" onclick="selectTime('09:30', this)">09:30</div>
                                 <div class="time-btn" data-time="10:00:00" onclick="selectTime('10:00', this)">10:00</div>
@@ -724,13 +745,16 @@
                                 <div class="time-btn" data-time="14:30:00" onclick="selectTime('14:30', this)">14:30</div>
                                 <div class="time-btn" data-time="15:00:00" onclick="selectTime('15:00', this)">15:00</div>
                                 <div class="time-btn" data-time="15:30:00" onclick="selectTime('15:30', this)">15:30</div>
+
                             @endif
                         </div>
                     </div>
+
                 </div>
 
             </div>
             <!-- End Sisi Kiri -->
+
 
             <!-- SISI KANAN: Informasi Anak, Pembayaran, dan Tombol Aksi -->
             <div class="grid-right">
@@ -744,6 +768,7 @@
                         <label>Nama Anak</label>
                         <input type="text" name="child_name" class="form-control" placeholder="Masukkan nama anak" required>
                     </div>
+
                     <div class="form-group">
                         <label>Nama Wali</label>
                         <input type="text" name="parent_name" class="form-control" placeholder="Masukkan nama orang tua/wali" required>
@@ -755,6 +780,7 @@
                         <label>Usia Anak (Tahun)</label>
                         <input type="number" name="child_age" class="form-control" placeholder="Contoh: 5" required>
                     </div>
+
                     <div class="form-group">
                         <label>Jenis Kelamin</label>
                         <select name="child_gender" class="form-control" required>
@@ -769,6 +795,7 @@
                         <label>Nomer Telfon Aktif</label>
                         <input type="text" name="phone_number" class="form-control" placeholder="08XXXXXXXXXX" required>
                     </div>
+
                     <div class="form-group">
                         <label>Email Aktif</label>
                         <input type="email" name="email" class="form-control" placeholder="email@domain.com" required>
@@ -791,22 +818,27 @@
                 </div>
                 
                 <div class="payment-grid">
+
                     <label class="payment-item">
                         <input type="radio" name="payment_method" value="GoPay" checked onclick="closeBankDropdown()">
                         <span>GoPay</span>
                     </label>
+
                     <label class="payment-item">
                         <input type="radio" name="payment_method" value="DANA" onclick="closeBankDropdown()">
                         <span>DANA</span>
                     </label>
+
                     <label class="payment-item">
                         <input type="radio" name="payment_method" value="OVO" onclick="closeBankDropdown()">
                         <span>OVO</span>
                     </label>
+
                     <label class="payment-item">
                         <input type="radio" name="payment_method" value="ShopeePay" onclick="closeBankDropdown()">
                         <span>ShopeePay</span>
                     </label>
+
                     <label class="payment-item">
                         <input type="radio" name="payment_method" value="QRIS" onclick="closeBankDropdown()">
                         <span>QRIS</span>
@@ -814,22 +846,25 @@
 
                     <!-- Dropdown Bank Transfer -->
                     <div class="bank-dropdown-wrapper">
+
                         <div class="payment-item bank-header" onclick="toggleBankDropdown()">
                             <div style="display: flex; align-items: center; gap: 8px;">
                                 <input type="radio" name="payment_method" id="bank_radio" value="BCA">
                                 <span id="selected_bank_label">BCA</span>
                             </div>
+
                             <i class="fa-solid fa-chevron-down" id="bank_arrow"></i>
                         </div>
 
                         <!-- List Pilihan Bank -->
                         <div class="bank-options" id="bankOptions">
-                            <div class="bank-option-item active" onclick="selectBank('BCA')">BCA</div>
-                            <div class="bank-option-item" onclick="selectBank('Mandiri')">Mandiri</div>
-                            <div class="bank-option-item" onclick="selectBank('BRI')">BRI</div>
-                            <div class="bank-option-item" onclick="selectBank('BNI')">BNI</div>
-                            <div class="bank-option-item" onclick="selectBank('BSI')">BSI</div>
+                            <div class="bank-option-item active" onclick="selectBank('BCA', event)">BCA</div>
+                            <div class="bank-option-item" onclick="selectBank('Mandiri', event)">Mandiri</div>
+                            <div class="bank-option-item" onclick="selectBank('BRI', event)">BRI</div>
+                            <div class="bank-option-item" onclick="selectBank('BNI', event)">BNI</div>
+                            <div class="bank-option-item" onclick="selectBank('BSI', event)">BSI</div>
                         </div>
+
                     </div>
                 </div>
 
@@ -843,8 +878,13 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <button type="submit" class="btn-submit-booking">Konfirmasi booking</button>
-                <button type="button" class="btn-save-draft"><i class="fa-regular fa-bookmark"></i> Simpan untuk nanti</button>
+                <button type="submit" class="btn-submit-booking">
+                    Konfirmasi booking
+                </button>
+
+                <button type="button" class="btn-save-draft">
+                    <i class="fa-regular fa-bookmark"></i> Simpan untuk nanti
+                </button>
 
             </div>
             <!-- End Sisi Kanan -->
@@ -853,8 +893,10 @@
     </form>
     <!-- End Form Utama -->
 
+
     <!-- ================= 4. BOTTOM FEATURES FOOTER ================= -->
     <div class="bottom-features">
+
         <div class="bottom-feature-item">
             <i class="fa-solid fa-shield-halved"></i>
             <div>
@@ -862,6 +904,7 @@
                 Data anda terenkripsi dengan aman
             </div>
         </div>
+
         <div class="bottom-feature-item">
             <i class="fa-solid fa-headset"></i>
             <div>
@@ -869,6 +912,7 @@
                 Tim kami siap membantu kapan saja
             </div>
         </div>
+
         <div class="bottom-feature-item">
             <i class="fa-regular fa-calendar-check"></i>
             <div>
@@ -876,6 +920,7 @@
                 Pilih waktu konsultasi yang sesuai untuk anda
             </div>
         </div>
+
         <div class="bottom-feature-item">
             <i class="fa-solid fa-heart"></i>
             <div>
@@ -883,12 +928,19 @@
                 Kami berkomitmen mendukung setiap langkah perkembangan anak
             </div>
         </div>
+
     </div>
     <!-- End Bottom Features Footer -->
 
 </div>
 
- <script>
+
+<script>
+
+    // =========================================================
+    // DATA DOKTER
+    // =========================================================
+
     // Ambil data dokter beserta relasi jadwalnya dari Laravel Blade
     const selectedDoctor = @json($selectedDoctor ?? null);
 
@@ -900,250 +952,720 @@
         "Juli", "Agustus", "September", "Oktober", "November", "Desember"
     ];
 
-    // DISESUAIKAN HURUF KAPITALNYA SESUAI ENUM DATABASE ('Senin', 'Selasa', dst)
-    const dayNamesIndo = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
+    // DISESUAIKAN HURUF KAPITALNYA SESUAI ENUM DATABASE
+    // ('Senin', 'Selasa', dst)
+    const dayNamesIndo = [
+        "Senin",
+        "Selasa",
+        "Rabu",
+        "Kamis",
+        "Jumat",
+        "Sabtu",
+        "Minggu"
+    ];
+
+
+    // =========================================================
+    // CALENDAR
+    // =========================================================
 
     function renderCalendar() {
+
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
 
-        document.getElementById('monthYearTitle').innerText = `${monthNames[month]} ${year}`;
+        document.getElementById('monthYearTitle').innerText =
+            `${monthNames[month]} ${year}`;
 
         const calendarDays = document.getElementById('calendarDays');
+
         calendarDays.innerHTML = '';
 
-        const daysOfWeek = ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'];
+        const daysOfWeek = [
+            'Sen',
+            'Sel',
+            'Rab',
+            'Kam',
+            'Jum',
+            'Sab',
+            'Min'
+        ];
+
         daysOfWeek.forEach(day => {
+
             const dayHead = document.createElement('div');
+
             dayHead.className = 'day-name';
             dayHead.innerText = day;
+
             calendarDays.appendChild(dayHead);
+
         });
 
-        const firstDayIndex = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const prevMonthDays = new Date(year, month, 0).getDate();
 
-        let startingDay = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
+        const firstDayIndex =
+            new Date(year, month, 1).getDay();
 
+        const daysInMonth =
+            new Date(year, month + 1, 0).getDate();
+
+        const prevMonthDays =
+            new Date(year, month, 0).getDate();
+
+
+        let startingDay =
+            firstDayIndex === 0
+                ? 6
+                : firstDayIndex - 1;
+
+
+        // Hari dari bulan sebelumnya
         for (let i = startingDay; i > 0; i--) {
-            const emptyDiv = document.createElement('div');
+
+            const emptyDiv =
+                document.createElement('div');
+
             emptyDiv.style.opacity = '0.3';
             emptyDiv.style.cursor = 'default';
-            emptyDiv.innerText = prevMonthDays - i + 1;
+
+            emptyDiv.innerText =
+                prevMonthDays - i + 1;
+
             calendarDays.appendChild(emptyDiv);
         }
 
+
+        // Hari pada bulan aktif
         for (let day = 1; day <= daysInMonth; day++) {
-            const dayDiv = document.createElement('div');
+
+            const dayDiv =
+                document.createElement('div');
+
             dayDiv.innerText = day;
 
-            const formattedMonth = String(month + 1).padStart(2, '0');
-            const formattedDay = String(day).padStart(2, '0');
-            const dateStr = `${year}-${formattedMonth}-${formattedDay}`;
 
-            if (!selectedDateStr && day === currentDate.getDate()) {
+            const formattedMonth =
+                String(month + 1).padStart(2, '0');
+
+            const formattedDay =
+                String(day).padStart(2, '0');
+
+
+            const dateStr =
+                `${year}-${formattedMonth}-${formattedDay}`;
+
+
+            // Default memilih hari ini
+            if (
+                !selectedDateStr &&
+                day === currentDate.getDate()
+            ) {
+
                 selectedDateStr = dateStr;
-                const inputDate = document.getElementById('input_booking_date');
-                if (inputDate) inputDate.value = selectedDateStr;
+
+                const inputDate =
+                    document.getElementById('input_booking_date');
+
+                if (inputDate) {
+                    inputDate.value = selectedDateStr;
+                }
             }
 
+
+            // Tandai tanggal aktif
             if (dateStr === selectedDateStr) {
                 dayDiv.classList.add('active-day');
             }
 
-            dayDiv.onclick = function() {
-                document.querySelectorAll('#calendarDays div').forEach(el => el.classList.remove('active-day'));
-                dayDiv.classList.add('active-day');
-                
-                selectedDateStr = dateStr;
-                const inputDate = document.getElementById('input_booking_date');
-                if (inputDate) inputDate.value = selectedDateStr;
 
+            // Klik tanggal
+            dayDiv.onclick = function() {
+
+                document
+                    .querySelectorAll('#calendarDays div')
+                    .forEach(el =>
+                        el.classList.remove('active-day')
+                    );
+
+
+                dayDiv.classList.add('active-day');
+
+                selectedDateStr = dateStr;
+
+
+                const inputDate =
+                    document.getElementById('input_booking_date');
+
+                if (inputDate) {
+                    inputDate.value = selectedDateStr;
+                }
+
+
+                // Render ulang jam berdasarkan hari
                 renderTimeSlots();
             };
+
 
             calendarDays.appendChild(dayDiv);
         }
 
+
         renderTimeSlots();
     }
 
+
+    // Navigasi bulan sebelumnya
     document.getElementById('prevMonth').addEventListener('click', () => {
-        currentDate.setMonth(currentDate.getMonth() - 1);
+
+        currentDate.setMonth(
+            currentDate.getMonth() - 1
+        );
+
         renderCalendar();
     });
 
+
+    // Navigasi bulan berikutnya
     document.getElementById('nextMonth').addEventListener('click', () => {
-        currentDate.setMonth(currentDate.getMonth() + 1);
+
+        currentDate.setMonth(
+            currentDate.getMonth() + 1
+        );
+
         renderCalendar();
     });
+
+
+
+    // =========================================================
+    // JENIS KONSULTASI
+    // =========================================================
 
     function selectType(type, element) {
-        document.querySelectorAll('.type-card').forEach(el => el.classList.remove('active'));
+
+        document
+            .querySelectorAll('.type-card')
+            .forEach(el =>
+                el.classList.remove('active')
+            );
+
+
         element.classList.add('active');
-        const inputType = document.getElementById('input_consultation_type');
-        if (inputType) inputType.value = type;
+
+
+        const inputType =
+            document.getElementById('input_consultation_type');
+
+        if (inputType) {
+            inputType.value = type;
+        }
     }
+
+
+
+    // =========================================================
+    // PILIH WAKTU
+    // =========================================================
 
     function selectTime(time, element) {
-        if (element.classList.contains('disabled-slot')) return;
-        document.querySelectorAll('.time-btn').forEach(el => el.classList.remove('active'));
+
+        if (
+            element.classList.contains('disabled-slot')
+        ) {
+            return;
+        }
+
+
+        document
+            .querySelectorAll('.time-btn')
+            .forEach(el =>
+                el.classList.remove('active')
+            );
+
+
         element.classList.add('active');
-        const inputTime = document.getElementById('input_booking_time');
-        if (inputTime) inputTime.value = time;
+
+
+        const inputTime =
+            document.getElementById('input_booking_time');
+
+        if (inputTime) {
+            inputTime.value = time;
+        }
     }
 
+
+
+    // =========================================================
+    // RENDER TIME SLOTS
+    // =========================================================
+
     function renderTimeSlots() {
-        const timeContainer = document.getElementById('timeSlotsContainer');
-        if (!timeContainer) return;
+
+        const timeContainer =
+            document.getElementById('timeSlotsContainer');
+
+
+        if (!timeContainer) {
+            return;
+        }
+
 
         timeContainer.innerHTML = '';
-        const inputTime = document.getElementById('input_booking_time');
-        if (inputTime) inputTime.value = '';
 
-        if (!selectedDateStr || !selectedDoctor || !selectedDoctor.schedules) {
-            timeContainer.innerHTML = '<p class="text-muted">Pilih tanggal dan dokter terlebih dahulu.</p>';
+
+        const inputTime =
+            document.getElementById('input_booking_time');
+
+
+        if (inputTime) {
+            inputTime.value = '';
+        }
+
+
+        if (
+            !selectedDateStr ||
+            !selectedDoctor ||
+            !selectedDoctor.schedules
+        ) {
+
+            timeContainer.innerHTML =
+                '<p class="text-muted">Pilih tanggal dan dokter terlebih dahulu.</p>';
+
             return;
         }
 
-        const dateParts = selectedDateStr.split('-').map(Number);
-        const dateObj = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-        
-        let jsDay = dateObj.getDay(); 
-        let adjustedIndex = jsDay === 0 ? 6 : jsDay - 1; 
-        const targetDayName = dayNamesIndo[adjustedIndex]; // "Senin", "Selasa", dst (Sudah kapital)
 
-        // Langsung cocokkan karena database dan array sama-sama pakai kapital di depan
-        const daySchedule = selectedDoctor.schedules.find(s => {
-            const dbDay = String(s.day).trim();
-            const isActive = Number(s.is_active) === 1;
-            return dbDay === targetDayName && isActive;
-        });
+        const dateParts =
+            selectedDateStr
+                .split('-')
+                .map(Number);
 
+
+        const dateObj =
+            new Date(
+                dateParts[0],
+                dateParts[1] - 1,
+                dateParts[2]
+            );
+
+
+        let jsDay =
+            dateObj.getDay();
+
+
+        let adjustedIndex =
+            jsDay === 0
+                ? 6
+                : jsDay - 1;
+
+
+        const targetDayName =
+            dayNamesIndo[adjustedIndex];
+
+
+        // Cocokkan hari dengan database
+        const daySchedule =
+            selectedDoctor.schedules.find(s => {
+
+                const dbDay =
+                    String(s.day).trim();
+
+                const isActive =
+                    Number(s.is_active) === 1;
+
+                return (
+                    dbDay === targetDayName &&
+                    isActive
+                );
+            });
+
+
+        // Tidak ada jadwal pada hari tersebut
         if (!daySchedule) {
-            timeContainer.innerHTML = `<p class="text-danger small">Dokter tidak ada jadwal praktik pada hari ${targetDayName}.</p>`;
+
+            timeContainer.innerHTML =
+                `<p class="text-danger small">Dokter tidak ada jadwal praktik pada hari ${targetDayName}.</p>`;
+
             return;
         }
 
+
+        // Parser jam
         const parseMinutes = (timeString) => {
-            const clean = String(timeString).trim().substring(0, 5); 
-            const [h, m] = clean.split(':').map(Number);
-            return (h * 60) + (m || 0);
+
+            const clean =
+                String(timeString)
+                    .trim()
+                    .substring(0, 5);
+
+
+            const [h, m] =
+                clean
+                    .split(':')
+                    .map(Number);
+
+
+            return (
+                (h * 60) +
+                (m || 0)
+            );
         };
 
-        const startTotalMinutes = parseMinutes(daySchedule.start_time);
-        const endTotalMinutes = parseMinutes(daySchedule.end_time);
 
-        if (isNaN(startTotalMinutes) || isNaN(endTotalMinutes) || startTotalMinutes >= endTotalMinutes) {
-            timeContainer.innerHTML = '<p class="text-danger small">Format jam operasional dokter tidak valid.</p>';
+        const startTotalMinutes =
+            parseMinutes(daySchedule.start_time);
+
+
+        const endTotalMinutes =
+            parseMinutes(daySchedule.end_time);
+
+
+        // Validasi jam
+        if (
+            isNaN(startTotalMinutes) ||
+            isNaN(endTotalMinutes) ||
+            startTotalMinutes >= endTotalMinutes
+        ) {
+
+            timeContainer.innerHTML =
+                '<p class="text-danger small">Format jam operasional dokter tidak valid.</p>';
+
             return;
         }
 
-        for (let currentMin = startTotalMinutes; currentMin < endTotalMinutes; currentMin += 30) {
-            const h = Math.floor(currentMin / 60);
-            const m = currentMin % 60;
 
-            const timeFormatted = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+        // Generate slot setiap 30 menit
+        for (
+            let currentMin = startTotalMinutes;
+            currentMin < endTotalMinutes;
+            currentMin += 30
+        ) {
 
-            const btn = document.createElement('div');
-            btn.className = 'time-btn';
-            btn.setAttribute('data-time', timeFormatted);
-            btn.setAttribute('data-minutes', currentMin);
-            btn.innerText = timeFormatted;
+            const h =
+                Math.floor(currentMin / 60);
+
+            const m =
+                currentMin % 60;
+
+
+            const timeFormatted =
+                String(h).padStart(2, '0') +
+                ':' +
+                String(m).padStart(2, '0');
+
+
+            const btn =
+                document.createElement('div');
+
+
+            btn.className =
+                'time-btn';
+
+
+            btn.setAttribute(
+                'data-time',
+                timeFormatted
+            );
+
+
+            btn.setAttribute(
+                'data-minutes',
+                currentMin
+            );
+
+
+            btn.innerText =
+                timeFormatted;
+
 
             btn.onclick = function() {
-                selectTime(timeFormatted, btn);
+
+                selectTime(
+                    timeFormatted,
+                    btn
+                );
             };
+
 
             timeContainer.appendChild(btn);
         }
 
+
+        // Cek slot yang sudah dibooking
         checkBookedSlots();
     }
 
+
+
+    // =========================================================
+    // CEK SLOT YANG SUDAH DIBOOKING
+    // =========================================================
+
     function checkBookedSlots() {
-        const docIdInput = document.getElementById('input_doctor_id');
-        const doctorId = docIdInput ? docIdInput.value : (selectedDoctor ? (selectedDoctor.id || selectedDoctor.doctor_id) : null);
-        const dateStr = selectedDateStr;
 
-        if (!doctorId || !dateStr) return;
+        const docIdInput =
+            document.getElementById('input_doctor_id');
 
-        fetch(`/api/check-booked-slots?doctor_id=${doctorId}&date=${dateStr}`)
-            .then(res => res.json())
-            .then(bookedTimes => {
-                if (!Array.isArray(bookedTimes)) return;
 
-                let occupiedMinutes = [];
-                bookedTimes.forEach(timeStr => {
-                    const cleanTime = String(timeStr).substring(0, 5);
-                    const [h, m] = cleanTime.split(':').map(Number);
-                    const bookedMin = (h * 60) + (m || 0);
-                    
-                    occupiedMinutes.push(bookedMin);
-                    occupiedMinutes.push(bookedMin + 30);
-                });
+        const doctorId =
+            docIdInput
+                ? docIdInput.value
+                : (
+                    selectedDoctor
+                        ? (
+                            selectedDoctor.id ||
+                            selectedDoctor.doctor_id
+                        )
+                        : null
+                );
 
-                document.querySelectorAll('.time-btn').forEach(btn => {
-                    const btnMinutes = parseInt(btn.getAttribute('data-minutes'), 10);
 
-                    btn.classList.remove('disabled-slot');
+        const dateStr =
+            selectedDateStr;
+
+
+        if (!doctorId || !dateStr) {
+            return;
+        }
+
+
+        fetch(
+            `/api/check-booked-slots?doctor_id=${doctorId}&date=${dateStr}`
+        )
+
+        .then(res => res.json())
+
+        .then(bookedTimes => {
+
+            if (!Array.isArray(bookedTimes)) {
+                return;
+            }
+
+
+            let occupiedMinutes = [];
+
+
+            bookedTimes.forEach(timeStr => {
+
+                const cleanTime =
+                    String(timeStr)
+                        .substring(0, 5);
+
+
+                const [h, m] =
+                    cleanTime
+                        .split(':')
+                        .map(Number);
+
+
+                const bookedMin =
+                    (h * 60) +
+                    (m || 0);
+
+
+                occupiedMinutes.push(
+                    bookedMin
+                );
+
+
+                occupiedMinutes.push(
+                    bookedMin + 30
+                );
+            });
+
+
+            document
+                .querySelectorAll('.time-btn')
+                .forEach(btn => {
+
+                    const btnMinutes =
+                        parseInt(
+                            btn.getAttribute('data-minutes'),
+                            10
+                        );
+
+
+                    btn.classList.remove(
+                        'disabled-slot'
+                    );
+
+
                     btn.style.opacity = '1';
                     btn.style.pointerEvents = 'auto';
                     btn.style.textDecoration = 'none';
 
-                    if (occupiedMinutes.includes(btnMinutes)) {
-                        btn.classList.add('disabled-slot');
-                        btn.style.opacity = '0.3';
-                        btn.style.pointerEvents = 'none';
-                        btn.style.textDecoration = 'line-through';
+
+                    if (
+                        occupiedMinutes.includes(
+                            btnMinutes
+                        )
+                    ) {
+
+                        btn.classList.add(
+                            'disabled-slot'
+                        );
+
+
+                        btn.style.opacity =
+                            '0.3';
+
+
+                        btn.style.pointerEvents =
+                            'none';
+
+
+                        btn.style.textDecoration =
+                            'line-through';
                     }
+
                 });
-            })
-            .catch(err => console.error("Error checking slots:", err));
+
+        })
+
+        .catch(err =>
+            console.error(
+                "Error checking slots:",
+                err
+            )
+        );
     }
+
+
+
+    // =========================================================
+    // BANK DROPDOWN
+    // =========================================================
 
     function toggleBankDropdown() {
-        const bankOptions = document.getElementById('bankOptions');
-        const bankArrow = document.getElementById('bank_arrow');
-        const bankRadio = document.getElementById('bank_radio');
 
-        if (bankRadio) bankRadio.checked = true;
-        if (bankOptions) bankOptions.classList.toggle('show');
+        const bankOptions =
+            document.getElementById('bankOptions');
 
-        if (bankOptions && bankArrow) {
-            bankArrow.style.transform = bankOptions.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+
+        const bankArrow =
+            document.getElementById('bank_arrow');
+
+
+        const bankRadio =
+            document.getElementById('bank_radio');
+
+
+        if (bankRadio) {
+            bankRadio.checked = true;
+        }
+
+
+        if (bankOptions) {
+            bankOptions.classList.toggle('show');
+        }
+
+
+        if (
+            bankOptions &&
+            bankArrow
+        ) {
+
+            bankArrow.style.transform =
+                bankOptions.classList.contains('show')
+                    ? 'rotate(180deg)'
+                    : 'rotate(0deg)';
         }
     }
 
+
+
     function selectBank(bankName, event) {
-        const bankRadio = document.getElementById('bank_radio');
-        const selectedBankLabel = document.getElementById('selected_bank_label');
+
+        const bankRadio =
+            document.getElementById('bank_radio');
+
+
+        const selectedBankLabel =
+            document.getElementById('selected_bank_label');
+
 
         if (bankRadio) {
-            bankRadio.value = bankName;
-            bankRadio.checked = true;
-        }
-        if (selectedBankLabel) selectedBankLabel.innerText = bankName;
 
-        document.querySelectorAll('.bank-option-item').forEach(item => item.classList.remove('active'));
-        
-        const target = (event && event.currentTarget) || (window.event && window.event.currentTarget);
-        if (target) target.classList.add('active');
+            bankRadio.value =
+                bankName;
+
+            bankRadio.checked =
+                true;
+        }
+
+
+        if (selectedBankLabel) {
+
+            selectedBankLabel.innerText =
+                bankName;
+        }
+
+
+        document
+            .querySelectorAll('.bank-option-item')
+            .forEach(item =>
+                item.classList.remove('active')
+            );
+
+
+        const target =
+            (
+                event &&
+                event.currentTarget
+            ) ||
+            (
+                window.event &&
+                window.event.currentTarget
+            );
+
+
+        if (target) {
+            target.classList.add('active');
+        }
+
 
         closeBankDropdown();
     }
 
+
+
     function closeBankDropdown() {
-        const bankOptions = document.getElementById('bankOptions');
-        const bankArrow = document.getElementById('bank_arrow');
+
+        const bankOptions =
+            document.getElementById('bankOptions');
+
+
+        const bankArrow =
+            document.getElementById('bank_arrow');
+
+
         if (bankOptions) {
+
             bankOptions.classList.remove('show');
-            if (bankArrow) bankArrow.style.transform = 'rotate(0deg)';
+
+
+            if (bankArrow) {
+
+                bankArrow.style.transform =
+                    'rotate(0deg)';
+            }
         }
     }
 
-    document.addEventListener('DOMContentLoaded', renderCalendar);
+
+
+    // =========================================================
+    // INITIALIZE
+    // =========================================================
+
+    document.addEventListener(
+        'DOMContentLoaded',
+        renderCalendar
+    );
+
 </script>
+
 </body>
+
 </html>

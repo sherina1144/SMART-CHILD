@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'Admin Dashboard - SmartChild' }}</title>
-    
+
     <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- TAMBAHKAN BOOTSTRAP 5 CSS DI SINI -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- CSS Layout Admin -->
     <style>
@@ -49,6 +54,10 @@
             gap: 10px;
         }
 
+        .brand-logo i {
+            color: #F39C50;
+        }
+
         .brand-logo span {
             color: #F39C50;
         }
@@ -74,7 +83,8 @@
             transition: all 0.2s;
         }
 
-        .nav-link:hover, .nav-link.active {
+        .nav-link:hover,
+        .nav-link.active {
             background-color: #314E41;
             color: #ffffff;
         }
@@ -84,9 +94,16 @@
             width: 20px;
         }
 
-        .user-profile {
+        /* Sidebar Footer (Profile & Logout) */
+        .sidebar-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             padding-top: 20px;
             border-top: 1px solid #314E41;
+        }
+
+        .user-profile {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -109,11 +126,41 @@
             font-size: 13px;
             font-weight: 700;
             color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
         }
 
         .user-info p {
             font-size: 11px;
             color: #A3B899;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
+        }
+
+        .btn-logout {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            background-color: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-logout:hover {
+            background-color: rgba(239, 68, 68, 0.3);
+            color: #ffffff;
         }
 
         /* --- MAIN CONTENT AREA --- */
@@ -124,11 +171,13 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div>
+            <!-- Logo Disamakan dengan Halaman Lain -->
             <div class="brand-logo">
                 <i class="fa-solid fa-child-reaching"></i>
                 SMART<span>CHILD</span>
@@ -136,36 +185,61 @@
 
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <a href="{{ url('/admin/dashboard') }}" class="nav-link {{ Request::is('admin/dashboard*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.dashboard') }}"
+                        class="nav-link {{ Request::is('admin/dashboard*') ? 'active' : '' }}">
                         <i class="fa-solid fa-chart-pie"></i> Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ url('/admin/doctor/add') }}" class="nav-link {{ Request::is('admin/doctor*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.doctor.add') }}"
+                        class="nav-link {{ Request::is('admin/doctor*') ? 'active' : '' }}">
                         <i class="fa-solid fa-user-doctor"></i> Doctor and Therapist
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ url('/admin/consultations') }}" class="nav-link {{ Request::is('admin/consultations*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.consultation.index') }}"
+                        class="nav-link {{ Request::is('admin/consultations*') ? 'active' : '' }}">
                         <i class="fa-solid fa-calendar-check"></i> Book Consultation
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.parenting.index') }}"
+                        class="nav-link {{ Request::is('admin/parenting*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-graduation-cap"></i> Parenting Academy
                     </a>
                 </li>
             </ul>
         </div>
 
-        <div class="user-profile">
-            <div class="avatar">A</div>
-            <div class="user-info">
-                <h5>Admin SmartChild</h5>
-                <p>admin@smartchild.id</p>
+        <div class="sidebar-footer">
+            <!-- Data Profil Dinamis (Dari Database) -->
+            <div class="user-profile">
+                <div class="avatar">
+                    {{ strtoupper(substr(Auth::user()->nama ?? 'A', 0, 1)) }}
+                </div>
+                <div class="user-info">
+                    <h5>{{ Auth::user()->nama ?? 'Admin' }}</h5>
+                    <p>{{ Auth::user()->email ?? 'admin@smartchild.id' }}</p>
+                </div>
             </div>
+
+            <!-- Tombol Keluar (Logout) -->
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="btn-logout">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Keluar
+                </button>
+            </form>
         </div>
     </aside>
 
-    <!-- KONTEN HALAMAN AKAN MASUK DI SINI -->
+    <!-- KONTEN HALAMAN -->
     <main class="main-wrapper">
         @yield('content')
     </main>
 
+    <!-- TAMBAHKAN BOOTSTRAP 5 JS BUNDLE DI BAWAH INI -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

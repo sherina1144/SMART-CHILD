@@ -4,29 +4,53 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\ConsultationController;
+use App\Http\Controllers\ParentingAcademyController;
+use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NewsletterController;
 use App\Models\Consultation;
 
 /*
 |--------------------------------------------------------------------------
-| HOME & ABOUT
+| AUTHENTICATION ROUTES (Public)
+|--------------------------------------------------------------------------
+*/
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.process');
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Opsional: Jika / (root) diakses, langsung arahkan ke halaman login
+Route::get('/', function () {
+    return redirect('/login');
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| PROTECTED ROUTES (Wajib Login)
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
+// HOME
+Route::get('/home', function () {
     return view('user.home');
-})->name('home');
+})->name('home')->middleware('auth');
 
 Route::get('/about', function () {
     return view('user.about');
-})->name('about');
+})->name('about')->middleware('auth');
+
 
 /*
 |--------------------------------------------------------------------------
 | DEVELOPMENT
 |--------------------------------------------------------------------------
 */
-
-Route::prefix('development')->name('development.')->group(function () {
+Route::prefix('development')->name('development.')->middleware('auth')->group(function () {
     Route::get('/child-development', function () {
         return view('user.development.child_development');
     })->name('child');
@@ -40,13 +64,13 @@ Route::prefix('development')->name('development.')->group(function () {
     })->name('recommendation');
 });
 
+
 /*
 |--------------------------------------------------------------------------
 | SHOP
 |--------------------------------------------------------------------------
 */
-
-Route::prefix('shop')->name('shop.')->group(function () {
+Route::prefix('shop')->name('shop.')->middleware('auth')->group(function () {
     Route::get('/by-age', function () {
         return view('user.shop.shop_byage');
     })->name('byage');
@@ -60,36 +84,37 @@ Route::prefix('shop')->name('shop.')->group(function () {
     })->name('smartbox');
 });
 
+
 /*
 |--------------------------------------------------------------------------
 | SERVICES (USER)
 |--------------------------------------------------------------------------
 */
+Route::prefix('services')->name('services.')->middleware('auth')->group(function () {
+    Route::get('/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('doctor');
+    Route::get('/doctor-and-therapist/{id}', [DoctorController::class, 'show'])->name('doctor.show');
 
-Route::prefix('services')->name('services.')->group(function () {
-    Route::get('/parenting-academy', function () {
-        return view('user.services.parenting_academy');
-    })->name('parenting_academy');
+    Route::get('/book-consultation/{doctor_id?}', [ConsultationController::class, 'create'])->name('book_consultation');
+    Route::post('/book-consultation/store', [ConsultationController::class, 'store'])->name('consultation.store');
+
+    Route::get('/parenting-academy', [ParentingAcademyController::class, 'index'])->name('parenting_academy');
+    Route::post('/parenting-academy/subscribe', [ParentingAcademyController::class, 'subscribe'])->name('parenting_academy.subscribe');
 });
 
-// Route User -> Doctor & Therapist
-Route::get('/services/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('user.doctor.index');
-Route::get('/services/doctor-and-therapist/{id}', [DoctorController::class, 'show'])->name('user.doctor.show');
+// Tambahan rute pendukung user
+Route::get('/services/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('user.doctor.index')->middleware('auth');
+Route::get('/services/doctor-and-therapist/{id}', [DoctorController::class, 'show'])->name('user.doctor.show')->middleware('auth');
+Route::get('/user/consultation/receipt/{id}', [ConsultationController::class, 'showReceipt'])->name('user.consultation.receipt')->middleware('auth');
 
-// Route User -> Book Consultation
-Route::get('/services/book-consultation/{doctor_id?}', [ConsultationController::class, 'create'])->name('services.book_consultation');
-Route::get('/user/consultation/create/{doctor_id?}', [ConsultationController::class, 'create'])->name('user.consultation.create');
+Route::post('/newsletter/store', [NewsletterController::class, 'store'])->name('newsletter.store');
 
-Route::post('/services/book-consultation/store', [ConsultationController::class, 'store'])->name('user.consultation.store');
-Route::get('/user/consultation/receipt/{id}', [ConsultationController::class, 'showReceipt'])->name('user.consultation.receipt');
 
 /*
 |--------------------------------------------------------------------------
 | PARTNERSHIP
 |--------------------------------------------------------------------------
 */
-
-Route::prefix('partnership')->name('partnership.')->group(function () {
+Route::prefix('partnership')->name('partnership.')->middleware('auth')->group(function () {
     Route::get('/school-partnership', function () {
         return view('user.partnership.partner_school');
     })->name('school');
@@ -99,56 +124,87 @@ Route::prefix('partnership')->name('partnership.')->group(function () {
     })->name('business');
 });
 
+
 /*
 |--------------------------------------------------------------------------
-| OTHERS
+| OTHERS (Community & Contact)
 |--------------------------------------------------------------------------
 */
-
 Route::get('/contact', function () {
     return view('user.contact_us');
-})->name('contact.us');
+})->name('contact.us')->middleware('auth');
 
-Route::get('/community', function () {
-    return view('user.community');
-})->name('community');
+Route::get('/community', [CommunityController::class, 'index'])->name('community')->middleware('auth');
+
+
+/*
+|--------------------------------------------------------------------------
+| DOCTOR ROUTES
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:doctor'])->prefix('doctor')->name('doctor.')->group(function () {
+    Route::get('/dashboard', function () {
+        return "Halaman Dashboard Khusus Dokter";
+    })->name('dashboard');
+});
+
 
 /*
 |--------------------------------------------------------------------------
 | ADMIN ROUTES
 |--------------------------------------------------------------------------
 */
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('layout.dashboard_admin');
+    })->name('dashboard');
 
-Route::get('/admin/dashboard', function () {
-    return view('layout.dashboard_admin');
-})->name('admin.dashboard');
+    Route::get('/tambah-doctor', function () {
+        return view('admin.tambah_doctor');
+    });
 
-Route::get('/admin/daftar-consultation', function () {
-    return view('admin.daftar_consultation');
-});
+    Route::get('/daftar-consultation', function () {
+        return view('admin.daftar_consultation');
+    });
 
-// Admin Consultations
-Route::get('/admin/consultations', [ConsultationController::class, 'indexAdmin'])->name('admin.consultation.index');
-
-// Admin Doctor Management & Schedules
-Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/doctor/add', [DoctorController::class, 'adminIndex'])->name('doctor.add');
     Route::post('/doctor/store', [DoctorController::class, 'store'])->name('doctor.store');
     Route::get('/doctor/{id}/edit', [DoctorController::class, 'edit'])->name('doctor.edit');
     Route::put('/doctor/{id}/update', [DoctorController::class, 'update'])->name('doctor.update');
     Route::delete('/doctor/{id}/destroy', [DoctorController::class, 'destroy'])->name('doctor.destroy');
 
-    // Route khusus Kelola Jadwal Terpisah Dokter
+    // Route Kelola Jadwal Terpisah Dokter (dari kode kamu sebelumnya)
     Route::post('/doctor/schedule/store', [DoctorController::class, 'storeSchedule'])->name('doctor.schedule.store');
     Route::delete('/doctor/schedule/{id}/destroy', [DoctorController::class, 'destroySchedule'])->name('doctor.schedule.destroy');
+
+    Route::get('/consultations', [ConsultationController::class, 'indexAdmin'])->name('consultation.index');
+
+    // --- PARENTING ACADEMY (Admin CRUD) ---
+    Route::prefix('parenting-academy')->name('parenting.')->group(function () {
+        Route::get('/', [ParentingAcademyController::class, 'indexAdmin'])->name('index');
+
+        // CRUD Buku Panduan / Artikel
+        Route::get('/academy/create', [ParentingAcademyController::class, 'createAcademy'])->name('academy.create');
+        Route::post('/academy/store', [ParentingAcademyController::class, 'storeAcademy'])->name('academy.store');
+        Route::get('/academy/{id}/edit', [ParentingAcademyController::class, 'editAcademy'])->name('academy.edit');
+        Route::put('/academy/{id}/update', [ParentingAcademyController::class, 'updateAcademy'])->name('academy.update');
+        Route::delete('/academy/{id}/destroy', [ParentingAcademyController::class, 'destroyAcademy'])->name('academy.destroy');
+
+        // CRUD Video Rekomendasi
+        Route::get('/video/create', [ParentingAcademyController::class, 'createVideo'])->name('video.create');
+        Route::post('/video/store', [ParentingAcademyController::class, 'storeVideo'])->name('video.store');
+        Route::get('/video/{id}/edit', [ParentingAcademyController::class, 'editVideo'])->name('video.edit');
+        Route::put('/video/{id}/update', [ParentingAcademyController::class, 'updateVideo'])->name('video.update');
+        Route::delete('/video/{id}/destroy', [ParentingAcademyController::class, 'destroyVideo'])->name('video.destroy');
+    });
 });
+
 
 /*
 |--------------------------------------------------------------------------
 | API INTERNAL (ANTI DOUBLE BOOKING)
 |--------------------------------------------------------------------------
 */
-
 Route::get('/api/check-booked-slots', function (Request $request) {
     $bookedTimes = Consultation::where('doctor_id', $request->doctor_id)
         ->where('booking_date', $request->date)
