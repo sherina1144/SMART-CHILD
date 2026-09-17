@@ -6,6 +6,7 @@ use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ParentingAcademyController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NewsletterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,6 +84,8 @@ Route::prefix('services')->name('services.')->middleware('auth')->group(function
     Route::post('/parenting-academy/subscribe', [ParentingAcademyController::class, 'subscribe'])->name('parenting_academy.subscribe');
 });
 
+Route::post('/newsletter/store', [NewsletterController::class, 'store'])->name('newsletter.store');
+
 Route::get('/services/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('user.doctor.index')->middleware('auth');
 Route::get('/services/doctor-and-therapist/{id}', [DoctorController::class, 'show'])->name('user.doctor.show')->middleware('auth');
 Route::get('/user/consultation/receipt/{id}', [ConsultationController::class, 'showReceipt'])->name('user.consultation.receipt')->middleware('auth');
@@ -144,11 +147,23 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     Route::get('/consultations', [ConsultationController::class, 'indexAdmin'])->name('consultation.index');
 
-    // --- PARENTING ACADEMY (ADMIN CRUD) ---
-    Route::get('/parenting-academy', [ParentingAcademyController::class, 'indexAdmin'])->name('parenting.index');
-    Route::get('/parenting-academy/create', [ParentingAcademyController::class, 'create'])->name('parenting.create');
-    Route::post('/parenting-academy/store', [ParentingAcademyController::class, 'store'])->name('parenting.store');
-    Route::get('/parenting-academy/{id}/edit', [ParentingAcademyController::class, 'edit'])->name('parenting.edit');
-    Route::put('/parenting-academy/{id}/update', [ParentingAcademyController::class, 'update'])->name('parenting.update');
-    Route::delete('/parenting-academy/{id}/destroy', [ParentingAcademyController::class, 'destroy'])->name('parenting.destroy');
+    // --- PARENTING ACADEMY (Unified Admin CRUD for Guides & Videos) ---
+    // --- PARENTING ACADEMY (Admin CRUD) ---
+    Route::prefix('parenting-academy')->name('parenting.')->group(function () {
+        Route::get('/', [ParentingAcademyController::class, 'indexAdmin'])->name('index');
+
+        // CRUD Buku Panduan / Artikel
+        Route::get('/academy/create', [ParentingAcademyController::class, 'createAcademy'])->name('academy.create');
+        Route::post('/academy/store', [ParentingAcademyController::class, 'storeAcademy'])->name('academy.store');
+        Route::get('/academy/{id}/edit', [ParentingAcademyController::class, 'editAcademy'])->name('academy.edit');
+        Route::put('/academy/{id}/update', [ParentingAcademyController::class, 'updateAcademy'])->name('academy.update');
+        Route::delete('/academy/{id}/destroy', [ParentingAcademyController::class, 'destroyAcademy'])->name('academy.destroy');
+
+        // CRUD Video Rekomendasi
+        Route::get('/video/create', [ParentingAcademyController::class, 'createVideo'])->name('video.create');
+        Route::post('/video/store', [ParentingAcademyController::class, 'storeVideo'])->name('video.store');
+        Route::get('/video/{id}/edit', [ParentingAcademyController::class, 'editVideo'])->name('video.edit');
+        Route::put('/video/{id}/update', [ParentingAcademyController::class, 'updateVideo'])->name('video.update');
+        Route::delete('/video/{id}/destroy', [ParentingAcademyController::class, 'destroyVideo'])->name('video.destroy');
+    });
 });

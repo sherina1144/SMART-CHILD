@@ -11,6 +11,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
 
+    <!-- TAMBAHKAN BOOTSTRAP 5 CSS DI SINI -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <!-- CSS Layout Admin -->
     <style>
         * {
@@ -199,7 +202,6 @@
                         <i class="fa-solid fa-calendar-check"></i> Book Consultation
                     </a>
                 </li>
-                <!-- TAMBAHKAN DI SINI -->
                 <li class="nav-item">
                     <a href="{{ route('admin.parenting.index') }}"
                         class="nav-link {{ Request::is('admin/parenting*') ? 'active' : '' }}">
@@ -236,6 +238,8 @@
         @yield('content')
     </main>
 
+    <!-- TAMBAHKAN BOOTSTRAP 5 JS BUNDLE DI BAWAH INI -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

@@ -348,7 +348,7 @@
             font-size: 0.75rem;
         }
 
-        /* SECTION EXPERTS */
+        /* SECTION EXPERTS (Disesuaikan dengan Referensi Gambar) */
         .experts-section {
             margin-bottom: 4rem;
         }
@@ -356,14 +356,14 @@
         .experts-header {
             text-align: center;
             max-width: 36rem;
-            margin: 0 auto 2.5rem auto;
+            margin: 0 auto 3rem auto;
         }
 
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr;
             gap: 2rem;
-            max-width: 56rem;
+            max-width: 72rem;
             margin: 0 auto;
         }
 
@@ -375,10 +375,10 @@
 
         .expert-card {
             background: #ffffff;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-            border: 1px solid #F3F4F6;
+            padding: 2.5rem 2rem;
+            border-radius: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            border: 1px solid #F1F5F9;
             text-align: center;
             display: flex;
             flex-direction: column;
@@ -386,57 +386,58 @@
         }
 
         .expert-avatar {
-            width: 6rem;
-            height: 6rem;
+            width: 6.5rem;
+            height: 6.5rem;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         .expert-name {
-            font-size: 1.125rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: #1e4d3b;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.35rem;
         }
 
         .expert-title {
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: #f26d5b;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1.25rem;
         }
 
         .expert-desc {
             color: #4B5563;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
             line-height: 1.6;
+            max-width: 32rem;
         }
 
-        /* NEWSLETTER SECTION */
+        /* NEWSLETTER SECTION (Disesuaikan dengan Referensi Gambar) */
         .newsletter-section {
             background: linear-gradient(to bottom, transparent, #FFF3EC);
-            padding: 4rem 1.5rem;
+            padding: 5rem 1.5rem;
         }
 
         .newsletter-container {
-            max-width: 36rem;
+            max-width: 42rem;
             margin: 0 auto;
             text-align: center;
         }
 
         .newsletter-title {
-            font-size: 1.5rem;
+            font-size: clamp(1.5rem, 2vw, 1.875rem);
             font-weight: 700;
             color: #1e4d3b;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
         }
 
         .newsletter-desc {
             color: #4B5563;
-            font-size: 0.875rem;
-            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
             line-height: 1.6;
         }
 
@@ -444,6 +445,8 @@
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
+            max-width: 32rem;
+            margin: 0 auto;
         }
 
         @media (min-width: 640px) {
@@ -454,12 +457,13 @@
 
         .newsletter-input {
             flex-grow: 1;
-            padding: 0.75rem 1.25rem;
-            border-radius: 0.75rem;
-            border: 1px solid #D1D5DB;
+            padding: 0.85rem 1.25rem;
+            border-radius: 9999px;
+            border: 1px solid #E5E7EB;
             background-color: #ffffff;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
             outline: none;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
 
         .newsletter-input:focus {
@@ -470,13 +474,14 @@
             background-color: #1e4d3b;
             color: #ffffff;
             font-weight: 700;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
+            padding: 0.85rem 2rem;
+            border-radius: 9999px;
             border: none;
             cursor: pointer;
             transition: background-color 0.2s ease;
             white-space: nowrap;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
         }
 
         .newsletter-btn:hover {
@@ -508,6 +513,7 @@
         <!-- Main Content & Filter Section -->
         <section class="content-container">
 
+            <!-- Tampilkan pesan sukses -->
             @if(session('success'))
                 <div class="alert-success">
                     {{ session('success') }}
@@ -518,18 +524,20 @@
             <div class="filter-wrapper">
                 <div class="filter-pills">
                     @php $currentCat = request('category', 'Semua Materi'); @endphp
-                    <a href="{{ route('services.parenting_academy', ['category' => 'Semua Materi']) }}"
-                        class="pill-link {{ $currentCat == 'Semua Materi' ? 'pill-active' : 'pill-inactive' }}">Semua
-                        Materi</a>
-                    <a href="{{ route('services.parenting_academy', ['category' => 'Perkembangan Anak']) }}"
-                        class="pill-link {{ $currentCat == 'Perkembangan Anak' ? 'pill-active' : 'pill-inactive' }}">Perkembangan
-                        Anak</a>
-                    <a href="{{ route('services.parenting_academy', ['category' => 'Nutrisi & Kesehatan']) }}"
-                        class="pill-link {{ $currentCat == 'Nutrisi & Kesehatan' ? 'pill-active' : 'pill-inactive' }}">Nutrisi
-                        & Kesehatan</a>
-                    <a href="{{ route('services.parenting_academy', ['category' => 'Tips Stimulasi']) }}"
-                        class="pill-link {{ $currentCat == 'Tips Stimulasi' ? 'pill-active' : 'pill-inactive' }}">Tips
-                        Stimulasi</a>
+
+                    <a href="{{ route('services.parenting_academy') }}"
+                        class="pill-link {{ !$currentCat || $currentCat == 'Semua Materi' ? 'pill-active' : 'pill-inactive' }}">
+                        Semua Materi
+                    </a>
+
+                    @foreach($categories as $cat)
+                        @if($cat)
+                            <a href="{{ route('services.parenting_academy', ['category' => $cat]) }}"
+                                class="pill-link {{ $currentCat == $cat ? 'pill-active' : 'pill-inactive' }}">
+                                {{ $cat }}
+                            </a>
+                        @endif
+                    @endforeach
                 </div>
                 <a href="#" class="popular-link">Lihat Topik Terpopuler</a>
             </div>
@@ -580,7 +588,7 @@
                 </div>
             </div>
 
-            <!-- Dibimbing Oleh Expert Terpercaya -->
+            <!-- Dibimbing Oleh Expert Terpercaya (Sesuai Referensi Gambar) -->
             <div class="experts-section">
                 <div class="experts-header">
                     <h2 class="section-title">Dibimbing Oleh Expert Terpercaya</h2>
@@ -589,7 +597,8 @@
                 <div class="grid-2">
                     @foreach($experts as $expert)
                         <div class="expert-card">
-                            <img src="{{ asset($expert->photo) }}" alt="{{ $expert->name }}" class="expert-avatar">
+                            <img src="{{ asset('storage/' . $expert->photo) }}" alt="{{ $expert->name }}"
+                                class="expert-avatar">
                             <h3 class="expert-name">{{ $expert->name }}</h3>
                             <span class="expert-title">{{ $expert->title }}</span>
                             <p class="expert-desc">{{ $expert->description }}</p>
@@ -600,15 +609,14 @@
 
         </section>
 
-        <!-- Newsletter Section -->
+        <!-- Newsletter Section (Sesuai Referensi Gambar) -->
         <section class="newsletter-section">
             <div class="newsletter-container">
                 <h2 class="newsletter-title">Dapatkan Tips & Panduan Mingguan</h2>
-                <p class="newsletter-desc">Daftarkan email Anda untuk berlangganan konten eksklusif tumbuh kembang anak
+                <p class="newsletter-desc">Dafrarkan email Anda untuk berlangganan konten eksklusif tumbuh kembang anak
                     dari tim ahli medis SmartChild langsung ke inbox Anda.</p>
 
-                <form action="{{ route('services.parenting_academy.subscribe') }}" method="POST"
-                    class="newsletter-form">
+                <form action="{{ route('newsletter.store') }}" method="POST" class="newsletter-form">
                     @csrf
                     <input type="email" name="email" required placeholder="Alamat Email Anda" class="newsletter-input">
                     <button type="submit" class="newsletter-btn">Langganan</button>

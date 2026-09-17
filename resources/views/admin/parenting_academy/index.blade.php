@@ -1,78 +1,131 @@
 @extends('layout.dashboard_admin')
 
 @section('content')
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-    <div>
-        <h2 style="font-size: 24px; font-weight: 800; color: #253D32; margin-bottom: 5px;">Kelola Parenting Academy</h2>
-        <p style="font-size: 14px; color: #64748B;">Tambah, ubah, atau hapus materi edukasi untuk para orang tua.</p>
-    </div>
-    <a href="{{ route('admin.parenting.create') }}" style="background-color: #253D32; color: #ffffff; padding: 10px 18px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: background 0.2s;">
-        <i class="fa-solid fa-plus"></i> Tambah Materi
-    </a>
-</div>
+    <div class="container-fluid px-4 py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold text-dark">Kelola Parenting Academy</h2>
+        </div>
 
-<!-- Notifikasi Berhasil -->
-@if(session('success'))
-    <div style="background-color: #d1fae5; color: #065f46; padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
-        <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
-    </div>
-@endif
+        @if(session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
-<!-- Tabel Daftar Materi -->
-<div style="background: #ffffff; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); overflow: hidden; border: 1px solid #E2E8F0;">
-    <table style="width: 100%; border-collapse: collapse; text-align: left;">
-        <thead>
-            <tr style="background-color: #F8FAF9; border-bottom: 1px solid #E2E8F0; color: #64748B; font-size: 12px; font-weight: 700; text-transform: uppercase;">
-                <th style="padding: 16px 20px;">No</th>
-                <th style="padding: 16px 20px;">Thumbnail</th>
-                <th style="padding: 16px 20px;">Judul & Kategori</th>
-                <th style="padding: 16px 20px;">Status</th>
-                <th style="padding: 16px 20px; text-align: center;">Aksi</th>
-            </tr>
-        </thead>
-        <tbody style="font-size: 14px; color: #334155;">
-            @forelse($academies as $index => $item)
-                <tr style="border-bottom: 1px solid #F1F5F9; transition: background 0.2s;" onmouseover="this.style.backgroundColor='#F8FAF9'" onmouseout="this.style.backgroundColor='transparent'">
-                    <td style="padding: 16px 20px; font-weight: 600; color: #64748B;">{{ $index + 1 }}</td>
-                    <td style="padding: 16px 20px;">
-                        @if($item->thumbnail)
-                            <img src="{{ asset('storage/' . $item->thumbnail) }}" alt="Thumbnail" style="width: 60px; height: 40px; object-fit: cover; border-radius: 6px;">
-                        @else
-                            <div style="width: 60px; height: 40px; background-color: #E2E8F0; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #94A3B8; font-size: 12px;">No Img</div>
-                        @endif
-                    </td>
-                    <td style="padding: 16px 20px;">
-                        <div style="font-weight: 700; color: #253D32; margin-bottom: 4px;">{{ $item->title }}</div>
-                        <span style="font-size: 11px; background-color: #E2F6EE; color: #0D9488; padding: 2px 8px; border-radius: 6px; font-weight: 600;">{{ $item->category ?? 'Umum' }}</span>
-                    </td>
-                    <td style="padding: 16px 20px;">
-                        <span style="font-size: 11px; padding: 4px 10px; border-radius: 20px; font-weight: 700; {{ $item->status == 'published' ? 'background-color: #dcfce7; color: #166534;' : 'background-color: #fef9c3; color: #854d0e;' }}">
-                            {{ ucfirst($item->status) }}
-                        </span>
-                    </td>
-                    <td style="padding: 16px 20px; text-align: center;">
-                        <div style="display: flex; justify-content: center; gap: 8px;">
-                            <a href="{{ route('admin.parenting.edit', $item->id) }}" style="background-color: #FEF3C7; color: #D97706; padding: 6px 10px; border-radius: 6px; text-decoration: none; font-size: 13px;" title="Edit">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </a>
-                            <form action="{{ route('admin.parenting.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus materi ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" style="background-color: #FEE2E2; color: #DC2626; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 13px;" title="Hapus">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="5" style="padding: 40px; text-align: center; color: #94A3B8;">
-                        Belum ada data materi Parenting Academy. Silakan tambahkan materi baru.
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-</div>
+        <!-- SECTION 1: BUKU PANDUAN / ARTIKEL -->
+        <div class="card shadow-sm mb-5 border-0">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-success"><i class="fa-solid fa-book-open me-2"></i> Daftar Buku Panduan &
+                    Artikel</h5>
+                <a href="{{ route('admin.parenting.academy.create') }}" class="btn btn-success btn-sm">
+                    <i class="fa-solid fa-plus me-1"></i> Tambah Panduan
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Thumbnail</th>
+                                <th>Judul</th>
+                                <th>Kategori</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($academies as $item)
+                                <tr>
+                                    <td>
+                                        <img src="{{ asset('storage/' . $item->thumbnail) }}" alt="{{ $item->title }}"
+                                            class="rounded" style="width: 70px; height: 50px; object-fit: cover;">
+                                    </td>
+                                    <td class="fw-semibold">{{ $item->title }}</td>
+                                    <td><span
+                                            class="badge bg-success bg-opacity-10 text-success px-2 py-1">{{ $item->category }}</span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('admin.parenting.academy.edit', $item->id) }}"
+                                            class="btn btn-warning btn-sm text-white">Edit</a>
+                                        <form action="{{ route('admin.parenting.academy.destroy', $item->id) }}" method="POST"
+                                            class="d-inline" onsubmit="return confirm('Yakin ingin menghapus panduan ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">Belum ada data buku panduan.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: VIDEO REKOMENDASI -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-video me-2 text-warning"></i> Daftar Video
+                    Rekomendasi</h5>
+                <!-- PERBAIKAN ADA DI SINI (Kurung tutup route sudah lengkap) -->
+                <a href="{{ route('admin.parenting.video.create') }}" class="btn btn-dark btn-sm">
+                    <i class="fa-solid fa-plus me-1"></i> Tambah Video
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Thumbnail</th>
+                                <th>Judul Video</th>
+                                <th>Durasi & Instruktur</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($videos as $vid)
+                                <tr>
+                                    <td>
+                                        <img src="{{ asset('storage/' . $vid->thumbnail) }}" alt="{{ $vid->title }}"
+                                            class="rounded" style="width: 70px; height: 50px; object-fit: cover;">
+                                    </td>
+                                    <td class="fw-semibold">
+                                        {{ $vid->title }}<br>
+                                        <a href="{{ $vid->video_url }}" target="_blank"
+                                            class="small text-primary text-decoration-none"><i
+                                                class="fa-solid fa-link me-1"></i> Lihat Link Video</a>
+                                    </td>
+                                    <td>
+                                        <span class="d-block text-muted small"><i class="fa-regular fa-clock me-1"></i>
+                                            {{ $vid->duration }}</span>
+                                        <span class="d-block text-muted small"><i class="fa-solid fa-user-doctor me-1"></i>
+                                            {{ $vid->instructor }}</span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('admin.parenting.video.edit', $vid->id) }}"
+                                            class="btn btn-warning btn-sm text-white">Edit</a>
+                                        <form action="{{ route('admin.parenting.video.destroy', $vid->id) }}" method="POST"
+                                            class="d-inline" onsubmit="return confirm('Yakin ingin menghapus video ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">Belum ada data video rekomendasi.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

@@ -10,20 +10,18 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('experts', function (Blueprint $table) {
+        Schema::create('newsletters', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('specialty');
-            $table->text('description');
-            $table->string('photo'); // Untuk menyimpan path foto
+            $table->string('email')->unique(); // Mencegah email yang sama mendaftar dua kali
             $table->timestamps();
         });
     }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('experts');
+        Schema::dropIfExists('newsletters');
     }
 };
