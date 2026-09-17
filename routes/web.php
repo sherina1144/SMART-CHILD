@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\ConsultationController;
+use App\Models\Consultation;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,26 +19,6 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return view('user.about');
 })->name('about');
-
-//dashboard admin
-Route::get('/admin/dashboard', function () {
-    return view('layout.dashboard_admin');
-});
-
-// Dashboard Admin
-Route::get('/admin/dashboard', function () {
-    return view('layout.dashboard_admin');
-});
-
-// Halaman Doctor and Therapist
-Route::get('/admin/tambah-doctor', function () {
-    return view('admin.tambah_doctor');
-});
-
-// Halaman Book Consultation
-Route::get('/admin/daftar-consultation', function () {
-    return view('admin.daftar_consultation');
-});
 
 /*
 |--------------------------------------------------------------------------
@@ -80,23 +62,26 @@ Route::prefix('shop')->name('shop.')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| SERVICES
+| SERVICES (USER)
 |--------------------------------------------------------------------------
 */
 
 Route::prefix('services')->name('services.')->group(function () {
-    Route::get('/doctor-and-therapist', function () {
-        return view('user.services.doctor_trapis');
-    })->name('doctor');
-
-    Route::get('/book-consultation', function () {
-        return view('user.services.book_consultation');
-    })->name('book_consultation');
-
     Route::get('/parenting-academy', function () {
         return view('user.services.parenting_academy');
     })->name('parenting_academy');
 });
+
+// Route User -> Doctor & Therapist
+Route::get('/services/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('user.doctor.index');
+Route::get('/services/doctor-and-therapist/{id}', [DoctorController::class, 'show'])->name('user.doctor.show');
+
+// Route User -> Book Consultation
+Route::get('/services/book-consultation/{doctor_id?}', [ConsultationController::class, 'create'])->name('services.book_consultation');
+Route::get('/user/consultation/create/{doctor_id?}', [ConsultationController::class, 'create'])->name('user.consultation.create');
+
+Route::post('/services/book-consultation/store', [ConsultationController::class, 'store'])->name('user.consultation.store');
+Route::get('/user/consultation/receipt/{id}', [ConsultationController::class, 'showReceipt'])->name('user.consultation.receipt');
 
 /*
 |--------------------------------------------------------------------------
@@ -128,35 +113,48 @@ Route::get('/community', function () {
     return view('user.community');
 })->name('community');
 
-
 /*
 |--------------------------------------------------------------------------
-| SERVICES
+| ADMIN ROUTES
 |--------------------------------------------------------------------------
 */
 
-// Route untuk Admin tambah dokter dll
-Route::prefix('admin')->name('admin.')->group(function () {
-    // Portal Admin & Tambah Dokter (Route yang sudah ada)
-    Route::get('/doctor/add', [DoctorController::class, 'adminIndex'])->name('doctor.add');
-    Route::post('/doctor/store', [DoctorController::class, 'store'])->name('doctor.store');
-    // Route Edit & Update Dokter
-    Route::get('/doctor/{id}/edit', [DoctorController::class, 'edit'])->name('doctor.edit');
-    Route::put('/doctor/{id}/update', [DoctorController::class, 'update'])->name('doctor.update');
-    // Route Hapus Dokter
-    Route::delete('/doctor/{id}/destroy', [DoctorController::class, 'destroy'])->name('doctor.destroy');
+Route::get('/admin/dashboard', function () {
+    return view('layout.dashboard_admin');
+})->name('admin.dashboard');
+
+Route::get('/admin/daftar-consultation', function () {
+    return view('admin.daftar_consultation');
 });
 
-// Route admin consultations
+// Admin Consultations
 Route::get('/admin/consultations', [ConsultationController::class, 'indexAdmin'])->name('admin.consultation.index');
 
+// Admin Doctor Management & Schedules
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/doctor/add', [DoctorController::class, 'adminIndex'])->name('doctor.add');
+    Route::post('/doctor/store', [DoctorController::class, 'store'])->name('doctor.store');
+    Route::get('/doctor/{id}/edit', [DoctorController::class, 'edit'])->name('doctor.edit');
+    Route::put('/doctor/{id}/update', [DoctorController::class, 'update'])->name('doctor.update');
+    Route::delete('/doctor/{id}/destroy', [DoctorController::class, 'destroy'])->name('doctor.destroy');
 
-// Route untuk User Services -> Doctor & Therapist
-Route::get('/services/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('services.doctor');
-Route::get('/services/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('user.doctor.index');
-Route::get('/services/doctor-and-therapist/{id}', [DoctorController::class, 'show'])->name('user.doctor.show');
+    // Route khusus Kelola Jadwal Terpisah Dokter
+    Route::post('/doctor/schedule/store', [DoctorController::class, 'storeSchedule'])->name('doctor.schedule.store');
+    Route::delete('/doctor/schedule/{id}/destroy', [DoctorController::class, 'destroySchedule'])->name('doctor.schedule.destroy');
+});
 
-// Route user untuk book consultations
-Route::get('/services/book-consultation/{doctor_id?}', [ConsultationController::class, 'create'])->name('user.consultation.create');
-Route::post('/services/book-consultation/store', [ConsultationController::class, 'store'])->name('user.consultation.store');
-Route::get('/user/consultation/receipt/{id}', [ConsultationController::class, 'showReceipt'])->name('user.consultation.receipt');
+/*
+|--------------------------------------------------------------------------
+| API INTERNAL (ANTI DOUBLE BOOKING)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/api/check-booked-slots', function (Request $request) {
+    $bookedTimes = Consultation::where('doctor_id', $request->doctor_id)
+        ->where('booking_date', $request->date)
+        ->whereIn('payment_status', ['Unpaid', 'Paid', 'Success'])
+        ->pluck('booking_time')
+        ->toArray();
+
+    return response()->json($bookedTimes);
+});

@@ -11,9 +11,12 @@ class ConsultationController extends Controller
     // Menampilkan halaman Form Booking
     public function create($doctor_id = null)
     {
-        // Jika ada doctor_id, ambil data dokternya. Jika tidak ada, ambil dokter pertama sebagai default
-        $selectedDoctor = $doctor_id ? Doctor::findOrFail($doctor_id) : Doctor::first();
-        $allDoctors = Doctor::all(); // Untuk opsi ganti dokter jika diperlukan
+        // Jika ada $doctor_id, cari dokternya. Jika TIDAK ada, set ke null (kosong)
+        $selectedDoctor = $doctor_id 
+            ? Doctor::with('schedules')->find($doctor_id) 
+            : null;
+
+        $allDoctors = Doctor::with('schedules')->get();
 
         return view('user.services.book_consultation', compact('selectedDoctor', 'allDoctors'));
     }
@@ -31,11 +34,26 @@ class ConsultationController extends Controller
             'email'             => 'required|email|max:100',
             'address'           => 'required|string',
             'consultation_type' => 'required|in:Online,Offline',
-            'booking_date'      => 'required|date',
+            'booking_date'      => 'required|date|after_or_equal:today',
             'booking_time'      => 'required',
             'complaint'         => 'nullable|string',
             'payment_method'    => 'required|string',
         ]);
+
+        // --- VALIDASI ANTI DOUBLE BOOKING ---
+        // Pengecekan HANYA berdasarkan tanggal dan jam yang di-booking oleh user
+        $isAlreadyBooked = Consultation::where('doctor_id', $request->doctor_id)
+            ->where('booking_date', $request->booking_date)
+            ->where('booking_time', $request->booking_time)
+            ->whereIn('payment_status', ['Unpaid', 'Paid', 'Success'])
+            ->exists();
+
+        if ($isAlreadyBooked) {
+            return redirect()->back()
+                ->withErrors(['booking_time' => 'Maaf, Dokter tersebut sudah memiliki janji pada tanggal dan jam ini. Silakan pilih jam lain.'])
+                ->withInput();
+        }
+        // ------------------------------------
 
         $consultation = Consultation::create([
             'user_id'           => auth()->id() ?? 1,
@@ -56,24 +74,19 @@ class ConsultationController extends Controller
             'status_konsultasi' => 'Scheduled',
         ]);
 
-        // Kirim nilai primary key consultation_id ke route
         return redirect()->route('user.consultation.receipt', $consultation->consultation_id);
     }
 
     // Method Tampil Struk
     public function showReceipt($id)
     {
-        // Mencari data berdasarkan consultation_id
         $consultation = Consultation::with('doctor')->findOrFail($id);
-
         return view('user.services.struk_consultation', compact('consultation'));
     }
 
     public function indexAdmin()
     {
-        // Mengambil semua data konsultasi diurutkan dari yang terbaru
-        $consultations = Consultation::latest()->paginate(10);
-
+        $consultations = Consultation::with('doctor')->latest()->paginate(10);
         return view('admin.daftar_consultation', compact('consultations'));
     }
 }

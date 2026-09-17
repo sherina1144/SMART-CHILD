@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Doctor extends Model
 {
+    use HasFactory;
+
+    protected $table = 'doctors';
     protected $primaryKey = 'doctor_id';
 
     protected $fillable = [
@@ -17,6 +21,10 @@ class Doctor extends Model
         'lama_pengalaman',
         'rating',
         'biaya_konsultasi',
-        'jadwal_praktik',
     ];
+
+    public function schedules()
+    {
+        return $this->hasMany(DoctorSchedule::class, 'doctor_id', 'doctor_id');
+    }
 }

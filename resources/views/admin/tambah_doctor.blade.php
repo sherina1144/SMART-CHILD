@@ -155,6 +155,16 @@
         font-weight: 700;
     }
 
+    .badge-schedule {
+        background-color: #E2E8F0;
+        color: #2D3748;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        display: inline-block;
+        margin: 2px 0;
+    }
+
     .action-btns {
         display: flex;
         gap: 8px;
@@ -245,20 +255,65 @@
                 <label>Biaya Konsultasi (Rp)</label>
                 <input type="number" name="biaya_konsultasi" class="form-control" placeholder="Contoh: 150000" required>
             </div>
-
-            <div class="form-group full-width">
-                <label>Jadwal Praktik</label>
-                <input type="text" name="jadwal_praktik" class="form-control" placeholder="Contoh: Senin - Jumat (08.00 - 15.00)">
-            </div>
         </div>
 
         <button type="submit" class="btn-submit">Simpan Data Dokter</button>
     </form>
 </div>
 
-<!-- TABEL DAFTAR DOKTER -->
+<!-- FORM TAMBAH JADWAL PRAKTIK (DOCTOR SCHEDULES RELASIONAL) -->
+<div class="form-container">
+    <h2 class="form-title">Tambah Slot Jadwal Praktik Dokter</h2>
+
+    <form action="{{ route('admin.doctor.schedule.store') }}" method="POST">
+        @csrf
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Pilih Dokter / Terapis</label>
+                <select name="doctor_id" class="form-control" required>
+                    <option value="">-- Pilih Dokter --</option>
+                    @foreach($doctors as $doc)
+                        <option value="{{ $doc->doctor_id }}">{{ $doc->nama_lengkap }} ({{ $doc->kategori }})</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Hari Praktik</label>
+                <select name="day" class="form-control" required>
+                    <option value="Senin">Senin</option>
+                    <option value="Selasa">Selasa</option>
+                    <option value="Rabu">Rabu</option>
+                    <option value="Kamis">Kamis</option>
+                    <option value="Jumat">Jumat</option>
+                    <option value="Sabtu">Sabtu</option>
+                    <option value="Minggu">Minggu</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Jam Mulai Praktik</label>
+                <input type="time" name="start_time" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label>Jam Selesai Praktik</label>
+                <input type="time" name="end_time" class="form-control" required>
+            </div>
+
+            <div class="form-group full-width">
+                <label>Kuota Konsultasi (Jumlah Pasien)</label>
+                <input type="number" name="quota" class="form-control" value="1" min="1" required>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Tambah Slot Jadwal</button>
+    </form>
+</div>
+
+<!-- TABEL DAFTAR DOKTER & JADWAL TERSEDIA -->
 <div class="table-container">
-    <h3 class="form-title">Daftar Dokter Tersimpan</h3>
+    <h3 class="form-title">Daftar Dokter & Slot Jadwal Praktik</h3>
 
     <table class="custom-table">
         <thead>
@@ -266,9 +321,10 @@
                 <th>Foto</th>
                 <th>Nama</th>
                 <th>Kategori</th>
+                <th>Slot Jadwal Praktik</th>
                 <th>Pengalaman</th>
                 <th>Rating</th>
-                <th>Aksi</th>
+                <th>Aksi Dokter</th>
             </tr>
         </thead>
         <tbody>
@@ -279,6 +335,22 @@
                 </td>
                 <td><strong>{{ $doc->nama_lengkap }}</strong></td>
                 <td><span class="badge-category">{{ $doc->kategori }}</span></td>
+                <td>
+                    @if($doc->schedules && $doc->schedules->count() > 0)
+                        @foreach($doc->schedules as $sch)
+                            <div class="badge-schedule">
+                                {{ $sch->day }}: {{ date('H:i', strtotime($sch->start_time)) }} - {{ date('H:i', strtotime($sch->end_time)) }}
+                                <form action="{{ route('admin.doctor.schedule.destroy', $sch->id ?? $sch->schedule_id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Hapus slot jam ini?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" style="border:none; background:none; color:#E53E3E; cursor:pointer; font-weight:bold; padding:0 2px;">&times;</button>
+                                </form>
+                            </div><br>
+                        @endforeach
+                    @else
+                        <span style="color: #A0AEC0; font-size: 12px; italic;">Belum ada slot jadwal</span>
+                    @endif
+                </td>
                 <td>{{ $doc->lama_pengalaman }} Tahun</td>
                 <td><i class="fa-solid fa-star" style="color: #F39C50;"></i> {{ $doc->rating }}</td>
                 <td>
