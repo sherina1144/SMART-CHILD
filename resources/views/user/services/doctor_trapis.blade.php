@@ -162,7 +162,7 @@
 </head>
 <body>
 
- @include('layout.header')
+    @include('layout.header')
 
     <main class="doctor-grid">
         @foreach($doctors as $doctor)
@@ -196,7 +196,7 @@
             <!-- Tombol -->
             <div class="btn-group">
                 <a href="{{ route('user.doctor.show', $doctor->doctor_id) }}" class="btn-outline">Lihat profile</a>
-                <button class="btn-filled">Jadwalkan</button>
+                <a href="{{ route('user.consultation.create', $doctor->doctor_id) }}" class="btn-filled">Jadwalkan</a>
             </div>
         </div>
         @endforeach

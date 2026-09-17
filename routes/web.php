@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DoctorController;
+use App\Http\Controllers\ConsultationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +17,26 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return view('user.about');
 })->name('about');
+
+//dashboard admin
+Route::get('/admin/dashboard', function () {
+    return view('layout.dashboard_admin');
+});
+
+// Dashboard Admin
+Route::get('/admin/dashboard', function () {
+    return view('layout.dashboard_admin');
+});
+
+// Halaman Doctor and Therapist
+Route::get('/admin/tambah-doctor', function () {
+    return view('admin.tambah_doctor');
+});
+
+// Halaman Book Consultation
+Route::get('/admin/daftar-consultation', function () {
+    return view('admin.daftar_consultation');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -107,7 +128,14 @@ Route::get('/community', function () {
     return view('user.community');
 })->name('community');
 
-// Route untuk Admin
+
+/*
+|--------------------------------------------------------------------------
+| SERVICES
+|--------------------------------------------------------------------------
+*/
+
+// Route untuk Admin tambah dokter dll
 Route::prefix('admin')->name('admin.')->group(function () {
     // Portal Admin & Tambah Dokter (Route yang sudah ada)
     Route::get('/doctor/add', [DoctorController::class, 'adminIndex'])->name('doctor.add');
@@ -119,7 +147,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/doctor/{id}/destroy', [DoctorController::class, 'destroy'])->name('doctor.destroy');
 });
 
+// Route admin consultations
+Route::get('/admin/consultations', [ConsultationController::class, 'indexAdmin'])->name('admin.consultation.index');
+
+
 // Route untuk User Services -> Doctor & Therapist
 Route::get('/services/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('services.doctor');
 Route::get('/services/doctor-and-therapist', [DoctorController::class, 'userIndex'])->name('user.doctor.index');
 Route::get('/services/doctor-and-therapist/{id}', [DoctorController::class, 'show'])->name('user.doctor.show');
+
+// Route user untuk book consultations
+Route::get('/services/book-consultation/{doctor_id?}', [ConsultationController::class, 'create'])->name('user.consultation.create');
+Route::post('/services/book-consultation/store', [ConsultationController::class, 'store'])->name('user.consultation.store');
+Route::get('/user/consultation/receipt/{id}', [ConsultationController::class, 'showReceipt'])->name('user.consultation.receipt');
