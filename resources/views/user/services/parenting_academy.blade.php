@@ -538,7 +538,8 @@
             <div id="kursus" class="grid-3" style="margin-bottom: 4rem;">
                 @forelse($courses as $course)
                     <div class="course-card">
-                        <img src="{{ asset($course->image) }}" alt="{{ $course->title }}" class="course-img">
+                        <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="{{ $course->title }}"
+                            class="course-img">
                         <div class="course-body">
                             <span class="category-badge">{{ $course->category }}</span>
                             <h3 class="course-title">{{ $course->title }}</h3>
@@ -560,8 +561,15 @@
                     @foreach($videos as $video)
                         <div class="video-card">
                             <div class="video-thumb-wrapper">
-                                <img src="{{ asset($video->thumbnail) }}" alt="{{ $video->title }}" class="video-thumb">
-                                <div class="play-button">▶</div>
+                                <img src="{{ asset('storage/' . $video->thumbnail) }}" alt="{{ $video->title }}"
+                                    class="video-thumb">
+                                @if($video->video_url)
+                                    <a href="{{ $video->video_url }}" target="_blank" class="play-button"
+                                        title="Tonton Video">▶</a>
+                                @else
+                                    <div class="play-button" style="cursor: not-allowed; opacity: 0.6;"
+                                        title="Video belum tersedia">▶</div>
+                                @endif
                             </div>
                             <div class="video-info">
                                 <h4 class="video-title">{{ $video->title }}</h4>

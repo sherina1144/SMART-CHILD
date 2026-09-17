@@ -617,7 +617,7 @@
         </div>
 
         <!-- FORM UTAMA -->
-        <form action="{{ route('user.consultation.store') }}" method="POST">
+        <form action="{{ route('services.consultation.store') }}" method="POST">
             @csrf
             <!-- Hidden inputs untuk menangkap data pilihan JS -->
             <input type="hidden" name="doctor_id" value="{{ $selectedDoctor->doctor_id ?? '' }}" required>
