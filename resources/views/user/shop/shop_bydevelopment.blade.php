@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop By Age - Smart Child</title>
+
+    <title>Shop By Development - Smart Child</title>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 </head>
+
+
 <body>
 
-    @include('layout.header')
+@include('layout.header')
+
 
 <style>
+
     /* =====================================================
        SMARTCHILD - SHOP BY DEVELOPMENT
-       COLOR PALETTE
        ===================================================== */
 
     :root {
@@ -24,9 +35,14 @@
         --soft-gray: #667085;
     }
 
+
     /* =====================================================
-       RESET KHUSUS HALAMAN
+       RESET
        ===================================================== */
+
+    body {
+        margin: 0;
+    }
 
     .shop-development-page {
         width: 100%;
@@ -56,102 +72,121 @@
        ===================================================== */
 
     .sbd-hero {
-        width: 100%;
-        max-width: 1140px;
-        min-height: 190px;
-        margin: 0 auto;
-
         position: relative;
+
+        min-height: 300px;
+
+        padding: 35px 70px 20px;
 
         display: flex;
         align-items: center;
+        justify-content: space-between;
 
         overflow: hidden;
+
+        background: var(--warm-cream);
     }
+
 
     .sbd-hero-content {
         position: relative;
+
         z-index: 3;
 
-        padding-left: 9px;
-        padding-top: 5px;
+        width: 52%;
     }
+
 
     .sbd-hero-title {
-        margin: 0 0 14px;
-
-        font-size: 48px;
-        line-height: 1.08;
-        font-weight: 800;
-        letter-spacing: -1.8px;
+        margin: 0 0 12px;
 
         color: var(--dark-green);
+
+        font-size: 50px;
+        font-weight: 800;
+
+        line-height: 1.1;
+
+        letter-spacing: -1.5px;
     }
+
 
     .sbd-hero-description {
         margin: 0;
 
-        font-size: 17px;
-        line-height: 1.65;
-        font-weight: 400;
+        color: #34443F;
 
-        color: var(--dark-green);
+        font-size: 18px;
+        line-height: 1.7;
+
+        font-weight: 400;
     }
 
 
     /* =====================================================
-       HERO IMAGE / ILLUSTRATION
+       HERO RIGHT
        ===================================================== */
 
     .sbd-hero-visual {
-        position: absolute;
+        position: relative;
 
-        top: 0;
-        right: 5px;
+        width: 48%;
+        height: 220px;
 
-        width: 480px;
-        height: 190px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
+
 
     .sbd-hero-circle {
         position: absolute;
 
-        right: 10px;
-        bottom: 0;
-
         width: 455px;
-        height: 180px;
+        height: 250px;
 
-        border-radius: 240px 240px 0 0;
+        background: #FFF1E8;
 
-        background: #FFF9F2;
+        border-radius: 50% 50% 0 0;
+
+        bottom: -30px;
+        right: 10px;
+
+        z-index: 1;
     }
+
 
     .sbd-hero-image {
-        position: absolute;
-
-        top: 8px;
-        right: 82px;
-
-        width: 285px;
-        height: 170px;
-
-        object-fit: contain;
+        position: relative;
 
         z-index: 2;
+
+        width: 550px;
+        height: 280px;
+
+        object-fit: contain;
+        object-position: center;
+
+        display: block;
     }
+
 
     .sbd-hero-decoration {
         position: absolute;
 
-        top: 45px;
-        right: 0;
+        right: 5px;
+        top: 10px;
 
-        color: var(--sage-green);
+        width: 45px;
+        height: 45px;
 
-        font-size: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-        opacity: .6;
+        color: #8DB39D;
+
+        font-size: 32px;
 
         z-index: 3;
     }
@@ -165,83 +200,110 @@
         width: 100%;
         max-width: 1110px;
 
-        margin: 0 auto;
+        margin: -2px auto 0;
 
         display: grid;
+
         grid-template-columns: repeat(5, 1fr);
 
         gap: 16px;
+
+        position: relative;
+
+        z-index: 5;
     }
 
+
     .sbd-development-card {
-        min-height: 123px;
+        min-height: 145px;
 
-        padding: 15px;
+        padding: 18px 16px;
 
-        border-radius: 16px;
+        border-radius: 18px;
 
         display: flex;
         align-items: center;
 
-        border: 1px solid rgba(49, 92, 80, .10);
+        border: 1px solid rgba(49, 92, 80, .12);
+
+        overflow: hidden;
     }
+
 
     .sbd-development-card.sage {
-        background: var(--warm-cream);
+        background: #F1F4EA;
     }
+
 
     .sbd-development-card.peach {
-        background: var(--warm-cream);
+        background: #FFF0E8;
     }
 
 
-    /* ICON */
+    /* =====================================================
+       DEVELOPMENT ICON
+       ===================================================== */
 
     .sbd-development-icon {
-        width: 50px;
-        min-width: 50px;
+        width: 58px;
+        min-width: 58px;
 
-        margin-right: 8px;
+        height: 58px;
+
+        margin-right: 12px;
 
         display: flex;
         align-items: center;
         justify-content: center;
 
-        font-size: 37px;
+        font-size: 38px;
+
+        line-height: 1;
     }
+
 
     .sbd-development-card.sage .sbd-development-icon {
         color: var(--sage-green);
     }
+
 
     .sbd-development-card.peach .sbd-development-icon {
         color: var(--soft-peach);
     }
 
 
-    /* TEXT */
+    /* =====================================================
+       DEVELOPMENT TEXT
+       ===================================================== */
 
     .sbd-development-text {
         flex: 1;
+
+        min-width: 0;
     }
+
 
     .sbd-development-title {
         margin: 0 0 7px;
 
-        text-align: center;
+        text-align: left;
 
         font-size: 14px;
+
         line-height: 1.3;
+
         font-weight: 700;
 
         color: var(--dark-green);
     }
 
+
     .sbd-development-description {
         margin: 0;
 
         font-size: 11.5px;
-        line-height: 1.6;
+
+        line-height: 1.55;
 
         color: var(--soft-gray);
     }
@@ -253,24 +315,31 @@
 
     .sbd-products-section {
         width: 100%;
+
         max-width: 1110px;
 
         margin: 21px auto 0;
     }
 
+
     .sbd-products-header {
         margin: 0 3px 12px;
 
         display: flex;
+
         align-items: center;
+
         justify-content: space-between;
     }
+
 
     .sbd-products-title {
         margin: 0;
 
         font-size: 19px;
+
         line-height: 1.3;
+
         font-weight: 700;
 
         color: var(--dark-green);
@@ -278,21 +347,30 @@
 
 
     /* =====================================================
-       SORT / FILTER
+       SORT & FILTER
        ===================================================== */
 
     .sbd-product-controls {
         display: flex;
+
         align-items: center;
 
         gap: 16px;
     }
+
+
+    .sbd-sort-wrapper,
+    .sbd-filter-wrapper {
+        position: relative;
+    }
+
 
     .sbd-sort-button,
     .sbd-filter-button {
         height: 40px;
 
         border: 1px solid rgba(49, 92, 80, .11);
+
         border-radius: 11px;
 
         background: var(--warm-cream);
@@ -302,7 +380,9 @@
         font-size: 11px;
 
         display: flex;
+
         align-items: center;
+
         justify-content: center;
 
         cursor: pointer;
@@ -310,28 +390,107 @@
         transition: .2s ease;
     }
 
+
     .sbd-sort-button {
         width: 115px;
+
         gap: 12px;
     }
 
+
     .sbd-filter-button {
         width: 101px;
+
         gap: 8px;
     }
+
 
     .sbd-sort-button:hover,
     .sbd-filter-button:hover {
         border-color: var(--sage-green);
+
         color: var(--dark-green);
     }
+
 
     .sbd-sort-button i {
         font-size: 9px;
     }
 
+
     .sbd-filter-button i {
         font-size: 10px;
+    }
+
+
+    /* =====================================================
+       DROPDOWN
+       ===================================================== */
+
+    .sbd-sort-menu,
+    .sbd-filter-menu {
+        position: absolute;
+
+        top: 48px;
+        right: 0;
+
+        width: 180px;
+
+        padding: 8px;
+
+        background: var(--white);
+
+        border: 1px solid rgba(49, 92, 80, .10);
+
+        border-radius: 12px;
+
+        box-shadow: 0 8px 25px rgba(49, 92, 80, .10);
+
+        z-index: 100;
+
+        display: none;
+    }
+
+
+    .sbd-sort-menu.show,
+    .sbd-filter-menu.show {
+        display: block;
+    }
+
+
+    .sbd-sort-option,
+    .sbd-filter-option {
+        width: 100%;
+
+        padding: 10px 12px;
+
+        border-radius: 8px;
+
+        background: transparent;
+
+        color: var(--soft-gray);
+
+        font-family: inherit;
+
+        font-size: 11px;
+
+        line-height: 1.4;
+
+        text-align: left;
+
+        cursor: pointer;
+
+        transition: .2s ease;
+
+        display: block;
+    }
+
+
+    .sbd-sort-option:hover,
+    .sbd-filter-option:hover {
+        background: var(--warm-cream);
+
+        color: var(--dark-green);
     }
 
 
@@ -343,6 +502,7 @@
         width: 100%;
 
         display: grid;
+
         grid-template-columns: repeat(4, 1fr);
 
         gap: 22px;
@@ -357,9 +517,19 @@
         overflow: hidden;
 
         border: 1px solid rgba(49, 92, 80, .12);
+
         border-radius: 17px;
 
         background: var(--white);
+
+        transition: .2s ease;
+    }
+
+
+    .sbd-product-card:hover {
+        transform: translateY(-2px);
+
+        box-shadow: 0 8px 20px rgba(49, 92, 80, .08);
     }
 
 
@@ -373,6 +543,7 @@
         position: relative;
 
         display: flex;
+
         align-items: center;
         justify-content: center;
 
@@ -380,6 +551,7 @@
 
         overflow: hidden;
     }
+
 
     .sbd-product-image img {
         width: 90%;
@@ -391,7 +563,18 @@
     }
 
 
-    /* PRODUCT TAG */
+    .product-no-image {
+        color: var(--soft-gray);
+
+        font-size: 12px;
+
+        text-align: center;
+    }
+
+
+    /* =====================================================
+       PRODUCT TAG
+       ===================================================== */
 
     .sbd-product-tag {
         position: absolute;
@@ -406,38 +589,48 @@
         border-radius: 20px;
 
         font-size: 10px;
+
         line-height: 1;
+
         font-weight: 500;
     }
 
+
     .sbd-product-tag.sage {
         background: var(--sage-green);
+
         color: var(--white);
     }
 
+
     .sbd-product-tag.peach {
         background: var(--soft-peach);
+
         color: var(--white);
     }
 
 
     /* =====================================================
-       PRODUCT INFORMATION
+       PRODUCT INFO
        ===================================================== */
 
     .sbd-product-info {
         padding: 13px 18px 11px;
     }
 
+
     .sbd-product-name {
         margin: 0 0 5px;
 
         font-size: 14px;
+
         line-height: 1.4;
+
         font-weight: 600;
 
         color: var(--dark-green);
     }
+
 
     .sbd-product-description {
         min-height: 38px;
@@ -445,6 +638,7 @@
         margin: 0;
 
         font-size: 10.5px;
+
         line-height: 1.6;
 
         color: var(--soft-gray);
@@ -456,54 +650,58 @@
        ===================================================== */
 
     .sbd-product-bottom {
-        margin-top: 6px;
+        margin-top: 10px;
 
         display: flex;
+
         align-items: center;
+
+        width: 100%;
     }
+
 
     .sbd-product-price {
         white-space: nowrap;
 
         font-size: 14px;
+
         font-weight: 600;
 
         color: var(--dark-green);
     }
 
-    .sbd-product-rating {
-        margin-left: 20px;
+
+    /* =====================================================
+       FORM CART
+       ===================================================== */
+
+    .sbd-product-bottom .add-to-cart-form {
+        margin-left: auto;
+
+        padding: 0;
 
         display: flex;
+
         align-items: center;
 
-        gap: 4px;
-
-        white-space: nowrap;
-    }
-
-    .sbd-product-rating i {
-        font-size: 11px;
-        color: var(--soft-peach);
-    }
-
-    .sbd-product-rating span {
-        font-size: 10px;
-        color: var(--soft-gray);
+        flex-shrink: 0;
     }
 
 
     /* =====================================================
-       CART BUTTON
+       CART BUTTON - BULAT
        ===================================================== */
 
     .sbd-cart-button {
         width: 41px;
         height: 41px;
 
-        margin-left: auto;
+        margin: 0;
+
+        padding: 0;
 
         border: none;
+
         border-radius: 50%;
 
         background: var(--sage-green);
@@ -511,6 +709,7 @@
         color: var(--white);
 
         display: flex;
+
         align-items: center;
         justify-content: center;
 
@@ -521,6 +720,7 @@
         transition: .2s ease;
     }
 
+
     .sbd-cart-button:hover {
         background: var(--dark-green);
 
@@ -528,22 +728,53 @@
     }
 
 
+    .sbd-cart-button i {
+        font-size: 15px;
+    }
+
+
     /* =====================================================
-       SEE ALL PRODUCT BUTTON
+       EMPTY PRODUCT
+       ===================================================== */
+
+    .sbd-empty-product {
+        grid-column: 1 / -1;
+
+        min-height: 80px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        color: var(--soft-gray);
+
+        font-size: 14px;
+
+        text-align: center;
+    }
+
+
+    /* =====================================================
+       SEE ALL PRODUCT
        ===================================================== */
 
     .sbd-see-all-wrapper {
         width: 100%;
 
         margin-top: 23px;
+
         margin-bottom: 21px;
 
         display: flex;
+
         justify-content: center;
     }
 
+
     .sbd-see-all-button {
         width: 308px;
+
         height: 43px;
 
         position: relative;
@@ -555,18 +786,22 @@
         color: var(--white);
 
         display: flex;
+
         align-items: center;
         justify-content: center;
 
         font-size: 12px;
+
         font-weight: 500;
 
         transition: .2s ease;
     }
 
+
     .sbd-see-all-button:hover {
         background: var(--dark-green);
     }
+
 
     .sbd-see-all-button i {
         position: absolute;
@@ -578,19 +813,23 @@
 
 
     /* =====================================================
-       FOOTER KHUSUS HALAMAN INI
+       FOOTER
        ===================================================== */
 
     .sbd-footer {
         width: 100%;
+
         height: 57px;
 
         background: var(--dark-green);
 
         display: flex;
+
         align-items: center;
+
         justify-content: center;
     }
+
 
     .sbd-footer p {
         margin: 0;
@@ -598,7 +837,53 @@
         color: var(--white);
 
         font-size: 10px;
+
         font-weight: 400;
+    }
+
+
+    /* =====================================================
+       CART TOAST
+       ===================================================== */
+
+    .cart-toast {
+        position: fixed;
+
+        top: 90px;
+        right: 30px;
+
+        z-index: 9999;
+
+        background: var(--dark-green);
+
+        color: var(--white);
+
+        padding: 14px 20px;
+
+        border-radius: 10px;
+
+        font-size: 14px;
+
+        font-weight: 500;
+
+        box-shadow: 0 8px 25px rgba(0, 0, 0, .15);
+
+        opacity: 0;
+
+        visibility: hidden;
+
+        transform: translateY(-10px);
+
+        transition: all .25s ease;
+    }
+
+
+    .cart-toast.show {
+        opacity: 1;
+
+        visibility: visible;
+
+        transform: translateY(0);
     }
 
 
@@ -614,9 +899,11 @@
             max-width: calc(100% - 80px);
         }
 
+
         .sbd-hero-title {
             font-size: 42px;
         }
+
 
         .sbd-product-grid {
             gap: 14px;
@@ -630,9 +917,11 @@
             grid-template-columns: repeat(2, 1fr);
         }
 
+
         .sbd-product-grid {
             grid-template-columns: repeat(2, 1fr);
         }
+
 
         .sbd-hero-visual {
             opacity: .35;
@@ -648,45 +937,77 @@
             max-width: calc(100% - 32px);
         }
 
+
         .sbd-hero {
             min-height: 240px;
         }
 
+
         .sbd-hero-title {
             font-size: 34px;
+
             letter-spacing: -1px;
         }
+
 
         .sbd-hero-description {
             font-size: 14px;
         }
 
+
         .sbd-hero-visual {
             display: none;
         }
+
 
         .sbd-development-categories {
             grid-template-columns: 1fr;
         }
 
+
         .sbd-products-header {
             flex-direction: column;
+
             align-items: flex-start;
+
             gap: 12px;
         }
+
+
+        .sbd-product-controls {
+            width: 100%;
+        }
+
+
+        .sbd-sort-button,
+        .sbd-filter-button {
+            width: 100%;
+        }
+
+
+        .sbd-sort-wrapper,
+        .sbd-filter-wrapper {
+            flex: 1;
+        }
+
 
         .sbd-product-grid {
             grid-template-columns: 1fr;
         }
 
+
         .sbd-see-all-button {
             width: 100%;
         }
+
     }
+
 </style>
 
 
+
 <div class="shop-development-page">
+
 
     {{-- =====================================================
          HERO
@@ -708,15 +1029,10 @@
         </div>
 
 
-        {{-- HERO IMAGE --}}
         <div class="sbd-hero-visual">
 
             <div class="sbd-hero-circle"></div>
 
-            {{-- 
-                Ganti nama file ini sesuai gambar
-                yang ada di public/images
-            --}}
             <img
                 src="{{ asset('images/hero-toys.png') }}"
                 alt="SmartChild Educational Toys"
@@ -740,7 +1056,6 @@
     <section class="sbd-development-categories">
 
 
-        {{-- KOGNITIF --}}
         <div class="sbd-development-card sage">
 
             <div class="sbd-development-icon">
@@ -754,8 +1069,7 @@
                 </h3>
 
                 <p class="sbd-development-description">
-                    Meningkatkan kemampuan berpikir
-                    dan memecahkan masalah
+                    Meningkatkan kemampuan berpikir dan memecahkan masalah
                 </p>
 
             </div>
@@ -763,7 +1077,6 @@
         </div>
 
 
-        {{-- MOTORIK --}}
         <div class="sbd-development-card peach">
 
             <div class="sbd-development-icon">
@@ -777,8 +1090,7 @@
                 </h3>
 
                 <p class="sbd-development-description">
-                    Melatih koordinasi dan keterampilan
-                    motorik anak
+                    Melatih koordinasi dan keterampilan motorik anak
                 </p>
 
             </div>
@@ -786,7 +1098,6 @@
         </div>
 
 
-        {{-- BAHASA --}}
         <div class="sbd-development-card peach">
 
             <div class="sbd-development-icon">
@@ -800,8 +1111,7 @@
                 </h3>
 
                 <p class="sbd-development-description">
-                    Mengembangkan kemampuan bahasa
-                    dan komunikasi
+                    Mengembangkan kemampuan bahasa dan komunikasi
                 </p>
 
             </div>
@@ -809,7 +1119,6 @@
         </div>
 
 
-        {{-- SOSIAL --}}
         <div class="sbd-development-card sage">
 
             <div class="sbd-development-icon">
@@ -823,8 +1132,7 @@
                 </h3>
 
                 <p class="sbd-development-description">
-                    Mendorong interaksi dan keterampilan
-                    sosial
+                    Mendorong interaksi dan keterampilan sosial
                 </p>
 
             </div>
@@ -832,7 +1140,6 @@
         </div>
 
 
-        {{-- EMOSIONAL --}}
         <div class="sbd-development-card peach">
 
             <div class="sbd-development-icon">
@@ -846,8 +1153,7 @@
                 </h3>
 
                 <p class="sbd-development-description">
-                    Mendukung regulasi emosi dan
-                    kepercayaan diri anak
+                    Mendukung regulasi emosi dan kepercayaan diri anak
                 </p>
 
             </div>
@@ -865,33 +1171,139 @@
     <section class="sbd-products-section">
 
 
-        {{-- HEADER --}}
         <div class="sbd-products-header">
 
             <h2 class="sbd-products-title">
                 Rekomendasi Produk
             </h2>
 
+
             <div class="sbd-product-controls">
 
-                <button
-                    type="button"
-                    class="sbd-sort-button"
-                >
-                    Urutkan
 
-                    <i class="fa-solid fa-chevron-down"></i>
-                </button>
+                {{-- SORT --}}
+
+                <div class="sbd-sort-wrapper">
+
+                    <button
+                        type="button"
+                        class="sbd-sort-button"
+                        onclick="toggleSort(event)"
+                    >
+
+                        Urutkan
+
+                        <i class="fa-solid fa-chevron-down"></i>
+
+                    </button>
 
 
-                <button
-                    type="button"
-                    class="sbd-filter-button"
-                >
-                    <i class="fa-solid fa-filter"></i>
+                    <div
+                        class="sbd-sort-menu"
+                        id="sortMenu"
+                    >
 
-                    Filter
-                </button>
+                        <a
+                            href="{{ request()->fullUrlWithQuery(['sort' => 'termurah']) }}"
+                            class="sbd-sort-option"
+                        >
+                            Harga Terendah
+                        </a>
+
+
+                        <a
+                            href="{{ request()->fullUrlWithQuery(['sort' => 'termahal']) }}"
+                            class="sbd-sort-option"
+                        >
+                            Harga Tertinggi
+                        </a>
+
+
+                        <a
+                            href="{{ request()->fullUrlWithQuery(['sort' => 'nama']) }}"
+                            class="sbd-sort-option"
+                        >
+                            Nama A - Z
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+
+                {{-- FILTER --}}
+
+                <div class="sbd-filter-wrapper">
+
+                    <button
+                        type="button"
+                        class="sbd-filter-button"
+                        onclick="toggleFilter(event)"
+                    >
+
+                        <i class="fa-solid fa-filter"></i>
+
+                        Filter
+
+                    </button>
+
+
+                    <div
+                        class="sbd-filter-menu"
+                        id="filterMenu"
+                    >
+
+                        <a
+                            href="{{ route('shop.bydevelopment') }}"
+                            class="sbd-filter-option"
+                        >
+                            Semua Produk
+                        </a>
+
+
+                        <a
+                            href="{{ request()->fullUrlWithQuery(['development' => 'Kognitif']) }}"
+                            class="sbd-filter-option"
+                        >
+                            Kognitif
+                        </a>
+
+
+                        <a
+                            href="{{ request()->fullUrlWithQuery(['development' => 'Motorik']) }}"
+                            class="sbd-filter-option"
+                        >
+                            Motorik
+                        </a>
+
+
+                        <a
+                            href="{{ request()->fullUrlWithQuery(['development' => 'Bahasa']) }}"
+                            class="sbd-filter-option"
+                        >
+                            Bahasa
+                        </a>
+
+
+                        <a
+                            href="{{ request()->fullUrlWithQuery(['development' => 'Sosial']) }}"
+                            class="sbd-filter-option"
+                        >
+                            Sosial
+                        </a>
+
+
+                        <a
+                            href="{{ request()->fullUrlWithQuery(['development' => 'Emosional']) }}"
+                            class="sbd-filter-option"
+                        >
+                            Emosional
+                        </a>
+
+                    </div>
+
+                </div>
 
             </div>
 
@@ -899,277 +1311,116 @@
 
 
 
-        {{-- =================================================
-             PRODUCT GRID
-             ================================================= --}}
+        {{-- PRODUCT GRID --}}
 
         <div class="sbd-product-grid">
 
 
-            {{-- PRODUCT 1 --}}
-            <div class="sbd-product-card">
-
-                <div class="sbd-product-image">
-
-                    <span class="sbd-product-tag sage">
-                        Untuk Kognitif
-                    </span>
-
-                    <img
-                        src="{{ asset('images/shape-sorter.png') }}"
-                        alt="Shape Sorter Box"
-                    >
-
-                </div>
+            @forelse ($products as $product)
 
 
-                <div class="sbd-product-info">
-
-                    <h3 class="sbd-product-name">
-                        Shape Sorter Box
-                    </h3>
-
-                    <p class="sbd-product-description">
-                        Mainan edukatif untuk mengenal
-                        bentuk dan warna
-                    </p>
+                <div class="sbd-product-card">
 
 
-                    <div class="sbd-product-bottom">
+                    <div class="sbd-product-image">
 
-                        <div class="sbd-product-price">
-                            Rp 135.000
+                        @if ($product->gambar)
+
+                            <img
+                                src="{{ asset('images/' . $product->gambar) }}"
+                                alt="{{ $product->nama_produk }}"
+                            >
+
+                        @else
+
+                            <div class="product-no-image">
+                                Gambar belum tersedia
+                            </div>
+
+                        @endif
+
+                    </div>
+
+
+
+                    <div class="sbd-product-info">
+
+
+                        <h3 class="sbd-product-name">
+                            {{ $product->nama_produk }}
+                        </h3>
+
+
+                        <p class="sbd-product-description">
+                            {{ $product->deskripsi }}
+                        </p>
+
+
+
+                        <div class="sbd-product-bottom">
+
+
+                            <div class="sbd-product-price">
+
+                                Rp
+                                {{ number_format($product->harga, 0, ',', '.') }}
+
+                            </div>
+
+
+                            <form
+                                class="add-to-cart-form"
+                                action="{{ route('shop.cart.add', $product->product_id) }}"
+                                method="POST"
+                            >
+
+                                @csrf
+
+                                <button
+                                    type="submit"
+                                    class="sbd-cart-button"
+                                    title="Tambah ke keranjang"
+                                >
+
+                                    <i class="fa-solid fa-cart-shopping"></i>
+
+                                </button>
+
+                            </form>
+
+
                         </div>
-
-
-                        <div class="sbd-product-rating">
-
-                            <i class="fa-solid fa-star"></i>
-
-                            <span>
-                                4.9 (72)
-                            </span>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="sbd-cart-button"
-                        >
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </button>
 
                     </div>
 
                 </div>
 
-            </div>
+
+            @empty
 
 
-
-            {{-- PRODUCT 2 --}}
-            <div class="sbd-product-card">
-
-                <div class="sbd-product-image">
-
-                    <span class="sbd-product-tag peach">
-                        Untuk Motorik
-                    </span>
-
-                    <img
-                        src="{{ asset('images/rainbow-stacking.png') }}"
-                        alt="Rainbow Stacking"
-                    >
-
+                <div class="sbd-empty-product">
+                    Belum ada produk tersedia.
                 </div>
 
 
-                <div class="sbd-product-info">
+            @endforelse
 
-                    <h3 class="sbd-product-name">
-                        Rainbow Stacking
-                    </h3>
-
-                    <p class="sbd-product-description">
-                        Melatih koordinasi tangan dan
-                        kemampuan motorik halus
-                    </p>
-
-
-                    <div class="sbd-product-bottom">
-
-                        <div class="sbd-product-price">
-                            Rp 125.000
-                        </div>
-
-
-                        <div class="sbd-product-rating">
-
-                            <i class="fa-solid fa-star"></i>
-
-                            <span>
-                                4.8 (63)
-                            </span>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="sbd-cart-button"
-                        >
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            {{-- PRODUCT 3 --}}
-            <div class="sbd-product-card">
-
-                <div class="sbd-product-image">
-
-                    <span class="sbd-product-tag peach">
-                        Untuk Bahasa
-                    </span>
-
-                    <img
-                        src="{{ asset('images/flash-card.png') }}"
-                        alt="Flash Card Binatang"
-                    >
-
-                </div>
-
-
-                <div class="sbd-product-info">
-
-                    <h3 class="sbd-product-name">
-                        Flash Card Binatang
-                    </h3>
-
-                    <p class="sbd-product-description">
-                        Membantu anak mengenal kata dan
-                        meningkatkan kosakata
-                    </p>
-
-
-                    <div class="sbd-product-bottom">
-
-                        <div class="sbd-product-price">
-                            Rp 110.000
-                        </div>
-
-
-                        <div class="sbd-product-rating">
-
-                            <i class="fa-solid fa-star"></i>
-
-                            <span>
-                                4.9 (58)
-                            </span>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="sbd-cart-button"
-                        >
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            {{-- PRODUCT 4 --}}
-            <div class="sbd-product-card">
-
-                <div class="sbd-product-image">
-
-                    <span class="sbd-product-tag sage">
-                        Untuk Sosial
-                    </span>
-
-                    <img
-                        src="{{ asset('images/play-together.png') }}"
-                        alt="Play Together Set"
-                    >
-
-                </div>
-
-
-                <div class="sbd-product-info">
-
-                    <h3 class="sbd-product-name">
-                        Play Together Set
-                    </h3>
-
-                    <p class="sbd-product-description">
-                        Mainan peran untuk melatih interaksi
-                        dan kerja sama
-                    </p>
-
-
-                    <div class="sbd-product-bottom">
-
-                        <div class="sbd-product-price">
-                            Rp 145.000
-                        </div>
-
-
-                        <div class="sbd-product-rating">
-
-                            <i class="fa-solid fa-star"></i>
-
-                            <span>
-                                4.7 (49)
-                            </span>
-
-                        </div>
-
-
-                        <button
-                            type="button"
-                            class="sbd-cart-button"
-                        >
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </div>
 
         </div>
 
 
 
-        {{-- =================================================
-             SEE ALL
-             ================================================= --}}
+        {{-- SEE ALL --}}
 
         <div class="sbd-see-all-wrapper">
 
             <a
-                href="#"
+                href="{{ route('shop.allproducts') }}"
                 class="sbd-see-all-button"
             >
 
-                <span>
-                    Lihat Semua Produk
-                </span>
+                Lihat Semua Produk
 
                 <i class="fa-solid fa-arrow-right"></i>
 
@@ -1181,20 +1432,255 @@
 
 
 
-    {{-- =====================================================
-         FOOTER KHUSUS HALAMAN INI
-         TIDAK MENGGUNAKAN layout/footer.blade.php
-         ===================================================== --}}
+    {{-- FOOTER --}}
 
     <footer class="sbd-footer">
 
         <p>
-            © 2026 SmartChild. Tumbuh Cerdas, Bahagia Setiap Hari.
+            © {{ date('Y') }} SmartChild. Tumbuh Cerdas, Bahagia Setiap Hari.
         </p>
 
     </footer>
 
+
 </div>
 
+
+
+<div class="cart-toast"></div>
+
+
+
+<script>
+
+    /* =====================================================
+       SORT
+       ===================================================== */
+
+    function toggleSort(event) {
+
+        event.stopPropagation();
+
+        const sortMenu =
+            document.getElementById('sortMenu');
+
+        const filterMenu =
+            document.getElementById('filterMenu');
+
+        filterMenu.classList.remove('show');
+
+        sortMenu.classList.toggle('show');
+    }
+
+
+
+    /* =====================================================
+       FILTER
+       ===================================================== */
+
+    function toggleFilter(event) {
+
+        event.stopPropagation();
+
+        const filterMenu =
+            document.getElementById('filterMenu');
+
+        const sortMenu =
+            document.getElementById('sortMenu');
+
+        sortMenu.classList.remove('show');
+
+        filterMenu.classList.toggle('show');
+    }
+
+
+
+    /* =====================================================
+       CLOSE DROPDOWN
+       ===================================================== */
+
+    document.addEventListener('click', function(event) {
+
+        if (
+            !event.target.closest('.sbd-sort-wrapper') &&
+            !event.target.closest('.sbd-filter-wrapper')
+        ) {
+
+            document
+                .getElementById('sortMenu')
+                .classList.remove('show');
+
+            document
+                .getElementById('filterMenu')
+                .classList.remove('show');
+
+        }
+
+    });
+
+
+
+    /* =====================================================
+       ADD TO CART
+       ===================================================== */
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const forms =
+            document.querySelectorAll('.add-to-cart-form');
+
+
+        forms.forEach(function (form) {
+
+            form.addEventListener('submit', async function (e) {
+
+                e.preventDefault();
+
+                e.stopPropagation();
+
+
+                try {
+
+                    const response =
+                        await fetch(form.action, {
+
+                            method: 'POST',
+
+                            body: new FormData(form),
+
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+
+                        });
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (data.success) {
+
+                        updateCartBadge(data.cart_badge);
+
+                        showCartToast(data.message);
+
+                    } else {
+
+                        showCartToast(data.message);
+
+                    }
+
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showCartToast(
+                        'Terjadi kesalahan. Silakan coba lagi.'
+                    );
+
+                }
+
+            });
+
+        });
+
+    });
+
+
+
+    /* =====================================================
+       UPDATE CART BADGE
+       ===================================================== */
+
+    function updateCartBadge(count) {
+
+        let badge =
+            document.querySelector('.cart-badge');
+
+
+        if (count <= 0) {
+
+            if (badge) {
+                badge.remove();
+            }
+
+            return;
+        }
+
+
+        if (badge) {
+
+            badge.textContent = count;
+
+        } else {
+
+            const cartIcon =
+                document.querySelector('.header-cart');
+
+
+            if (cartIcon) {
+
+                const newBadge =
+                    document.createElement('span');
+
+                newBadge.className = 'cart-badge';
+
+                newBadge.textContent = count;
+
+                cartIcon.appendChild(newBadge);
+
+            }
+
+        }
+
+    }
+
+
+
+    /* =====================================================
+       TOAST
+       ===================================================== */
+
+    function showCartToast(message) {
+
+        let toast =
+            document.querySelector('.cart-toast');
+
+
+        if (!toast) {
+
+            toast =
+                document.createElement('div');
+
+            toast.className =
+                'cart-toast';
+
+            document.body.appendChild(toast);
+
+        }
+
+
+        toast.textContent =
+            message;
+
+
+        toast.classList.add('show');
+
+
+        setTimeout(function () {
+
+            toast.classList.remove('show');
+
+        }, 2500);
+
+    }
+
+</script>
+
+
 </body>
+
 </html>

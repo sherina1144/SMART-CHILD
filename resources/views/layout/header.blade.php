@@ -144,13 +144,21 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
             </button>
-            <a href="#" class="action-btn cart-btn" aria-label="Cart">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="9" cy="21" r="1"></circle>
-                    <circle cx="20" cy="21" r="1"></circle>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-                <span class="cart-badge">0</span>
+            <a href="{{ route('shop.cart') }}" class="header-cart">
+
+                <i class="fa-solid fa-cart-shopping"></i>
+
+                @php
+                    $cart = session('cart', []);
+                    $cartCount = count($cart);
+                @endphp
+
+                @if ($cartCount > 0)
+                    <span class="cart-badge">
+                        {{ min($cartCount, 99) }}
+                    </span>
+                @endif
+
             </a>
         </div>
     </div>
@@ -309,6 +317,21 @@
         display: flex;
         align-items: center;
         gap: 1rem;
+    }
+
+    .header-cart {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #4a5568;
+        text-decoration: none;
+        padding: 4px;
+        transition: color 0.2s ease;
+    }
+
+    .header-cart:hover {
+        color: #1e4d3b;
     }
 
     .action-btn {

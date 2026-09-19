@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\ConsultationController;
+use App\Http\Controllers\ShopDevelopmentController;
+use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -65,17 +67,27 @@ Route::prefix('development')->name('development.')->group(function () {
 */
 
 Route::prefix('shop')->name('shop.')->group(function () {
+
     Route::get('/by-age', function () {
         return view('user.shop.shop_byage');
     })->name('byage');
 
-    Route::get('/by-development', function () {
-        return view('user.shop.shop_bydevelopment');
-    })->name('bydevelopment');
+    Route::get('/shop-by-development', [ShopDevelopmentController::class, 'index'])
+        ->name('bydevelopment');
+
+    Route::get('/all-products', [ShopDevelopmentController::class, 'allProducts'])
+        ->name('allproducts');
+
+    Route::post('/cart/add/{product}', [CartController::class, 'add'])
+        ->name('cart.add');
+
+    Route::get('/cart', [CartController::class, 'index'])
+        ->name('cart');
 
     Route::get('/smart-box', function () {
         return view('user.shop.smart_childbox');
     })->name('smartbox');
+
 });
 
 /*
