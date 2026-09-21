@@ -89,4 +89,35 @@ class ConsultationController extends Controller
         $consultations = Consultation::with('doctor')->latest()->paginate(10);
         return view('admin.daftar_consultation', compact('consultations'));
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $consultation = Consultation::findOrFail($id);
+        
+        $request->validate([
+            'status' => 'required|in:confirmed,cancel,cancelled'
+        ]);
+
+        // Menyeragamkan status menjadi 'Cancelled' atau 'cancelled' ke database
+        $status = $request->status;
+        if ($status == 'cancel') {
+            $status = 'cancelled';
+        }
+
+        $consultation->status_konsultasi = ucfirst($status); // Menyimpan format huruf besar di awal (Confirmed / Cancelled)
+        
+        if (strtolower($status) == 'cancelled') {
+            $consultation->payment_status = 'Cancelled'; 
+        }
+        
+        $consultation->save();
+        return redirect()->back()->with('success', 'Status konsultasi berhasil diperbarui.');
+    }
+
+    public function myConsultations()
+    {
+        $consultations = \App\Models\Consultation::where('user_id', auth()->id())->latest()->get();
+
+        return view('user.services.daftar_consultation', compact('consultations'));
+    }
 }

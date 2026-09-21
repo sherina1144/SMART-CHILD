@@ -258,7 +258,7 @@
 
         <!-- Tombol Tambahan -->
         <div class="action-buttons">
-            <a href="{{ url('/') }}" class="btn-home">Kembali ke Beranda</a>
+            <a href="{{ route('home') }}" class="btn-home">Kembali ke Beranda</a>
             <button onclick="window.print()" class="btn-print"><i class="fa-solid fa-print"></i> Cetak Struk</button>
         </div>
     </div>

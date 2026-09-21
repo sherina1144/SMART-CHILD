@@ -148,22 +148,36 @@
         </nav>
 
         <!-- Right Icons -->
-        <div class="nav-actions">
-            <button type="button" class="action-btn search-btn" aria-label="Search">
+        <div class="nav-actions" style="display: flex; align-items: center; gap: 15px;">
+            <!-- Search Button -->
+            <button type="button" class="action-btn search-btn" aria-label="Search" style="background: none; border: none; cursor: pointer;">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                     stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
             </button>
-            <a href="#" class="action-btn cart-btn" aria-label="Cart">
+
+            <!-- Cart / Konsultasi Button -->
+            <a href="{{ route('user.consultations.index') }}" class="action-btn cart-btn" aria-label="Cart" style="position: relative; text-decoration: none; color: inherit; display: flex; align-items: center;">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="9" cy="21" r="1"></circle>
                     <circle cx="20" cy="21" r="1"></circle>
                     <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                 </svg>
-                <span class="cart-badge">0</span>
+                <span class="cart-badge" style="position: absolute; top: -8px; right: -8px; background: #f26d5b; color: white; font-size: 10px; font-weight: bold; padding: 2px 5px; border-radius: 50%;">{{ auth()->user()->consultations()->count() }}</span>
+            </a>
+
+            <!-- Profile Button (Baru) -->
+            <a href="{{ route('profile.show') }}" class="action-btn profile-btn" aria-label="Profile" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+                @if(auth()->user()->foto)
+                    <img src="{{ asset('storage/' . auth()->user()->foto) }}" alt="Profile" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover; border: 1.5px solid #cbd5e1;">
+                @else
+                    <div style="width: 28px; height: 28px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 13px; border: 1.5px solid #cbd5e1;">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                @endif
             </a>
         </div>
     </div>

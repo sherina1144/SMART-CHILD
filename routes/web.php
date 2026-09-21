@@ -163,9 +163,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         return view('admin.tambah_doctor');
     });
 
-    Route::get('/daftar-consultation', function () {
-        return view('admin.daftar_consultation');
-    });
+    Route::get('/daftar-consultation', [ConsultationController::class, 'indexAdmin'])->name('daftar.consultation');
 
     Route::get('/doctor/add', [DoctorController::class, 'adminIndex'])->name('doctor.add');
     Route::post('/doctor/store', [DoctorController::class, 'store'])->name('doctor.store');
@@ -173,11 +171,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::put('/doctor/{id}/update', [DoctorController::class, 'update'])->name('doctor.update');
     Route::delete('/doctor/{id}/destroy', [DoctorController::class, 'destroy'])->name('doctor.destroy');
 
-    // Route Kelola Jadwal Terpisah Dokter (dari kode kamu sebelumnya)
+    // Route Kelola Jadwal Terpisah Dokter 
     Route::post('/doctor/schedule/store', [DoctorController::class, 'storeSchedule'])->name('doctor.schedule.store');
     Route::delete('/doctor/schedule/{id}/destroy', [DoctorController::class, 'destroySchedule'])->name('doctor.schedule.destroy');
 
     Route::get('/consultations', [ConsultationController::class, 'indexAdmin'])->name('consultation.index');
+    Route::patch('/consultation/{id}/status', [ConsultationController::class, 'updateStatus'])->name('consultation.updateStatus');
 
     // --- PARENTING ACADEMY (Admin CRUD) ---
     Route::prefix('parenting-academy')->name('parenting.')->group(function () {
@@ -200,6 +199,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 
+Route::get('/consultation/create/{doctor_id}', [ConsultationController::class, 'create'])->name('user.consultation.create');
+Route::post('/consultation/store', [ConsultationController::class, 'store'])->name('user.consultation.store');
+Route::get('/my-consultations', [ConsultationController::class, 'myConsultations'])->name('user.consultations.index');
+
 /*
 |--------------------------------------------------------------------------
 | API INTERNAL (ANTI DOUBLE BOOKING)
@@ -208,9 +211,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 Route::get('/api/check-booked-slots', function (Request $request) {
     $bookedTimes = Consultation::where('doctor_id', $request->doctor_id)
         ->where('booking_date', $request->date)
-        ->whereIn('payment_status', ['Unpaid', 'Paid', 'Success'])
+        ->whereNotIn('status_konsultasi', ['Cancelled', 'cancel', 'Refunded'])
         ->pluck('booking_time')
         ->toArray();
 
     return response()->json($bookedTimes);
+});
+
+// Route Profil User (Ditambahkan name('profile.show') supaya cocok dengan header)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile.show');
+    Route::get('/profile/edit', [AuthController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
 });

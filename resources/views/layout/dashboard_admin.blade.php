@@ -11,7 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
 
-    <!-- TAMBAHKAN BOOTSTRAP 5 CSS DI SINI -->
+    <!-- BOOTSTRAP 5 CSS -->
+    <link href="https://cdn.jsdelivr.0rg/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- CSS Layout Admin -->
@@ -107,6 +108,14 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            text-decoration: none;
+            padding: 8px;
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+
+        .user-profile:hover {
+            background-color: #314E41;
         }
 
         .avatar {
@@ -120,6 +129,7 @@
             justify-content: center;
             font-weight: 700;
             font-size: 14px;
+            flex-shrink: 0;
         }
 
         .user-info h5 {
@@ -130,6 +140,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 150px;
+            margin-bottom: 0;
         }
 
         .user-info p {
@@ -139,6 +150,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 150px;
+            margin-bottom: 0;
         }
 
         .btn-logout {
@@ -177,7 +189,7 @@
     <!-- SIDEBAR -->
     <aside class="sidebar">
         <div>
-            <!-- Logo Disamakan dengan Halaman Lain -->
+            <!-- Logo -->
             <div class="brand-logo">
                 <i class="fa-solid fa-child-reaching"></i>
                 SMART<span>CHILD</span>
@@ -212,16 +224,19 @@
         </div>
 
         <div class="sidebar-footer">
-            <!-- Data Profil Dinamis (Dari Database) -->
-            <div class="user-profile">
-                <div class="avatar">
-                    {{ strtoupper(substr(Auth::user()->nama ?? 'A', 0, 1)) }}
+            <a href="{{ Route::has('profile.show') ? route('profile.show') : (Route::has('profile') ? route('profile') : url('/profile')) }}" class="user-profile">
+                <div class="avatar" style="overflow: hidden; padding: 0;">
+                    @if(Auth::user()->foto ?? false)
+                        <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover;">
+                    @else
+                        {{ strtoupper(substr(Auth::user()->nama ?? (Auth::user()->name ?? 'A'), 0, 1)) }}
+                    @endif
                 </div>
                 <div class="user-info">
-                    <h5>{{ Auth::user()->nama ?? 'Admin' }}</h5>
+                    <h5>{{ Auth::user()->nama ?? (Auth::user()->name ?? 'Admin') }}</h5>
                     <p>{{ Auth::user()->email ?? 'admin@smartchild.id' }}</p>
                 </div>
-            </div>
+            </a>
 
             <!-- Tombol Keluar (Logout) -->
             <form action="{{ route('logout') }}" method="POST">
@@ -238,7 +253,7 @@
         @yield('content')
     </main>
 
-    <!-- TAMBAHKAN BOOTSTRAP 5 JS BUNDLE DI BAWAH INI -->
+    <!-- BOOTSTRAP 5 JS BUNDLE -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
