@@ -78,16 +78,31 @@ Route::prefix('shop')->name('shop.')->group(function () {
     Route::get('/all-products', [ShopDevelopmentController::class, 'allProducts'])
         ->name('allproducts');
 
-    Route::post('/cart/add/{product}', [CartController::class, 'add'])
-        ->name('cart.add');
-
-    Route::get('/cart', [CartController::class, 'index'])
-        ->name('cart');
-
     Route::get('/smart-box', function () {
         return view('user.shop.smart_childbox');
     })->name('smartbox');
 
+    // CART
+    Route::get('/cart', [CartController::class, 'index'])
+        ->name('cart');
+
+    Route::post('/cart/add/{product}', [CartController::class, 'add'])
+        ->name('cart.add');
+
+    Route::post('/cart/update/{product}', [CartController::class, 'update'])
+        ->name('cart.update');
+
+    Route::delete('/cart/remove/{product}', [CartController::class, 'remove'])
+        ->name('cart.remove');
+
+    Route::get('/checkout', [CartController::class, 'checkout'])
+        ->name('checkout');
+
+    Route::post('/checkout/order', [CartController::class, 'placeOrder'])
+        ->name('checkout.order');
+
+    Route::get('/my-orders', [CartController::class, 'myOrders'])
+        ->name('myorders');
 });
 
 /*
