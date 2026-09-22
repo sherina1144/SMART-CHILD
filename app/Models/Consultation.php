@@ -15,6 +15,7 @@ class Consultation extends Model
     protected $fillable = [
         'user_id',
         'doctor_id',
+        'doctor_schedule_id', 
         'child_id',
         'child_name',
         'parent_name',
@@ -32,9 +33,13 @@ class Consultation extends Model
         'status_konsultasi',
     ];
 
-    // Relasi ke Model Doctor
     public function doctor()
     {
         return $this->belongsTo(Doctor::class, 'doctor_id', 'doctor_id');
+    }
+
+    public function schedule()
+    {
+        return $this->belongsTo(DoctorSchedule::class, 'doctor_schedule_id', 'schedule_id');
     }
 }

@@ -304,40 +304,47 @@
     <div class="main-content">
         <div class="container">
             
+            <!-- Notifikasi Sukses Kirim Pesan -->
+            @if(session('success'))
+                <div style="background-color: #d1e7dd; color: #0f5132; padding: 15px 20px; border-radius: 10px; margin-bottom: 25px; font-size: 14px; font-weight: 500; border: 1px solid #badbcc;">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <!-- SECTION HUBUNGI KAMI MELALUI -->
             <h2 class="contact-section-title">Hubungi kami melalui</h2>
 
             <div class="contact-channels-grid">
                 <!-- Email -->
-                <a href="mailto:hello@smartchild.id" class="channel-card">
+                <a href="mailto:{{ $setting->email ?? '' }}" class="channel-card">
                     <div class="channel-icon icon-email">
                         <i class="fa-regular fa-envelope"></i>
                     </div>
                     <div class="channel-info">
                         <h4>Email</h4>
-                        <p>hello@smartchild.id<br>kami akan membalas email anda segera</p>
+                        <p>{{ $setting->email ?? '' }}<br>kami akan membalas email anda segera</p>
                     </div>
                 </a>
 
                 <!-- Telpon -->
-                <a href="tel:+6281234567890" class="channel-card">
+                <a href="tel:{{ $setting->telepon ?? '' }}" class="channel-card">
                     <div class="channel-icon icon-telpon">
                         <i class="fa-solid fa-phone"></i>
                     </div>
                     <div class="channel-info">
                         <h4>Telpon</h4>
-                        <p>+62 812-3456-7890<br>Senin - Jumat<br>08.00 - 17.00 WIB</p>
+                        <p>{{ $setting->telepon ?? '' }}<br>{{ $setting->jam_operasional ?? '' }}</p>
                     </div>
                 </a>
 
                 <!-- WhatsApp -->
-                <a href="https://wa.me/6281234567890" target="_blank" class="channel-card">
+                <a href="https://wa.me/{{ $setting->whatsapp ?? '' }}" target="_blank" class="channel-card">
                     <div class="channel-icon icon-wa">
                         <i class="fa-brands fa-whatsapp"></i>
                     </div>
                     <div class="channel-info">
                         <h4>WhatsApp</h4>
-                        <p>+62 812-3456-7890<br>Chat kami untuk respon lebih cepat</p>
+                        <p>+{{ $setting->whatsapp ?? '' }}<br>Chat kami untuk respon lebih cepat</p>
                     </div>
                 </a>
 
@@ -348,7 +355,7 @@
                     </div>
                     <div class="channel-info">
                         <h4>Lokasi</h4>
-                        <p>Jl. cerdas No.10,<br>Jakarta, Indonesia 12345</p>
+                        <p>{{ $setting->lokasi ?? '' }}</p>
                     </div>
                 </a>
             </div>
@@ -361,16 +368,16 @@
                     <h3 class="content-title">Kirim Pesan</h3>
                     <p class="content-subtitle">Isi formulir di bawah ini dan tim kami akan segera menghubungi anda</p>
 
-                    <form action="#" method="POST">
+                    <form action="{{ route('contact.store') }}" method="POST">
                         @csrf
                         <div class="form-row-double">
                             <div class="form-group">
                                 <label for="nama">Nama Lengkap</label>
-                                <input type="text" id="nama" name="nama" class="form-control" placeholder="">
+                                <input type="text" id="nama" name="nama" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" name="email" class="form-control" placeholder="">
+                                <input type="email" id="email" name="email" class="form-control" required>
                             </div>
                         </div>
 
@@ -385,7 +392,7 @@
 
                         <div class="form-group">
                             <label for="pesan">Pesan</label>
-                            <textarea id="pesan" name="pesan" class="form-control" placeholder=""></textarea>
+                            <textarea id="pesan" name="pesan" class="form-control" required></textarea>
                         </div>
 
                         <button type="submit" class="btn-submit">
@@ -397,12 +404,11 @@
                 <!-- KOLOM KANAN: MAPS TEMUI KAMI -->
                 <div class="map-column">
                     <h3 class="content-title">Temui kami</h3>
-                    <div style="height: 18px;"></div> <!-- Spacing alignment -->
+                    <div style="height: 18px;"></div>
 
                     <div class="map-card">
-                        <!-- Peta Google Maps Embed -->
                         <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126920.28312028682!2d106.759478!3d-6.2297465!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e945e34b9d%3A0x5371bf0fdad786a2!2sJakarta!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid" 
+                            src="{{ $setting->maps_embed_url ?? '' }}" 
                             allowfullscreen="" 
                             loading="lazy" 
                             referrerpolicy="no-referrer-when-downgrade">
@@ -414,7 +420,7 @@
                             </div>
                             <div class="map-text">
                                 <h5>Smart Child Indonesia</h5>
-                                <p>Jl. Cerdas No. 10, Jakarta, Indonesia 12345</p>
+                                <p>{{ $setting->lokasi ?? '' }}</p>
                                 <a href="https://maps.google.com" target="_blank">Lihat di Google Maps <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i></a>
                             </div>
                         </div>

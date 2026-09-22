@@ -240,7 +240,7 @@
                 <h1>School<br>Partnership</h1>
                 <p>Bersama Smart Child, ciptakan lingkungan pendidikan yang mendukung tumbuh kembang setiap anak secara optimal.</p>
                 
-                <a href="#" class="btn-become-partner">
+                <a href="{{ route('partnership.form', ['type' => 'School']) }} class="btn-become-partner">
                     Become a Partner <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </a>
             </div>
