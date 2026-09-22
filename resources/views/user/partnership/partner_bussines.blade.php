@@ -237,7 +237,7 @@
                 <h1>Bussines<br>Partner</h1>
                 <p>Bersama Smart Child, ciptakan peluang dan kolaborasi yang memberikan dampak positif bagia nak dan keluarga</p>
                 
-                <a href="#" class="btn-become-partner">
+                <a href="{{ route('partnership.form', ['type' => 'Business']) }}class="btn-become-partner">
                     Become a Partner <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </a>
             </div>

@@ -257,9 +257,16 @@
         </div>
 
         <!-- Tombol Tambahan -->
-        <div class="action-buttons">
-            <a href="{{ route('home') }}" class="btn-home">Kembali ke Beranda</a>
-            <button onclick="window.print()" class="btn-print"><i class="fa-solid fa-print"></i> Cetak Struk</button>
+        <div class="action-buttons" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <div style="display: flex; gap: 10px;">
+                <a href="{{ route('home') }}" class="btn-home">Kembali ke Beranda</a>
+                <button onclick="window.print()" class="btn-print"><i class="fa-solid fa-print"></i> Cetak Struk</button>
+            </div>
+            
+            <!-- Tambahan teks informasi pengecekan pesanan -->
+            <p style="font-size: 13px; color: #6c757d; margin-top: 5px; text-align: center;">
+                Anda dapat mengecek status pesanan secara berkala melalui menu riwayat pesanan atau keranjang Anda.
+            </p>
         </div>
     </div>
 

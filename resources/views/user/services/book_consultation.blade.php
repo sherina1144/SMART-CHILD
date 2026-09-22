@@ -1052,7 +1052,7 @@
                 (h * 60) +
                 (m || 0)
             );
-        };
+        }; 
         const startTotalMinutes =
             parseMinutes(daySchedule.start_time);
         const endTotalMinutes =

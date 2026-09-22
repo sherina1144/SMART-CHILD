@@ -12,7 +12,6 @@
         rel="stylesheet">
 
     <!-- BOOTSTRAP 5 CSS -->
-    <link href="https://cdn.jsdelivr.0rg/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- CSS Layout Admin -->
@@ -43,6 +42,7 @@
             position: fixed;
             height: 100vh;
             z-index: 100;
+            overflow-y: auto;
         }
 
         .brand-logo {
@@ -218,6 +218,20 @@
                     <a href="{{ route('admin.parenting.index') }}"
                         class="nav-link {{ Request::is('admin/parenting*') ? 'active' : '' }}">
                         <i class="fa-solid fa-graduation-cap"></i> Parenting Academy
+                    </a>
+                </li>
+                <!-- Menu Baru: Partnerships -->
+                <li class="nav-item">
+                    <a href="{{ route('admin.partnership') }}"
+                        class="nav-link {{ Request::is('admin/partnerships*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-handshake"></i> Partnerships
+                    </a>
+                </li>
+                <!-- Menu Baru: Contact -->
+                <li class="nav-item">
+                    <a href="{{ route('admin.contact') }}"
+                        class="nav-link {{ Request::is('admin/contact*') ? 'active' : '' }}">
+                        <i class="fa-solid fa-envelope"></i> Contact
                     </a>
                 </li>
             </ul>

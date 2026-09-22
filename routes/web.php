@@ -9,6 +9,8 @@ use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NewsletterController;
 use App\Models\Consultation;
+use App\Http\Controllers\PartnershipController;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -130,9 +132,10 @@ Route::prefix('partnership')->name('partnership.')->middleware('auth')->group(fu
 | OTHERS (Community & Contact)
 |--------------------------------------------------------------------------
 */
-Route::get('/contact', function () {
-    return view('user.contact_us');
-})->name('contact.us')->middleware('auth');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/contact', [ContactController::class, 'index'])->name('contact.us');
+    Route::post('/contact/store', [ContactController::class, 'store'])->name('contact.store');
+});
 
 Route::get('/community', [CommunityController::class, 'index'])->name('community')->middleware('auth');
 
@@ -162,6 +165,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/tambah-doctor', function () {
         return view('admin.tambah_doctor');
     });
+
+    Route::get('/contact', [ContactController::class, 'adminIndex'])->name('contact');
+    Route::post('/contact/update', [ContactController::class, 'adminUpdate'])->name('contact.update');
 
     Route::get('/daftar-consultation', [ConsultationController::class, 'indexAdmin'])->name('daftar.consultation');
 
@@ -223,4 +229,21 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile.show');
     Route::get('/profile/edit', [AuthController::class, 'editProfile'])->name('profile.edit');
     Route::put('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
+    // Rute Partnership baru 
+    Route::get('/partnership', function () {
+        return view('user.partnership.tampil_partnership');
+    })->name('user.partnership');
+});
+
+Route::middleware(['auth'])->group(function () {
+    // Rute Partnership untuk user 
+    Route::get('/partnership', [PartnershipController::class, 'index'])->name('user.partnership');
+    Route::get('/partnership/form', [PartnershipController::class, 'create'])->name('partnership.form');
+    Route::post('/partnership/store', [PartnershipController::class, 'store'])->name('partnership.store');
+});
+
+// Rute untuk Admin
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/partnerships', [PartnershipController::class, 'adminIndex'])->name('admin.partnership');
+    Route::put('/admin/partnerships/{id}/status', [PartnershipController::class, 'updateStatus'])->name('admin.partnership.status');
 });
