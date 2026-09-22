@@ -2,19 +2,44 @@
 <html lang="id">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
     <title>Shop By Age - Smart Child</title>
 
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    {{-- FONT AWESOME --}}
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+
+    {{-- POPPINS --}}
+    <link rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
 
     <style>
+
         /* =====================================================
-           PALET WARNA SMART CHILD
+           PALET WARNA
            ===================================================== */
+
         :root {
+
             --sage: #6FAF9B;
             --peach: #F4A89A;
             --cream: #FFF9F2;
@@ -22,102 +47,178 @@
             --white: #FFFFFF;
             --gray: #667085;
             --border: #E8E4DC;
+
         }
 
 
         /* =====================================================
-           GENERAL
+           RESET
            ===================================================== */
+
         * {
+
             box-sizing: border-box;
+
+        }
+
+
+        html,
+        body {
+
             margin: 0;
             padding: 0;
+
         }
+
 
         body {
-            font-family: Arial, Helvetica, sans-serif;
+
+            font-family: 'Poppins', sans-serif;
+
             background: var(--cream);
+
             color: var(--dark-green);
+
         }
 
+
+        button,
+        input,
+        textarea,
+        select {
+
+            font-family: inherit;
+
+        }
+
+
+        /* =====================================================
+           PAGE
+           ===================================================== */
+
         .shop-age-page {
+
             width: 100%;
+
             min-height: 100vh;
+
             background: var(--cream);
+
         }
 
 
         /* =====================================================
            HERO
            ===================================================== */
+
         .shop-age-hero {
+
             width: 100%;
+
             max-width: 1200px;
+
             min-height: 270px;
 
             margin: 0 auto;
+
             padding: 45px 60px 25px;
 
             display: flex;
+
             align-items: center;
+
             justify-content: space-between;
 
             position: relative;
+
             overflow: hidden;
+
         }
+
 
         .shop-age-hero-content {
+
             width: 47%;
+
             position: relative;
+
             z-index: 2;
+
         }
 
+
         .shop-age-label {
+
             display: inline-block;
+
             margin-bottom: 14px;
 
             color: var(--sage);
+
             font-size: 14px;
+
             font-weight: 600;
+
         }
 
+
         .shop-age-hero h1 {
+
             font-size: 54px;
+
             line-height: 1.05;
 
             color: var(--dark-green);
+
             font-weight: 800;
 
-            margin-bottom: 18px;
+            margin: 0 0 18px;
+
         }
 
+
         .shop-age-hero p {
+
             color: var(--gray);
+
             font-size: 19px;
+
             line-height: 1.6;
 
             max-width: 420px;
+
+            margin: 0;
+
         }
 
 
         /* =====================================================
            HERO IMAGE
            ===================================================== */
+
         .shop-age-hero-image {
+
             width: 48%;
+
             height: 250px;
 
             position: relative;
 
             display: flex;
+
             justify-content: center;
+
             align-items: center;
+
         }
 
+
         .hero-circle {
+
             position: absolute;
 
             width: 410px;
+
             height: 230px;
 
             background: #FCEDE5;
@@ -125,44 +226,65 @@
             border-radius: 220px 220px 0 0;
 
             right: 5px;
+
             bottom: 0;
+
         }
 
+
         .shop-age-hero-image img {
+
             position: relative;
 
             z-index: 2;
 
             width: 100%;
+
             max-width: 500px;
+
             height: 250px;
 
             object-fit: contain;
+
             object-position: center bottom;
+
         }
 
 
         /* =====================================================
            DECORATION
            ===================================================== */
+
         .decor {
+
             position: absolute;
+
             z-index: 1;
+
         }
 
+
         .decor-star {
+
             right: 51%;
+
             top: 95px;
 
             color: #F5B83D;
+
             font-size: 35px;
+
         }
 
+
         .decor-leaf {
+
             right: 3%;
+
             bottom: 25px;
 
             width: 45px;
+
             height: 25px;
 
             border-radius: 100% 0 100% 0;
@@ -170,17 +292,22 @@
             background: #B6CCAF;
 
             transform: rotate(-25deg);
+
         }
 
 
         /* =====================================================
            AGE CARDS
            ===================================================== */
+
         .shop-age-cards {
+
             width: 100%;
+
             max-width: 1140px;
 
             margin: 10px auto 35px;
+
             padding: 0 20px;
 
             display: grid;
@@ -188,13 +315,12 @@
             grid-template-columns: repeat(4, 1fr);
 
             gap: 22px;
+
         }
 
 
-        /* =====================================================
-           CARD
-           ===================================================== */
         .age-card {
+
             height: 265px;
 
             position: relative;
@@ -202,117 +328,141 @@
             overflow: hidden;
 
             border: 1px solid var(--border);
+
             border-radius: 18px;
 
             padding: 30px 25px;
 
             transition: transform 0.2s ease;
+
         }
+
 
         .age-card:hover {
+
             transform: translateY(-3px);
+
         }
+
 
         .age-card-green {
+
             background: #EEF4E8;
+
         }
 
+
         .age-card-peach {
+
             background: #FFF0E7;
+
         }
 
 
         /* =====================================================
-           TEXT CARD
+           CARD TEXT
            ===================================================== */
+
         .age-card-text {
+
             position: relative;
 
             z-index: 4;
 
             width: 62%;
+
         }
 
+
         .age-card h2 {
+
             font-size: 28px;
+
             line-height: 1.2;
 
             color: var(--dark-green);
 
-            margin-bottom: 15px;
+            margin: 0 0 15px;
+
         }
 
+
         .age-card p {
+
             color: #465952;
 
             font-size: 14px;
+
             line-height: 1.5;
+
+            margin: 0;
+
         }
 
 
         /* =====================================================
-           GAMBAR ANAK
-           
-           INI BAGIAN PENTING
-           GAMBAR DIKANAN BAWAH
+           CARD IMAGE
            ===================================================== */
+
         .age-card img {
+
             position: absolute;
 
-            /* POSISI KE KANAN */
             right: -65px;
 
-            /* POSISI KE BAWAH */
             bottom: -5px;
 
-            /*
-             * Dibuat besar supaya gambar anak
-             * memenuhi bagian bawah card.
-             */
             height: 80%;
 
             width: auto;
 
-            /*
-             * Jangan kasih left / transform
-             * karena itu bisa bikin gambar
-             * balik ke tengah.
-             */
             left: auto;
+
             top: auto;
+
             transform: none;
 
             max-width: none;
 
             object-fit: contain;
+
             object-position: bottom right;
 
             z-index: 2;
 
             pointer-events: none;
+
         }
 
 
         /* =====================================================
-           ARROW BUTTON
+           ARROW
            ===================================================== */
+
         .age-arrow {
+
             position: absolute;
 
             right: 13px;
+
             bottom: 13px;
 
             width: 50px;
+
             height: 50px;
 
             border: none;
+
             border-radius: 50%;
 
             background: var(--sage);
+
             color: var(--white);
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
             font-size: 28px;
@@ -320,37 +470,50 @@
             cursor: pointer;
 
             z-index: 10;
+
         }
 
+
         .age-arrow.peach {
+
             background: var(--peach);
+
         }
 
 
         /* =====================================================
            BENEFITS
            ===================================================== */
+
         .shop-age-benefits {
+
             width: 100%;
+
             max-width: 1140px;
 
             margin: 0 auto 25px;
+
             padding: 22px 25px;
 
             background: var(--white);
 
             border: 1px solid var(--border);
+
             border-radius: 18px;
 
             display: grid;
 
             grid-template-columns: repeat(4, 1fr);
+
         }
 
+
         .benefit-item {
+
             min-height: 75px;
 
             display: flex;
+
             align-items: center;
 
             gap: 15px;
@@ -358,18 +521,21 @@
             padding: 0 20px;
 
             border-right: 1px solid var(--border);
+
         }
+
 
         .benefit-item:last-child {
+
             border-right: none;
+
         }
 
 
-        /* =====================================================
-           BENEFIT ICON
-           ===================================================== */
         .benefit-icon {
+
             width: 48px;
+
             height: 48px;
 
             flex-shrink: 0;
@@ -377,50 +543,77 @@
             border-radius: 50%;
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
         }
+
 
         .benefit-icon.green {
+
             background: #EAF2E8;
+
             color: var(--sage);
+
         }
+
 
         .benefit-icon.peach {
+
             background: #FFF0E9;
+
             color: var(--peach);
+
         }
+
 
         .benefit-icon svg {
+
             width: 25px;
+
             height: 25px;
+
         }
 
+
         .benefit-item h3 {
+
             font-size: 14px;
 
             color: var(--dark-green);
 
-            margin-bottom: 5px;
+            margin: 0 0 5px;
+
         }
 
+
         .benefit-item p {
+
             font-size: 12px;
 
             color: var(--gray);
 
             line-height: 1.4;
+
+            margin: 0;
+
         }
 
 
         /* =====================================================
-           TRUST SECTION
+           TRUST
            ===================================================== */
+
         .shop-age-trust {
+
             width: 100%;
+
             max-width: 1140px;
 
             margin: 0 auto 45px;
+
             padding: 18px 30px;
 
             background: #EDF3E8;
@@ -428,50 +621,81 @@
             border-radius: 15px;
 
             display: flex;
+
             align-items: center;
+
             justify-content: space-between;
+
         }
 
+
         .trust-left {
+
             display: flex;
+
             align-items: center;
 
             gap: 15px;
+
         }
 
+
         .trust-icon {
+
             width: 40px;
+
             height: 40px;
 
             border-radius: 50%;
 
             background: var(--sage);
+
             color: white;
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
         }
+
 
         .trust-left h3 {
+
             font-size: 17px;
+
             color: var(--dark-green);
+
+            margin: 0;
+
         }
 
+
         .trust-right {
+
             display: flex;
+
             align-items: center;
 
             gap: 30px;
+
         }
+
 
         .trust-avatars {
+
             display: flex;
+
             align-items: center;
+
         }
 
+
         .avatar {
+
             width: 38px;
+
             height: 38px;
 
             margin-left: -7px;
@@ -483,42 +707,60 @@
             border: 2px solid var(--white);
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
             color: var(--dark-green);
+
         }
+
 
         .avatar:first-child {
+
             margin-left: 0;
+
         }
 
+
         .rating {
+
             display: flex;
+
             align-items: center;
 
             gap: 10px;
+
         }
 
+
         .rating-stars {
+
             color: #F5B83D;
 
             font-size: 19px;
 
             letter-spacing: 2px;
+
         }
 
+
         .rating strong {
+
             color: var(--dark-green);
 
             font-size: 16px;
+
         }
 
 
         /* =====================================================
            FOOTER
            ===================================================== */
+
         .simple-footer {
+
             width: 100%;
 
             min-height: 75px;
@@ -526,99 +768,140 @@
             background: var(--dark-green);
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
             padding: 20px;
+
         }
 
+
         .simple-footer p {
+
             color: var(--white);
 
             font-size: 13px;
 
             text-align: center;
+
+            margin: 0;
+
         }
 
 
         /* =====================================================
-           RESPONSIVE TABLET
+           RESPONSIVE
            ===================================================== */
+
         @media (max-width: 1000px) {
 
             .shop-age-hero {
+
                 padding: 40px 30px 20px;
+
             }
+
 
             .shop-age-hero h1 {
+
                 font-size: 42px;
+
             }
+
 
             .shop-age-cards {
+
                 grid-template-columns: repeat(2, 1fr);
+
             }
 
+
             .shop-age-benefits {
+
                 grid-template-columns: repeat(2, 1fr);
 
                 gap: 15px;
+
             }
 
+
             .benefit-item {
+
                 border-right: none;
+
             }
+
         }
 
 
-        /* =====================================================
-           RESPONSIVE HP
-           ===================================================== */
         @media (max-width: 700px) {
 
             .shop-age-hero {
+
                 flex-direction: column;
 
                 text-align: center;
+
             }
+
 
             .shop-age-hero-content {
+
                 width: 100%;
+
             }
+
 
             .shop-age-hero-image {
+
                 width: 100%;
+
             }
+
 
             .shop-age-cards {
+
                 grid-template-columns: 1fr;
+
             }
+
 
             .shop-age-benefits {
+
                 grid-template-columns: 1fr;
+
             }
 
+
             .shop-age-trust {
+
                 flex-direction: column;
 
                 gap: 20px;
+
             }
+
         }
+
     </style>
+
 </head>
 
 
 <body>
 
-    {{-- HEADER DARI LAYOUT --}}
+
+    {{-- HEADER --}}
     @include('layout.header')
 
 
     <main class="shop-age-page">
 
 
-        <!-- =================================================
-             HERO
-             ================================================= -->
+        {{-- HERO --}}
+
         <section class="shop-age-hero">
 
             <div class="shop-age-hero-content">
@@ -660,14 +943,11 @@
         </section>
 
 
+        {{-- AGE CARDS --}}
 
-        <!-- =================================================
-             AGE CARDS
-             ================================================= -->
         <section class="shop-age-cards">
 
 
-            <!-- ================= 0 - 2 ================= -->
             <div class="age-card age-card-green">
 
                 <div class="age-card-text">
@@ -684,12 +964,10 @@
 
                 </div>
 
-
                 <img
                     src="{{ asset('images/age-0-2.png') }}"
                     alt="Anak usia 0 sampai 2 tahun"
                 >
-
 
                 <button class="age-arrow">
                     →
@@ -698,8 +976,6 @@
             </div>
 
 
-
-            <!-- ================= 3 - 5 ================= -->
             <div class="age-card age-card-peach">
 
                 <div class="age-card-text">
@@ -716,12 +992,10 @@
 
                 </div>
 
-
                 <img
                     src="{{ asset('images/age-3-5.png') }}"
                     alt="Anak usia 3 sampai 5 tahun"
                 >
-
 
                 <button class="age-arrow peach">
                     →
@@ -730,8 +1004,6 @@
             </div>
 
 
-
-            <!-- ================= 6 - 8 ================= -->
             <div class="age-card age-card-green">
 
                 <div class="age-card-text">
@@ -748,12 +1020,10 @@
 
                 </div>
 
-
                 <img
                     src="{{ asset('images/age-6-8.png') }}"
                     alt="Anak usia 6 sampai 8 tahun"
                 >
-
 
                 <button class="age-arrow">
                     →
@@ -762,8 +1032,6 @@
             </div>
 
 
-
-            <!-- ================= 9 - 12 ================= -->
             <div class="age-card age-card-peach">
 
                 <div class="age-card-text">
@@ -780,12 +1048,10 @@
 
                 </div>
 
-
                 <img
                     src="{{ asset('images/age-9-12.png') }}"
                     alt="Anak usia 9 sampai 12 tahun"
                 >
-
 
                 <button class="age-arrow peach">
                     →
@@ -796,14 +1062,11 @@
         </section>
 
 
+        {{-- BENEFITS --}}
 
-        <!-- =================================================
-             BENEFITS
-             ================================================= -->
         <section class="shop-age-benefits">
 
 
-            <!-- AMAN -->
             <div class="benefit-item">
 
                 <div class="benefit-icon green">
@@ -825,7 +1088,6 @@
 
                 </div>
 
-
                 <div>
 
                     <h3>
@@ -842,8 +1104,6 @@
             </div>
 
 
-
-            <!-- PERKEMBANGAN -->
             <div class="benefit-item">
 
                 <div class="benefit-icon peach">
@@ -865,7 +1125,6 @@
 
                 </div>
 
-
                 <div>
 
                     <h3>
@@ -882,8 +1141,6 @@
             </div>
 
 
-
-            <!-- BELAJAR -->
             <div class="benefit-item">
 
                 <div class="benefit-icon green">
@@ -897,13 +1154,7 @@
                         stroke-linejoin="round"
                     >
 
-                        <rect
-                            x="3"
-                            y="8"
-                            width="18"
-                            height="13"
-                            rx="2"
-                        />
+                        <rect x="3" y="8" width="18" height="13" rx="2"/>
 
                         <path d="M12 8v13"/>
 
@@ -916,7 +1167,6 @@
                     </svg>
 
                 </div>
-
 
                 <div>
 
@@ -934,8 +1184,6 @@
             </div>
 
 
-
-            <!-- PENGIRIMAN -->
             <div class="benefit-item">
 
                 <div class="benefit-icon peach">
@@ -953,24 +1201,15 @@
 
                         <path d="M14 8h4l3 3v5h-7z"/>
 
-                        <circle
-                            cx="7"
-                            cy="18"
-                            r="2"
-                        />
+                        <circle cx="7" cy="18" r="2"/>
 
-                        <circle
-                            cx="18"
-                            cy="18"
-                            r="2"
-                        />
+                        <circle cx="18" cy="18" r="2"/>
 
                         <path d="M9 18h7"/>
 
                     </svg>
 
                 </div>
-
 
                 <div>
 
@@ -990,10 +1229,8 @@
         </section>
 
 
+        {{-- TRUST --}}
 
-        <!-- =================================================
-             TRUST
-             ================================================= -->
         <section class="shop-age-trust">
 
 
@@ -1023,9 +1260,7 @@
             </div>
 
 
-
             <div class="trust-right">
-
 
                 <div class="trust-avatars">
 
@@ -1057,10 +1292,8 @@
     </main>
 
 
+    {{-- FOOTER --}}
 
-    <!-- =====================================================
-         FOOTER
-         ===================================================== -->
     <footer class="simple-footer">
 
         <p>

@@ -539,67 +539,54 @@
 
                     <div class="order-card-body">
 
-                        @if (isset($orderItems[$order->order_id]))
+                        @foreach ($order->items as $item)
 
-                            @foreach ($orderItems[$order->order_id] as $item)
+                        @if ($item->product)
 
-                                @if (isset($products[$item->product_id]))
+                            <div class="order-item">
 
-                                    @php
-                                        $product = $products[$item->product_id];
-                                    @endphp
+                                <div class="order-item-image">
 
+                                    @if ($item->product->gambar)
 
-                                    <div class="order-item">
+                                        <img
+                                            src="{{ asset('images/' . $item->product->gambar) }}"
+                                            alt="{{ $item->product->nama_produk }}"
+                                        >
 
+                                    @else
 
-                                        <div class="order-item-image">
-
-                                            @if ($product->gambar)
-
-                                                <img
-                                                    src="{{ asset('images/' . $product->gambar) }}"
-                                                    alt="{{ $product->nama_produk }}"
-                                                >
-
-                                            @else
-
-                                                <div class="order-item-no-image">
-                                                    Gambar belum tersedia
-                                                </div>
-
-                                            @endif
-
+                                        <div class="order-item-no-image">
+                                            Gambar belum tersedia
                                         </div>
 
+                                    @endif
 
-                                        <div class="order-item-info">
+                                </div>
 
-                                            <div class="order-item-name">
-                                                {{ $product->nama_produk }}
-                                            </div>
+                                <div class="order-item-info">
 
-                                            <div class="order-item-quantity">
-                                                {{ $item->jumlah }}
-                                                ×
-                                                Rp {{ number_format($product->harga, 0, ',', '.') }}
-                                            </div>
-
-                                        </div>
-
-
-                                        <div class="order-item-subtotal">
-                                            Rp {{ number_format($item->subtotal, 0, ',', '.') }}
-                                        </div>
-
-
+                                    <div class="order-item-name">
+                                        {{ $item->product->nama_produk }}
                                     </div>
 
-                                @endif
+                                    <div class="order-item-quantity">
+                                        {{ $item->jumlah }}
+                                        ×
+                                        Rp {{ number_format($item->product->harga, 0, ',', '.') }}
+                                    </div>
 
-                            @endforeach
+                                </div>
+
+                                <div class="order-item-subtotal">
+                                    Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                </div>
+
+                            </div>
 
                         @endif
+
+                    @endforeach
 
                     </div>
 

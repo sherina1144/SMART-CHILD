@@ -7,6 +7,7 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ShopDevelopmentController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ParentingAcademyController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\AuthController;
@@ -141,21 +142,17 @@ Route::prefix('shop')
         |----------------------------------------------------------------------
         */
 
-        Route::get('/checkout', [CartController::class, 'checkout'])
+        Route::get('/checkout', [OrderController::class, 'checkout'])
             ->name('checkout');
 
-        Route::post('/checkout/order', [CartController::class, 'placeOrder'])
+        Route::post('/checkout/order', [OrderController::class, 'store'])
             ->name('checkout.order');
 
-
-        /*
-        |----------------------------------------------------------------------
-        | MY ORDERS
-        |----------------------------------------------------------------------
-        */
-
-        Route::get('/my-orders', [CartController::class, 'myOrders'])
+        Route::get('/my-orders', [OrderController::class, 'index'])
             ->name('myorders');
+
+        Route::get('/my-orders/{id}', [OrderController::class, 'show'])
+            ->name('myorders.show');
     });
 
 

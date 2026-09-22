@@ -1,18 +1,23 @@
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <header class="navbar-header">
+
     <div class="navbar-container">
 
-        <!-- Logo -->
+        {{-- LOGO --}}
         <a href="{{ route('home') }}" class="brand-logo">
             <span class="logo-icon">✦</span>
             <span class="logo-text">SMARTCHILD</span>
         </a>
 
 
-        <!-- Navigation Menu -->
+        {{-- NAVIGATION --}}
         <nav class="nav-menu">
+
             <ul class="nav-list">
 
-                <!-- Home -->
+                {{-- HOME --}}
                 <li class="nav-item">
                     <a href="{{ route('home') }}"
                         class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
@@ -21,7 +26,7 @@
                 </li>
 
 
-                <!-- About -->
+                {{-- ABOUT --}}
                 <li class="nav-item">
                     <a href="{{ route('about') }}"
                         class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}">
@@ -30,20 +35,25 @@
                 </li>
 
 
-                <!-- Dropdown: Development -->
+                {{-- DEVELOPMENT --}}
                 <li class="nav-item dropdown">
 
                     <a href="#"
                         class="nav-link {{ request()->routeIs('development.*') ? 'active' : '' }}">
+
                         Development
+
                         <span class="arrow">▾</span>
+
                     </a>
+
 
                     <div class="dropdown-menu">
 
                         <div class="dropdown-header">
                             Development
                         </div>
+
 
                         <ul class="dropdown-list">
 
@@ -75,20 +85,25 @@
                 </li>
 
 
-                <!-- Dropdown: Shop -->
+                {{-- SHOP --}}
                 <li class="nav-item dropdown">
 
                     <a href="#"
                         class="nav-link {{ request()->routeIs('shop.*') ? 'active' : '' }}">
+
                         Shop
+
                         <span class="arrow">▾</span>
+
                     </a>
+
 
                     <div class="dropdown-menu">
 
                         <div class="dropdown-header">
                             Shop
                         </div>
+
 
                         <ul class="dropdown-list">
 
@@ -120,20 +135,25 @@
                 </li>
 
 
-                <!-- Dropdown: Services -->
+                {{-- SERVICES --}}
                 <li class="nav-item dropdown">
 
                     <a href="#"
                         class="nav-link {{ request()->routeIs('services.*') ? 'active' : '' }}">
+
                         Services
+
                         <span class="arrow">▾</span>
+
                     </a>
+
 
                     <div class="dropdown-menu">
 
                         <div class="dropdown-header">
                             Services
                         </div>
+
 
                         <ul class="dropdown-list">
 
@@ -165,29 +185,38 @@
                 </li>
 
 
-                <!-- Community -->
+                {{-- COMMUNITY --}}
                 <li class="nav-item">
+
                     <a href="{{ route('community') }}"
                         class="nav-link {{ request()->routeIs('community') ? 'active' : '' }}">
+
                         Community
+
                     </a>
+
                 </li>
 
 
-                <!-- Dropdown: Partnership -->
+                {{-- PARTNERSHIP --}}
                 <li class="nav-item dropdown">
 
                     <a href="#"
                         class="nav-link {{ request()->routeIs('partnership.*') ? 'active' : '' }}">
+
                         Partnership
+
                         <span class="arrow">▾</span>
+
                     </a>
+
 
                     <div class="dropdown-menu">
 
                         <div class="dropdown-header">
                             Partnership
                         </div>
+
 
                         <ul class="dropdown-list">
 
@@ -212,103 +241,107 @@
                 </li>
 
 
-                <!-- Contact -->
+                {{-- CONTACT --}}
                 <li class="nav-item">
+
                     <a href="{{ route('contact.us') }}"
                         class="nav-link {{ request()->routeIs('contact.us') ? 'active' : '' }}">
+
                         Contact
+
                     </a>
+
                 </li>
 
             </ul>
+
         </nav>
 
 
-        <!-- Right Icons -->
-        <div class="nav-actions"
-            style="display: flex; align-items: center; gap: 15px;">
+        {{-- RIGHT ACTIONS --}}
+        <div class="nav-actions">
 
-            <!-- Search Button -->
-            <button type="button"
+            {{-- SEARCH --}}
+            <button
+                type="button"
                 class="action-btn search-btn"
                 aria-label="Search"
-                style="background: none; border: none; cursor: pointer;">
+            >
 
-                <svg width="18"
+                <svg
+                    width="18"
                     height="18"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
                     stroke-width="2.5"
                     stroke-linecap="round"
-                    stroke-linejoin="round">
+                    stroke-linejoin="round"
+                >
 
                     <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+
+                    <line
+                        x1="21"
+                        y1="21"
+                        x2="16.65"
+                        y2="16.65"
+                    ></line>
 
                 </svg>
 
             </button>
 
 
-            <!-- Cart -->
-            <a href="{{ route('shop.cart') }}"
-                class="header-cart">
+            {{-- CART --}}
+            <a
+                href="{{ route('shop.cart') }}"
+                class="header-cart"
+            >
 
                 <i class="fa-solid fa-cart-shopping"></i>
 
                 @php
+
                     $cart = session('cart', []);
+
                     $cartCount = collect($cart)->sum('quantity');
+
                     $cartBadge = min($cartCount, 99);
+
                 @endphp
 
+
                 @if ($cartCount > 0)
+
                     <span class="cart-badge">
                         {{ $cartBadge }}
                     </span>
+
                 @endif
 
             </a>
 
 
-            <!-- Dropdown: Profile Menu -->
-            <li class="nav-item dropdown"
-                style="list-style: none; position: relative;">
+            {{-- PROFILE --}}
+            <li class="nav-item dropdown profile-item">
 
-                <a href="#"
+                <a
+                    href="#"
                     class="action-btn profile-btn"
-                    style="text-decoration: none;
-                           color: inherit;
-                           display: flex;
-                           align-items: center;
-                           background: none;
-                           border: none;
-                           cursor: pointer;
-                           padding-bottom: 6px;">
+                >
 
                     @if(auth()->user()->foto)
 
-                        <img src="{{ asset('storage/' . auth()->user()->foto) }}"
+                        <img
+                            src="{{ asset('storage/' . auth()->user()->foto) }}"
                             alt="Profile"
-                            style="width: 28px;
-                                   height: 28px;
-                                   border-radius: 50%;
-                                   object-fit: cover;
-                                   border: 1.5px solid #cbd5e1;">
+                            class="profile-image"
+                        >
 
                     @else
 
-                        <div style="width: 28px;
-                                    height: 28px;
-                                    border-radius: 50%;
-                                    background: #e2e8f0;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    color: #64748b;
-                                    font-size: 13px;
-                                    border: 1.5px solid #cbd5e1;">
+                        <div class="profile-placeholder">
 
                             <i class="fa-solid fa-user"></i>
 
@@ -319,70 +352,59 @@
                 </a>
 
 
-                <div class="dropdown-menu"
-                    style="position: absolute;
-                           right: 0;
-                           top: 100%;
-                           margin-top: 2px;
-                           min-width: 170px;
-                           padding: 8px;
-                           background: #ffffff;
-                           box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-                           border-radius: 12px;
-                           z-index: 1000;">
+                <div class="dropdown-menu profile-menu">
 
-                    <div class="dropdown-header"
-                        style="font-weight: 700;
-                               font-size: 11px;
-                               color: #718096;
-                               padding: 4px 8px;
-                               text-transform: uppercase;">
-
+                    <div class="dropdown-header">
                         Akun Saya
-
                     </div>
+                    
+                    <ul class="dropdown-list">
 
-
-                    <ul class="dropdown-list"
-                        style="list-style: none;
-                               padding: 0;
-                               margin: 0;">
-
-                        <!-- Profile -->
                         <li>
-                            <a href="{{ route('profile.show') }}"
-                                class="{{ request()->routeIs('profile.*') ? 'active-sub' : '' }}"
-                                style="display: block;
-                                       padding: 8px 12px;
-                                       font-size: 13px;
-                                       text-decoration: none;
-                                       color: #2D3748;
-                                       border-radius: 6px;
-                                       transition: background 0.2s;">
 
-                                <i class="fa-solid fa-user-pen me-2 text-muted"></i>
+                            <a
+                                href="{{ route('profile.show') }}"
+                                class="{{ request()->routeIs('profile.*') ? 'active-sub' : '' }}"
+                            >
+
+                                <i class="fa-solid fa-user-pen"></i>
+
                                 Lihat Profil
 
                             </a>
+
                         </li>
 
 
-                        <!-- Partnership -->
                         <li>
-                            <a href="{{ route('user.partnership') }}"
-                                class="{{ request()->routeIs('user.partnership') ? 'active-sub' : '' }}"
-                                style="display: block;
-                                       padding: 8px 12px;
-                                       font-size: 13px;
-                                       text-decoration: none;
-                                       color: #2D3748;
-                                       border-radius: 6px;
-                                       transition: background 0.2s;">
 
-                                <i class="fa-solid fa-handshake me-2 text-muted"></i>
+                            <a
+                                href="{{ route('shop.myorders') }}"
+                                class="{{ request()->routeIs('shop.myorders') || request()->routeIs('shop.myorders.show') ? 'active-sub' : '' }}"
+                            >
+
+                                <i class="fa-solid fa-box"></i>
+
+                                My Order
+
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a
+                                href="{{ route('user.partnership') }}"
+                                class="{{ request()->routeIs('user.partnership') ? 'active-sub' : '' }}"
+                            >
+
+                                <i class="fa-solid fa-handshake"></i>
+
                                 Partnership
 
                             </a>
+
                         </li>
 
                     </ul>
@@ -394,232 +416,617 @@
         </div>
 
     </div>
+
 </header>
 
 
 <style>
 
-    .navbar-header {
-        background-color: #ffffff;
-        border-bottom: 1px solid #f0f0f0;
-        position: relative;
-        width: 100%;
-        z-index: 1000;
-    }
+/* Font Awesome DIHAPUS dari sini - sudah dimuat sekali lewat <link> di atas.
+   Memuat 2x lewat @import + <link> adalah salah satu penyebab icon kotak. */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
 
-    .navbar-container {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 2rem;
-        height: 80px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.navbar-header {
+
+    width: 100%;
+    height: 80px;
+
+    background-color: #ffffff;
+
+    border-bottom: 1px solid #f0f0f0;
+
+    position: relative;
+
+    z-index: 1000;
+
+    font-family: 'Poppins', Arial, sans-serif;
+
+    box-sizing: border-box;
+}
 
 
-    .brand-logo {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        text-decoration: none;
-    }
+/* Semua elemen di dalam header */
+
+.navbar-header *,
+.navbar-header *::before,
+.navbar-header *::after {
+
+    box-sizing: border-box;
+
+}
 
 
-    .logo-icon {
-        color: #f26d5b;
-        font-size: 24px;
-    }
+/* =====================================================
+   CONTAINER
+   ===================================================== */
+
+.navbar-header .navbar-container {
+
+    width: 100%;
+
+    max-width: 1280px;
+
+    height: 80px;
+
+    margin: 0 auto;
+
+    padding: 0 2rem;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+}
 
 
-    .logo-text {
-        color: #1e4d3b;
-        font-weight: 800;
-        font-size: 1.35rem;
-        letter-spacing: 0.5px;
-    }
+/* =====================================================
+   LOGO
+   ===================================================== */
+
+.navbar-header .brand-logo {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    text-decoration: none;
+
+    flex-shrink: 0;
+
+}
 
 
-    .nav-list {
-        display: flex;
-        align-items: center;
-        list-style: none;
-        gap: 2rem;
-        margin: 0;
-        padding: 0;
-    }
+.navbar-header .logo-icon {
+
+    color: #f26d5b;
+
+    font-size: 24px;
+
+    line-height: 1;
+
+}
 
 
-    .nav-item {
-        position: relative;
-        padding: 28px 0;
-    }
+.navbar-header .logo-text {
+
+    color: #1e4d3b;
+
+    font-size: 1.35rem;
+
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+
+    line-height: 1;
+
+}
 
 
-    .nav-link {
-        text-decoration: none;
-        color: #4a5568;
-        font-weight: 600;
-        font-size: 0.95rem;
-        transition: color 0.2s ease;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        position: relative;
-    }
+/* =====================================================
+   NAVIGATION
+   ===================================================== */
+
+.navbar-header .nav-menu {
+
+    display: flex;
+
+    align-items: center;
+
+}
 
 
-    .nav-link.active,
-    .nav-link:hover {
-        color: #1e4d3b;
-    }
+.navbar-header .nav-list {
+
+    display: flex;
+
+    align-items: center;
+
+    list-style: none;
+
+    gap: 2rem;
+
+    margin: 0;
+
+    padding: 0;
+
+}
 
 
-    .nav-link.active::after {
-        content: '';
-        position: absolute;
-        bottom: -28px;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background-color: #f26d5b;
-        border-radius: 4px 4px 0 0;
-    }
+.navbar-header .nav-item {
+
+    position: relative;
+
+    margin: 0;
+
+    padding: 28px 0;
+
+}
 
 
-    .arrow {
-        font-size: 0.75rem;
-        color: #1e4d3b;
-    }
+.navbar-header .nav-link {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    position: relative;
+
+    text-decoration: none;
+
+    color: #4a5568;
+
+    font-family: 'Poppins', Arial, sans-serif;
+
+    font-size: 0.95rem;
+
+    font-weight: 600;
+
+    line-height: 1;
+
+    transition: color 0.2s ease;
+
+}
 
 
-    .dropdown-menu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 220px;
-        background-color: #ffffff;
-        border-radius: 16px;
-        padding: 18px 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        border: 1px solid rgba(0, 0, 0, 0.04);
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(10px);
-        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-        pointer-events: none;
-    }
+.navbar-header .nav-link:hover,
+.navbar-header .nav-link.active {
+
+    color: #1e4d3b;
+
+}
 
 
-    .nav-item.dropdown:hover .dropdown-menu {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-        pointer-events: auto;
-    }
+.navbar-header .nav-link.active::after {
+
+    content: '';
+
+    position: absolute;
+
+    left: 0;
+
+    bottom: -28px;
+
+    width: 100%;
+
+    height: 3px;
+
+    background-color: #f26d5b;
+
+    border-radius: 4px 4px 0 0;
+
+}
 
 
-    .dropdown-header {
-        color: #1e4d3b;
-        font-weight: 700;
-        font-size: 0.95rem;
-        padding-bottom: 10px;
-        margin-bottom: 12px;
-        border-bottom: 1px solid #f0f0f0;
-    }
+.navbar-header .arrow {
+
+    font-size: 0.75rem;
+
+    color: #1e4d3b;
+
+}
 
 
-    .dropdown-list {
-        list-style: none;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin: 0;
-        padding: 0;
-    }
+/* =====================================================
+   DROPDOWN
+   ===================================================== */
+
+.navbar-header .dropdown-menu {
+
+    position: absolute;
+
+    top: 100%;
+
+    left: 0;
+
+    width: 220px;
+
+    margin: 0;
+
+    padding: 18px 20px;
+
+    background-color: #ffffff;
+
+    border: 1px solid rgba(0, 0, 0, 0.04);
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.08);
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform: translateY(10px);
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease,
+        visibility 0.25s ease;
+
+    pointer-events: none;
+
+}
 
 
-    .dropdown-list a {
-        text-decoration: none;
-        color: #4a5568;
-        font-size: 0.88rem;
-        font-weight: 500;
-        transition: color 0.2s ease, transform 0.2s ease;
-        display: block;
-    }
+.navbar-header .nav-item.dropdown:hover > .dropdown-menu {
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transform: translateY(0);
+
+    pointer-events: auto;
+
+}
 
 
-    .dropdown-list a:hover {
-        color: #1e4d3b;
-        transform: translateX(3px);
-    }
+.navbar-header .dropdown-header {
+
+    color: #1e4d3b;
+
+    font-family: 'Poppins', Arial, sans-serif;
+
+    font-size: 0.95rem;
+
+    font-weight: 700;
+
+    line-height: 1.4;
+
+    padding-bottom: 10px;
+
+    margin-bottom: 12px;
+
+    border-bottom: 1px solid #f0f0f0;
+
+}
 
 
-    .dropdown-list a.active-sub {
-        color: #1e4d3b;
-        font-weight: 600;
-    }
+.navbar-header .dropdown-list {
+
+    list-style: none;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    margin: 0;
+
+    padding: 0;
+
+}
 
 
-    .nav-actions {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
+.navbar-header .dropdown-list li {
+
+    margin: 0;
+
+    padding: 0;
+
+}
 
 
-    .header-cart {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #4a5568;
-        text-decoration: none;
-        padding: 4px;
-        transition: color 0.2s ease;
-    }
+.navbar-header .dropdown-list a {
+
+    display: block;
+
+    margin: 0;
+
+    padding: 0;
+
+    text-decoration: none;
+
+    color: #4a5568;
+
+    font-family: 'Poppins', Arial, sans-serif;
+
+    font-size: 0.88rem;
+
+    font-weight: 500;
+
+    line-height: 1.4;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+
+}
 
 
-    .header-cart:hover {
-        color: #1e4d3b;
-    }
+.navbar-header .dropdown-list a:hover {
+
+    color: #1e4d3b;
+
+    transform: translateX(3px);
+
+}
 
 
-    .action-btn {
-        background: none;
-        border: none;
-        color: #4a5568;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        text-decoration: none;
-        padding: 4px;
-        transition: color 0.2s ease;
-    }
+.navbar-header .dropdown-list a.active-sub {
+
+    color: #1e4d3b;
+
+    font-weight: 600;
+
+}
 
 
-    .action-btn:hover {
-        color: #1e4d3b;
-    }
+/* =====================================================
+   RIGHT ACTIONS
+   ===================================================== */
+
+.navbar-header .nav-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin: 0;
+
+    padding: 0;
+
+    flex-shrink: 0;
+
+}
 
 
-    .cart-badge {
-        position: absolute;
-        top: -6px;
-        right: -8px;
-        background-color: #f26d5b;
-        color: white;
-        font-size: 0.7rem;
-        font-weight: 700;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+.navbar-header .action-btn {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    position: relative;
+
+    width: auto;
+
+    height: auto;
+
+    padding: 4px;
+
+    margin: 0;
+
+    background: none;
+
+    border: none;
+
+    color: #4a5568;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    line-height: 1;
+
+}
+
+
+.navbar-header .action-btn:hover {
+
+    color: #1e4d3b;
+
+}
+
+
+/* =====================================================
+   CART
+   ===================================================== */
+
+.navbar-header .header-cart {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: auto;
+
+    height: auto;
+
+    padding: 4px;
+
+    margin: 0;
+
+    color: #4a5568;
+
+    text-decoration: none;
+
+    line-height: 1;
+
+}
+
+
+.navbar-header .header-cart:hover {
+
+    color: #1e4d3b;
+
+}
+
+
+.navbar-header .cart-badge {
+
+    position: absolute;
+
+    top: -6px;
+
+    right: -8px;
+
+    width: 18px;
+
+    height: 18px;
+
+    padding: 0;
+
+    margin: 0;
+
+    border-radius: 50%;
+
+    background-color: #f26d5b;
+
+    color: #ffffff;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-family: 'Poppins', Arial, sans-serif;
+
+    font-size: 0.7rem;
+
+    font-weight: 700;
+
+    line-height: 1;
+
+}
+
+
+/* =====================================================
+   PROFILE
+   ===================================================== */
+
+.navbar-header .profile-item {
+
+    list-style: none;
+
+    padding: 28px 0;
+
+}
+
+
+.navbar-header .profile-menu {
+
+    left: auto;
+
+    right: 0;
+
+    min-width: 170px;
+
+    width: 170px;
+
+}
+
+
+.navbar-header .profile-btn {
+
+    padding: 4px;
+
+}
+
+
+.navbar-header .profile-image {
+
+    width: 28px;
+
+    height: 28px;
+
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    border: 1.5px solid #cbd5e1;
+
+}
+
+
+.navbar-header .profile-placeholder {
+
+    width: 28px;
+
+    height: 28px;
+
+    border-radius: 50%;
+
+    background: #e2e8f0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    border: 1.5px solid #cbd5e1;
+
+}
+
+
+.navbar-header .profile-menu .dropdown-list a {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+
+.navbar-header .profile-menu .dropdown-list a i {
+
+    width: 16px;
+
+    text-align: center;
+
+    color: #718096;
+
+}
+
+
+/* =====================================================
+   FONT
+   ===================================================== */
+
+.navbar-header,
+.navbar-header *:not(i) {
+
+    font-family: 'Poppins', Arial, sans-serif;
+
+}
 
 </style>
