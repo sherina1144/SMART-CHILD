@@ -34,7 +34,7 @@
 
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             background: var(--warm-cream);
             color: var(--dark-green);
         }

@@ -35,7 +35,7 @@
 
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
 
             background: var(--warm-cream);
 
@@ -663,6 +663,110 @@
 
         }
 
+        /* notifikasi pesanan */
+        .order-success-notification {
+            width: calc(100% - 40px);
+            max-width: 1110px;
+
+            margin: 25px auto 0;
+
+            padding: 15px 18px;
+
+            display: flex;
+            align-items: center;
+            gap: 13px;
+
+            background: #F0F9F5;
+            border: 1px solid rgba(111, 175, 155, .35);
+            border-radius: 12px;
+
+            color: var(--dark-green);
+
+            box-shadow: 0 5px 15px rgba(49, 92, 80, .06);
+
+            animation: notificationSlide .3s ease;
+        }
+
+
+        .order-success-icon {
+            width: 34px;
+            height: 34px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: var(--sage-green);
+            color: var(--white);
+
+            font-size: 16px;
+
+            flex-shrink: 0;
+        }
+
+
+        .order-success-text {
+            flex: 1;
+        }
+
+
+        .order-success-text strong {
+            display: block;
+
+            margin-bottom: 3px;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            color: var(--dark-green);
+        }
+
+
+        .order-success-text span {
+            display: block;
+
+            font-size: 11px;
+
+            color: var(--soft-gray);
+        }
+
+
+        .order-success-close {
+            width: 30px;
+            height: 30px;
+
+            border: none;
+            background: transparent;
+
+            color: var(--soft-gray);
+
+            cursor: pointer;
+
+            font-size: 13px;
+        }
+
+
+        .order-success-close:hover {
+            color: var(--dark-green);
+        }
+
+
+        @keyframes notificationSlide {
+
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
     </style>
 
 </head>
@@ -673,6 +777,31 @@
 
 
 @include('layout.header')
+
+@if (session('success'))
+    <div class="order-success-notification" id="orderSuccessNotification">
+
+        <div class="order-success-icon">
+            <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <div class="order-success-text">
+            <strong>Pesanan berhasil dibuat!</strong>
+            <span>
+                Pesanan kamu sudah tercatat dan akan dikonfirmasi oleh admin.
+            </span>
+        </div>
+
+        <button
+            type="button"
+            class="order-success-close"
+            onclick="closeOrderNotification()"
+        >
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+    </div>
+@endif
 
 
 
@@ -1296,6 +1425,43 @@
         }, 2500);
 
     }
+
+</script>
+
+<script>
+
+    function closeOrderNotification() {
+
+        const notification =
+            document.getElementById(
+                'orderSuccessNotification'
+            );
+
+        if (notification) {
+
+            notification.style.opacity = '0';
+
+            notification.style.transform =
+                'translateY(-8px)';
+
+            setTimeout(function () {
+
+                notification.remove();
+
+            }, 300);
+
+        }
+
+    }
+
+
+    // Hilang otomatis setelah 5 detik
+
+    setTimeout(function () {
+
+        closeOrderNotification();
+
+    }, 5000);
 
 </script>
 

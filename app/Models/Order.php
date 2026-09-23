@@ -16,6 +16,7 @@ class Order extends Model
         'nama_penerima',
         'no_hp',
         'alamat',
+        'metode_pembayaran',
         'bukti_pembayaran',
         'payment_status',
         'total_harga',

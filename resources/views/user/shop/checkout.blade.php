@@ -5,7 +5,10 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Checkout - Smart Child</title>
 
@@ -34,7 +37,7 @@
 
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             background: var(--warm-cream);
             color: var(--dark-green);
         }
@@ -232,118 +235,194 @@
 
 
         /* =====================================================
-           PAYMENT INFO
+           PAYMENT METHOD
         ===================================================== */
 
         .payment-box {
             padding: 18px;
-
             background: #F7F7F4;
-
             border: 1px solid rgba(49, 92, 80, .08);
-
             border-radius: 13px;
         }
 
 
         .payment-box-title {
             margin-bottom: 14px;
-
             color: var(--dark-green);
-
             font-size: 13px;
             font-weight: 700;
         }
 
 
-        .payment-bank {
+        .payment-method-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+
+        .payment-method {
+            position: relative;
+        }
+
+
+        .payment-method input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+
+        .payment-method label {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 9px;
 
-            margin-bottom: 8px;
-        }
+            min-height: 42px;
+            padding: 0 12px;
 
+            background: var(--white);
+            border: 1px solid rgba(49, 92, 80, .15);
+            border-radius: 10px;
 
-        .payment-bank-name {
             color: var(--dark-green);
-
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-
-        .payment-account {
-            color: var(--soft-gray);
-
             font-size: 12px;
+            font-weight: 600;
+
+            cursor: pointer;
+            transition: .2s ease;
         }
 
 
-        .payment-owner {
-            color: var(--soft-gray);
+        .payment-method label::before {
+            content: '';
 
-            font-size: 11px;
+            width: 13px;
+            height: 13px;
+
+            border: 1.5px solid #98A2B3;
+            border-radius: 50%;
+
+            flex-shrink: 0;
         }
 
 
-        .payment-total {
-            margin-top: 15px;
-            padding-top: 15px;
-
-            border-top: 1px solid rgba(49, 92, 80, .10);
+        .payment-method input:checked + label {
+            border-color: var(--sage-green);
+            background: #F0F9F5;
         }
 
 
-        .payment-total-label {
-            margin-bottom: 5px;
-
-            color: var(--soft-gray);
-
-            font-size: 11px;
+        .payment-method input:checked + label::before {
+            border: 4px solid var(--sage-green);
         }
 
 
-        .payment-total-price {
+        /* =====================================================
+           BANK DROPDOWN
+        ===================================================== */
+
+        .bank-dropdown {
+            display: none;
+
+            position: absolute;
+
+            top: calc(100% + 7px);
+            left: 0;
+
+            width: 100%;
+
+            padding: 6px;
+
+            background: var(--white);
+
+            border: 1px solid rgba(49, 92, 80, .12);
+            border-radius: 10px;
+
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .08);
+
+            z-index: 50;
+        }
+
+
+        .bank-dropdown.active {
+            display: block;
+        }
+
+
+        .bank-option {
+            display: block;
+
+            width: 100%;
+
+            padding: 9px 11px;
+
+            border: none;
+            border-radius: 7px;
+
+            background: transparent;
+
             color: var(--dark-green);
 
-            font-size: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+
+            text-align: left;
+
+            cursor: pointer;
+
+            transition: .2s ease;
+        }
+
+
+        .bank-option:hover {
+            background: #F0F9F5;
+        }
+
+
+        .bank-option.selected {
+            background: #EAF5F1;
+            color: var(--dark-green);
             font-weight: 700;
         }
 
 
         /* =====================================================
-           UPLOAD
+           PAYMENT INFO
         ===================================================== */
 
-        .payment-upload {
-            margin-top: 18px;
-        }
+        .payment-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
 
+            margin-top: 15px;
+            padding: 13px;
 
-        .payment-file {
-            width: 100%;
-
-            padding: 12px;
-
-            border: 1px dashed rgba(49, 92, 80, .25);
+            background: #FFF8F4;
             border-radius: 10px;
-
-            background: var(--white);
-
-            color: var(--soft-gray);
-
-            font-size: 11px;
-
-            cursor: pointer;
         }
 
 
-        .payment-note {
-            margin-top: 8px;
+        .payment-info-icon {
+            color: #E57A5F;
+            font-size: 15px;
+            margin-top: 2px;
+        }
 
-            color: var(--soft-gray);
 
+        .payment-info-text strong {
+            display: block;
+            margin-bottom: 3px;
+
+            color: #9A4E39;
+            font-size: 11px;
+        }
+
+
+        .payment-info-text span {
+            color: #9A4E39;
             font-size: 10px;
             line-height: 1.5;
         }
@@ -567,6 +646,11 @@
                 grid-template-columns: 1fr;
             }
 
+
+            .payment-method-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
         }
 
     </style>
@@ -605,11 +689,13 @@
             {{-- =================================================
                  CHECKOUT LAYOUT
             ================================================= --}}
+
             <form
                 action="{{ route('shop.checkout.order') }}"
                 method="POST"
-                enctype="multipart/form-data"
+                id="checkoutForm"
             >
+
                 @csrf
 
                 <div class="checkout-layout">
@@ -720,60 +806,208 @@
                             <div class="payment-box">
 
                                 <div class="payment-box-title">
-                                    Transfer ke rekening berikut
+                                    Pilih metode pembayaran
                                 </div>
 
 
-                                <div class="payment-bank">
-
-                                    <span class="payment-bank-name">
-                                        BCA
-                                    </span>
-
-                                    <span class="payment-account">
-                                        1234567890
-                                    </span>
-
-                                </div>
+                                <div class="payment-method-grid">
 
 
-                                <div class="payment-owner">
-                                    a.n. Smart Child
-                                </div>
+                                    {{-- GOPAY --}}
 
+                                    <div class="payment-method">
 
-                                <div class="payment-total">
+                                        <input
+                                            type="radio"
+                                            id="gopay"
+                                            name="metode_pembayaran"
+                                            value="GoPay"
+                                            required
+                                        >
 
-                                    <div class="payment-total-label">
-                                        Total yang harus dibayar
+                                        <label for="gopay">
+                                            GoPay
+                                        </label>
+
                                     </div>
 
-                                    <div class="payment-total-price">
-                                        Rp {{ number_format($total, 0, ',', '.') }}
+
+                                    {{-- DANA --}}
+
+                                    <div class="payment-method">
+
+                                        <input
+                                            type="radio"
+                                            id="dana"
+                                            name="metode_pembayaran"
+                                            value="DANA"
+                                        >
+
+                                        <label for="dana">
+                                            DANA
+                                        </label>
+
                                     </div>
+
+
+                                    {{-- OVO --}}
+
+                                    <div class="payment-method">
+
+                                        <input
+                                            type="radio"
+                                            id="ovo"
+                                            name="metode_pembayaran"
+                                            value="OVO"
+                                        >
+
+                                        <label for="ovo">
+                                            OVO
+                                        </label>
+
+                                    </div>
+
+
+                                    {{-- SHOPEEPAY --}}
+
+                                    <div class="payment-method">
+
+                                        <input
+                                            type="radio"
+                                            id="shopeepay"
+                                            name="metode_pembayaran"
+                                            value="ShopeePay"
+                                        >
+
+                                        <label for="shopeepay">
+                                            ShopeePay
+                                        </label>
+
+                                    </div>
+
+
+                                    {{-- QRIS --}}
+
+                                    <div class="payment-method">
+
+                                        <input
+                                            type="radio"
+                                            id="qris"
+                                            name="metode_pembayaran"
+                                            value="QRIS"
+                                        >
+
+                                        <label for="qris">
+                                            QRIS
+                                        </label>
+
+                                    </div>
+
+
+                                    {{-- BANK --}}
+
+                                    <div class="payment-method">
+
+                                        <input
+                                            type="radio"
+                                            id="bank"
+                                            name="metode_pembayaran"
+                                            value="Bank"
+                                        >
+
+
+                                        <label for="bank">
+
+                                            <span id="bankLabel">
+                                                Bank
+                                            </span>
+
+                                            <i
+                                                class="fa-solid fa-chevron-down"
+                                                id="bankArrow"
+                                                style="margin-left:auto;font-size:10px;"
+                                            ></i>
+
+                                        </label>
+
+
+                                        {{-- BANK DROPDOWN --}}
+
+                                        <div
+                                            class="bank-dropdown"
+                                            id="bankDropdown"
+                                        >
+
+                                            <button
+                                                type="button"
+                                                class="bank-option"
+                                                data-bank="Mandiri"
+                                            >
+                                                Mandiri
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="bank-option"
+                                                data-bank="BCA"
+                                            >
+                                                BCA
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="bank-option"
+                                                data-bank="BRI"
+                                            >
+                                                BRI
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="bank-option"
+                                                data-bank="BNI"
+                                            >
+                                                BNI
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="bank-option"
+                                                data-bank="BSI"
+                                            >
+                                                BSI
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
 
                                 </div>
 
 
-                                <div class="payment-upload">
+                                {{-- INFO PEMBAYARAN --}}
 
-                                    <label class="checkout-label">
-                                        Bukti Pembayaran
-                                        <span class="checkout-required">*</span>
-                                    </label>
+                                <div class="payment-info">
 
-                                    <input
-                                        type="file"
-                                        name="bukti_pembayaran"
-                                        class="payment-file"
-                                        accept="image/*"
-                                        required
-                                    >
+                                    <div class="payment-info-icon">
 
-                                    <p class="payment-note">
-                                        Upload screenshot atau foto bukti transfer.
-                                        Format JPG, JPEG, atau PNG.
-                                    </p>
+                                        <i class="fa-solid fa-wallet"></i>
+
+                                    </div>
+
+                                    <div class="payment-info-text">
+
+                                        <strong>
+                                            Pembayaran akan dikonfirmasi admin
+                                        </strong>
+
+                                        <span>
+                                            Pilih metode pembayaran yang akan digunakan.
+                                            Pesanan akan diproses setelah dikonfirmasi oleh admin.
+                                        </span>
+
+                                    </div>
 
                                 </div>
 
@@ -816,12 +1050,14 @@
                                 @if (isset($products[$productId]))
 
                                     @php
+
                                         $product = $products[$productId];
 
                                         $quantity = $item['quantity'];
 
                                         $subtotal =
                                             $product->harga * $quantity;
+
                                     @endphp
 
 
@@ -855,15 +1091,20 @@
                                             </div>
 
                                             <div class="checkout-product-quantity">
+
                                                 {{ $quantity }} ×
+
                                                 Rp {{ number_format($product->harga, 0, ',', '.') }}
+
                                             </div>
 
                                         </div>
 
 
                                         <div class="checkout-product-price">
+
                                             Rp {{ number_format($subtotal, 0, ',', '.') }}
+
                                         </div>
 
 
@@ -913,6 +1154,258 @@
         </div>
 
     </main>
+
+
+    <script>
+
+        const paymentMethods = document.querySelectorAll(
+            'input[name="metode_pembayaran"]'
+        );
+
+        const bankRadio = document.getElementById(
+            'bank'
+        );
+
+        const bankLabel = document.getElementById(
+            'bankLabel'
+        );
+
+        const bankDropdown = document.getElementById(
+            'bankDropdown'
+        );
+
+        const bankArrow = document.getElementById(
+            'bankArrow'
+        );
+
+        const bankOptions = document.querySelectorAll(
+            '.bank-option'
+        );
+
+        const checkoutForm = document.getElementById(
+            'checkoutForm'
+        );
+
+
+        /* =====================================================
+           BUKA DROPDOWN BANK
+        ===================================================== */
+
+        function openBankDropdown() {
+
+            bankDropdown.classList.add('active');
+
+            bankArrow.classList.remove(
+                'fa-chevron-down'
+            );
+
+            bankArrow.classList.add(
+                'fa-chevron-up'
+            );
+
+        }
+
+
+        /* =====================================================
+           TUTUP DROPDOWN BANK
+        ===================================================== */
+
+        function closeBankDropdown() {
+
+            bankDropdown.classList.remove('active');
+
+            bankArrow.classList.remove(
+                'fa-chevron-up'
+            );
+
+            bankArrow.classList.add(
+                'fa-chevron-down'
+            );
+
+        }
+
+
+        /* =====================================================
+           RESET BANK
+        ===================================================== */
+
+        function resetBank() {
+
+            bankRadio.value = 'Bank';
+
+            bankLabel.textContent = 'Bank';
+
+            bankOptions.forEach(
+                function (option) {
+
+                    option.classList.remove(
+                        'selected'
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =====================================================
+           PILIH METODE PEMBAYARAN
+        ===================================================== */
+
+        paymentMethods.forEach(
+            function (method) {
+
+                method.addEventListener(
+                    'change',
+                    function () {
+
+                        if (this.id === 'bank') {
+
+                            openBankDropdown();
+
+                        } else {
+
+                            closeBankDropdown();
+
+                            resetBank();
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+
+        /* =====================================================
+           PILIH BANK
+        ===================================================== */
+
+        bankOptions.forEach(
+            function (option) {
+
+                option.addEventListener(
+                    'click',
+                    function () {
+
+                        const selectedBank =
+                            this.dataset.bank;
+
+
+                        /*
+                         * Ubah value yang dikirim
+                         * ke backend.
+                         */
+
+                        bankRadio.value =
+                            selectedBank;
+
+
+                        /*
+                         * Pastikan radio Bank
+                         * tetap terpilih.
+                         */
+
+                        bankRadio.checked =
+                            true;
+
+
+                        /*
+                         * Ubah tulisan pada
+                         * kotak pembayaran.
+                         */
+
+                        bankLabel.textContent =
+                            selectedBank;
+
+
+                        /*
+                         * Tandai bank yang sedang dipilih.
+                         */
+
+                        bankOptions.forEach(
+                            function (item) {
+
+                                item.classList.remove(
+                                    'selected'
+                                );
+
+                            }
+                        );
+
+
+                        this.classList.add(
+                            'selected'
+                        );
+
+
+                        /*
+                         * Tutup dropdown.
+                         */
+
+                        closeBankDropdown();
+
+                    }
+                );
+
+            }
+        );
+
+
+        /* =====================================================
+           KLIK CARD BANK
+        ===================================================== */
+
+        bankRadio.addEventListener(
+            'click',
+            function () {
+
+                if (
+                    bankDropdown.classList.contains(
+                        'active'
+                    )
+                ) {
+
+                    closeBankDropdown();
+
+                } else {
+
+                    openBankDropdown();
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           CEK SEBELUM SUBMIT
+        ===================================================== */
+
+        checkoutForm.addEventListener(
+            'submit',
+            function (event) {
+
+                if (
+                    bankRadio.checked &&
+                    bankRadio.value === 'Bank'
+                ) {
+
+                    event.preventDefault();
+
+                    openBankDropdown();
+
+                    alert(
+                        'Silakan pilih bank terlebih dahulu.'
+                    );
+
+                }
+
+            }
+        );
+
+    </script>
 
 </body>
 

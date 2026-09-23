@@ -8,6 +8,7 @@ use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ShopDevelopmentController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SmartChildBoxController;
 use App\Http\Controllers\ParentingAcademyController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\AuthController;
@@ -112,9 +113,8 @@ Route::prefix('shop')
         Route::get('/all-products', [ShopDevelopmentController::class, 'allProducts'])
             ->name('allproducts');
 
-        Route::get('/smart-box', function () {
-            return view('user.shop.smart_childbox');
-        })->name('smartbox');
+        Route::get('/smart-box',[SmartChildBoxController::class, 'index'])
+            ->name('smartbox');
 
 
         /*

@@ -88,10 +88,26 @@ class OrderController extends Controller
             'nama_penerima' => 'required|string|max:150',
             'no_hp' => 'required|string|max:20',
             'alamat' => 'required|string',
+
+            'metode_pembayaran' => [
+                'required',
+                'in:GoPay,DANA,OVO,ShopeePay,QRIS,Mandiri,BCA,BRI,BNI,BSI',
+            ],
         ], [
-            'nama_penerima.required' => 'Nama penerima wajib diisi.',
-            'no_hp.required' => 'Nomor HP wajib diisi.',
-            'alamat.required' => 'Alamat wajib diisi.',
+            'nama_penerima.required' =>
+                'Nama penerima wajib diisi.',
+
+            'no_hp.required' =>
+                'Nomor HP wajib diisi.',
+
+            'alamat.required' =>
+                'Alamat wajib diisi.',
+
+            'metode_pembayaran.required' =>
+                'Metode pembayaran wajib dipilih.',
+
+            'metode_pembayaran.in' =>
+                'Metode pembayaran tidak valid.',
         ]);
 
         $cart = session('cart', []);
@@ -101,6 +117,11 @@ class OrderController extends Controller
                 ->route('shop.cart')
                 ->with('error', 'Keranjang masih kosong.');
         }
+
+        $metodePembayaran =
+        $request->metode_pembayaran === 'Bank'
+            ? $request->bank_pilihan
+            : $request->metode_pembayaran;
 
         DB::beginTransaction();
 
@@ -173,8 +194,11 @@ class OrderController extends Controller
                 'alamat' =>
                     $request->alamat,
 
+                'metode_pembayaran' =>
+                    $request->metode_pembayaran,
+
                 'payment_status' =>
-                    'Menunggu Verifikasi',
+                    'Menunggu Konfirmasi',
 
                 'total_harga' =>
                     $total,
