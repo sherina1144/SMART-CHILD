@@ -17,4 +17,12 @@ class CommunityController extends Controller // <- BENAR
 
         return view('user.community', compact('groups', 'threads', 'webinars'));
     }
+
+    public function community()
+    {
+        // Ambil data grup diskusi atau card tahap usia dari database/model
+        $groups = CommunityGroup::all(); // atau data array statis jika tidak pakai database
+
+        return view('user.community', compact('groups'));
+    }
 }

@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->string('slug')->unique();
-            $table->string('category'); // Stimulasi, Nutrisi, Perkembangan
+            $table->enum('category', ['nutrisi', 'tumbuh kembang', 'kesehatan', 'psikologi']);
             $table->string('image');
             $table->text('excerpt');
             $table->timestamps();

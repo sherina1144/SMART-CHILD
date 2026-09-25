@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community - Smart Child</title>
-    
+
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <!-- FontAwesome untuk ikon komentar -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -22,7 +23,8 @@
         body {
             background-color: #ffffff;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            color: #292524; /* text-stone-800 */
+            color: #292524;
+            /* text-stone-800 */
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
@@ -34,7 +36,8 @@
 
         /* TOMBOL & LINK */
         .btn-emerald {
-            background-color: #064e3b; /* emerald-900 */
+            background-color: #064e3b;
+            /* emerald-900 */
             color: #ffffff;
             font-weight: 500;
             padding: 0.75rem 1.5rem;
@@ -48,12 +51,15 @@
         }
 
         .btn-emerald:hover {
-            background-color: #065f46; /* emerald-800 */
+            background-color: #065f46;
+            /* emerald-800 */
         }
 
         .btn-outline-emerald {
-            border: 1px solid #d6d3d1; /* stone-300 */
-            color: #022c22; /* emerald-950 */
+            border: 1px solid #d6d3d1;
+            /* stone-300 */
+            color: #022c22;
+            /* emerald-950 */
             font-weight: 500;
             padding: 0.75rem 1.5rem;
             border-radius: 9999px;
@@ -65,11 +71,13 @@
         }
 
         .btn-outline-emerald:hover {
-            background-color: #f5f5f4; /* stone-50 */
+            background-color: #f5f5f4;
+            /* stone-50 */
         }
 
         .btn-orange {
-            background-color: #fb923c; /* orange-400 */
+            background-color: #fb923c;
+            /* orange-400 */
             color: #ffffff;
             font-weight: 500;
             padding: 0.625rem 1.25rem;
@@ -81,7 +89,8 @@
         }
 
         .btn-orange:hover {
-            background-color: #f97316; /* orange-500 */
+            background-color: #f97316;
+            /* orange-500 */
         }
 
         /* CONTAINER UTAMA */
@@ -110,26 +119,31 @@
 
         .hero-badge {
             display: inline-block;
-            background-color: #f5f5f4; /* stone-100 */
-            color: #44403c; /* stone-700 */
+            background-color: #f5f5f4;
+            /* stone-100 */
+            color: #44403c;
+            /* stone-700 */
             font-size: 0.75rem;
             font-weight: 500;
             padding: 0.35rem 0.875rem;
             border-radius: 9999px;
             margin-bottom: 1.5rem;
-            border: 1px solid #e7e5e4; /* stone-200 */
+            border: 1px solid #e7e5e4;
+            /* stone-200 */
         }
 
         .hero-title {
             font-size: clamp(2.25rem, 4vw, 3rem);
             font-weight: 700;
-            color: #022c22; /* emerald-950 */
+            color: #022c22;
+            /* emerald-950 */
             line-height: 1.2;
             margin-bottom: 1.5rem;
         }
 
         .hero-desc {
-            color: #57534e; /* stone-600 */
+            color: #57534e;
+            /* stone-600 */
             line-height: 1.7;
             margin-bottom: 2rem;
             font-size: 0.95rem;
@@ -217,7 +231,8 @@
         }
 
         .group-member-count {
-            color: #f97316; /* orange-500 */
+            color: #f97316;
+            /* orange-500 */
             font-weight: 600;
             font-size: 0.875rem;
         }
@@ -292,7 +307,8 @@
         }
 
         .thread-category {
-            color: #ea580c; /* orange-600 */
+            color: #ea580c;
+            /* orange-600 */
             font-weight: 600;
         }
 
@@ -464,7 +480,8 @@
                     Tumbuh Bersama Komunitas Orang Tua Hebat
                 </h1>
                 <p class="hero-desc">
-                    Tempat bertukar pengalaman, berdiskusi mengenai problem harian anak, serta mengikuti sesi webinar edukasi terpandu. Menghubungkan ribuan ibu dan ayah se-Indonesia.
+                    Tempat bertukar pengalaman, berdiskusi mengenai problem harian anak, serta mengikuti sesi webinar
+                    edukasi terpandu. Menghubungkan ribuan ibu dan ayah se-Indonesia.
                 </p>
                 <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
                     <a href="#" class="btn-emerald">
@@ -485,6 +502,7 @@
         <!-- =========================
          GRUP DISKUSI SESUAI TAHAP USIA
     ========================== -->
+        <!-- Bagian Grup Diskusi Sesuai Tahap Usia -->
         <section class="container-max" style="padding-top: 4rem; padding-bottom: 4rem;">
             <div class="section-header-center">
                 <h2 class="section-title">Grup Diskusi Sesuai Tahap Usia</h2>
@@ -492,20 +510,51 @@
             </div>
 
             <div class="grid-3">
-                @foreach($groups as $group)
+                @forelse($groups as $group)
                     <div class="group-card">
                         <div>
                             <h3>{{ $group->title }}</h3>
                             <p>{{ $group->description }}</p>
                         </div>
                         <div>
-                            <span class="group-member-count">{{ $group->member_count }}</span>
+                            <span class="group-member-count">{{ $group->active_members }} Anggota Aktif</span>
                         </div>
                     </div>
-                @endforeach
+                @empty
+                    <!-- Contoh Tampilan Statis jika belum menggunakan database -->
+                    <div class="group-card">
+                        <div>
+                            <h3>Newborn Parents</h3>
+                            <p>Mengupas topik menyusui, manajemen pola tidur, kolik bayi, imunisasi dasar pertama, dan
+                                bonding awal.</p>
+                        </div>
+                        <div>
+                            <span class="group-member-count">1.2k Anggota Aktif</span>
+                        </div>
+                    </div>
+                    <div class="group-card">
+                        <div>
+                            <h3>Toddler Parents</h3>
+                            <p>Menemani tantangan toilet training, stimulasi motorik balita aktif, mengatasi tantangan, dan
+                                melatih bicara.</p>
+                        </div>
+                        <div>
+                            <span class="group-member-count">3.4k Anggota Aktif</span>
+                        </div>
+                    </div>
+                    <div class="group-card">
+                        <div>
+                            <h3>School-Age Parents</h3>
+                            <p>Membahas persiapan sekolah anak, melatih fokus konsentrasi belajar, kemandirian sosialisasi,
+                                dan batasan gadget.</p>
+                        </div>
+                        <div>
+                            <span class="group-member-count">2.1k Anggota Aktif</span>
+                        </div>
+                    </div>
+                @endforelse
             </div>
         </section>
-
 
         <!-- =========================
          DISKUSI HANGAT HARI INI
@@ -513,7 +562,8 @@
         <section class="discussion-section">
             <div class="discussion-top-flex">
                 <div>
-                    <h2 style="font-size: 1.5rem; font-weight: 700; color: #022c22; margin-bottom: 0.25rem;">Diskusi Hangat Hari Ini</h2>
+                    <h2 style="font-size: 1.5rem; font-weight: 700; color: #022c22; margin-bottom: 0.25rem;">Diskusi
+                        Hangat Hari Ini</h2>
                     <p class="section-desc">Ikuti obrolan hangat seputar keseharian mendidik si kecil</p>
                 </div>
                 <a href="#" class="btn-orange">
@@ -582,9 +632,12 @@
     ========================== -->
         <section class="testimonial-section">
             <div class="testimonial-container">
-                <h2 style="font-size: 1.5rem; font-weight: 700; color: #022c22; margin-bottom: 2rem;">Kisah Sukses Orang Tua</h2>
+                <h2 style="font-size: 1.5rem; font-weight: 700; color: #022c22; margin-bottom: 2rem;">Kisah Sukses Orang
+                    Tua</h2>
                 <blockquote class="testimonial-quote">
-                    "Semenjak gabung di komunitas SmartChild dan rutin melakukan asesmen bulanan, saya tidak lagi panik membandingkan tumbuh kembang anak saya dengan anak tetangga. Laporan milestones-nya sangat membantu saya berdiskusi dengan dokter spesialis anak."
+                    "Semenjak gabung di komunitas SmartChild dan rutin melakukan asesmen bulanan, saya tidak lagi panik
+                    membandingkan tumbuh kembang anak saya dengan anak tetangga. Laporan milestones-nya sangat membantu
+                    saya berdiskusi dengan dokter spesialis anak."
                 </blockquote>
                 <div class="testimonial-author">Bunda Syafira & Kenzie (2 Tahun)</div>
                 <div class="testimonial-sub">Anggota Komunitas sejak 2024</div>
@@ -598,7 +651,8 @@
         <section class="cta-banner">
             <h2>Mari Menjadi Bagian dari Komunitas Kami</h2>
             <p>
-                Temukan kenyamanan berbagi ilmu pola asuh dan berjejaring bersama orang tua di seluruh wilayah Nusantara secara gratis.
+                Temukan kenyamanan berbagi ilmu pola asuh dan berjejaring bersama orang tua di seluruh wilayah Nusantara
+                secara gratis.
             </p>
             <a href="#" class="btn-emerald" style="padding: 0.875rem 2rem;">
                 Daftar Komunitas Sekarang

@@ -560,18 +560,21 @@
             </div>
 
             <!-- Video Panduan Praktis -->
+            <!-- Video Panduan Praktis -->
             <div class="video-section">
                 <div class="section-header">
                     <h2 class="section-title">Video Panduan Praktis</h2>
                     <p class="section-desc">Belajar visual lebih mudah dengan demonstrasi langsung dari ahlinya.</p>
                 </div>
                 <div class="grid-3">
-                    @foreach($videos as $video)
+                    @forelse($videos as $video)
                         <div class="video-card">
                             <div class="video-thumb-wrapper">
                                 <img src="{{ asset('storage/' . $video->thumbnail) }}" alt="{{ $video->title }}"
                                     class="video-thumb">
+
                                 @if($video->video_url)
+                                    <!-- Pastikan atribut href-nya memanggil variabel $video->video_url -->
                                     <a href="{{ $video->video_url }}" target="_blank" class="play-button"
                                         title="Tonton Video">▶</a>
                                 @else
@@ -579,31 +582,59 @@
                                         title="Video belum tersedia">▶</div>
                                 @endif
                             </div>
-                            <div class="video-info">
+                            <div class="video-info" style="padding: 1.25rem;">
+                                <!-- Badge Kategori Video yang Sama Persis dengan Course -->
+                                <span class="category-badge">{{ $video->category }}</span>
+
                                 <h4 class="video-title">{{ $video->title }}</h4>
                                 <p class="video-meta">Durasi: {{ $video->duration }} • Bersama {{ $video->instructor }}</p>
                             </div>
                         </div>
-                    @endforeach
+                    @empty
+                        <p class="empty-state"
+                            style="grid-column: span 3; text-align: center; color: #9CA3AF; padding: 2rem 0;">Belum ada
+                            video untuk kategori ini.</p>
+                    @endforelse
                 </div>
             </div>
 
             <!-- Dibimbing Oleh Expert Terpercaya (Sesuai Referensi Gambar) -->
-            <div class="experts-section">
-                <div class="experts-header">
-                    <h2 class="section-title">Dibimbing Oleh Expert Terpercaya</h2>
-                    <p class="section-desc">Belajar langsung dari tim praktisi berpengalaman dan bersertifikasi</p>
+            <!-- Bagian Expert Terpercaya -->
+            <div class="expert-section" style="margin-top: 4rem; margin-bottom: 4rem;">
+                <div class="section-header" style="text-align: center; margin-bottom: 2.5rem;">
+                    <h2 class="section-title" style="font-size: 1.75rem; font-weight: bold; color: #1F2937;">Dibimbing
+                        Oleh Expert Terpercaya</h2>
+                    <p class="section-desc" style="color: #6B7280; margin-top: 0.5rem;">Belajar langsung dari tim
+                        praktisi berpengalaman dan bersertifikasi</p>
                 </div>
-                <div class="grid-2">
-                    @foreach($experts as $expert)
-                        <div class="expert-card">
-                            <img src="{{ asset('storage/' . $expert->photo) }}" alt="{{ $expert->name }}"
-                                class="expert-avatar">
-                            <h3 class="expert-name">{{ $expert->name }}</h3>
-                            <span class="expert-title">{{ $expert->title }}</span>
-                            <p class="expert-desc">{{ $expert->description }}</p>
+
+                <!-- Grid untuk Card Expert (Berjajar 2 Kolom) -->
+                <div class="grid-2"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+                    @forelse($experts as $expert)
+                        <div class="expert-card"
+                            style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 2rem; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                            <!-- Foto Profil Expert -->
+                            <div class="expert-img-wrapper" style="margin-bottom: 1.25rem;">
+                                <img src="{{ $expert->photo ? asset('storage/' . $expert->photo) : asset('images/default-avatar.png') }}"
+                                    alt="{{ $expert->name }}"
+                                    style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin: 0 auto; border: 3px solid #F3F4F6;">
+                            </div>
+
+                            <!-- Nama & Spesialisasi -->
+                            <h4 style="font-size: 1.15rem; font-weight: bold; color: #1F2937; margin-bottom: 0.25rem;">
+                                {{ $expert->name }}</h4>
+                            <p style="font-size: 0.9rem; color: #F97316; font-weight: 600; margin-bottom: 1rem;">
+                                {{ $expert->specialization }}</p>
+
+                            <!-- Deskripsi / Bio Singkat -->
+                            <p style="font-size: 0.9rem; color: #4B5563; line-height: 1.5;">
+                                {{ $expert->bio ?? $expert->description }}</p>
                         </div>
-                    @endforeach
+                    @empty
+                        <p style="grid-column: span 2; text-align: center; color: #9CA3AF; padding: 2rem;">Belum ada data
+                            expert yang ditambahkan.</p>
+                    @endforelse
                 </div>
             </div>
 

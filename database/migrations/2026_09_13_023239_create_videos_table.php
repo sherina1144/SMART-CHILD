@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->string('duration');
             $table->string('instructor');
             $table->string('thumbnail');
+            // Menambahkan kolom kategori dengan enum
+            $table->enum('category', ['nutrisi', 'tumbuh kembang', 'kesehatan', 'psikologi']);
             $table->string('video_url')->nullable();
             $table->timestamps();
         });

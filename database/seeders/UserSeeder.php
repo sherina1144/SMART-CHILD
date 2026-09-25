@@ -2,33 +2,28 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-class DatabaseSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // Akun Admin (Sherina)
+        // Buat akun Admin
         User::create([
-            'nama' => 'Sherina Agustin', // Menggunakan 'nama'
+            'nama' => 'Sherina Agustin',
             'email' => 'sherina@gmail.com',
             'password' => Hash::make('12345678'),
             'role' => 'admin',
         ]);
 
-        // Akun User Biasa (Agatha)
+        // Buat akun User Biasa
         User::create([
-            'nama' => 'Agatha', // Menggunakan 'nama'
+            'nama' => 'Agatha',
             'email' => 'agatha@gmail.com',
             'password' => Hash::make('12345678'),
             'role' => 'user',
-        ]);
-
-        // Panggil seeder video
-        $this->call([
-            VideoSeeder::class,
         ]);
     }
 }

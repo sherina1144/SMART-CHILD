@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ParentingAcademy; // Model untuk Buku Panduan / Artikel
-use App\Models\Video;            // Model untuk Video Rekomendasi
-use App\Models\Doctor;           // Model untuk Dokter/Pakar (jika diperlukan)
+use App\Models\ParentingAcademy;
+use App\Models\Video;
+use App\Models\Doctor;
 use Illuminate\Support\Facades\Storage;
 
 class ParentingAcademyController extends Controller
@@ -19,22 +19,28 @@ class ParentingAcademyController extends Controller
     {
         $category = $request->get('category', 'Semua Materi');
 
-        // Ambil kategori unik untuk tombol filter dinamis di bagian atas
-        $categories = ParentingAcademy::where('status', 'published')
+        $categoriesFromAcademy = ParentingAcademy::where('status', 'published')
             ->whereNotNull('category')
-            ->distinct()
             ->pluck('category');
 
-        // Bagian Atas: Buku Panduan / Artikel (Difilter berdasarkan kategori)
-        $query = ParentingAcademy::where('status', 'published');
+        $categoriesFromVideo = Video::whereNotNull('category')
+            ->pluck('category');
+
+        $categories = $categoriesFromAcademy->merge($categoriesFromVideo)->unique()->sort()->values();
+
+        $coursesQuery = ParentingAcademy::where('status', 'published');
         if ($category && $category !== 'Semua Materi') {
-            $query->where('category', $category);
+            $coursesQuery->where('category', $category);
         }
-        $courses = $query->latest()->get();
+        $courses = $coursesQuery->latest()->get();
 
-        // Bagian Bawah: Video Rekomendasi (Tampil konsisten semua)
-        $videos = Video::latest()->get();
+        $videosQuery = Video::query();
+        if ($category && $category !== 'Semua Materi') {
+            $videosQuery->where('category', $category);
+        }
+        $videos = $videosQuery->latest()->get();
 
+        // PASTIKAN BARIS INI ADA SUPAYA DATA DOKTER TERKIRIM KE VIEW!
         $experts = Doctor::all();
 
         return view('user.services.parenting_academy', compact('courses', 'videos', 'categories', 'category', 'experts'));
@@ -42,10 +48,8 @@ class ParentingAcademyController extends Controller
 
     public function subscribe(Request $request)
     {
-        // Logika subscribe newsletter/membership jika ada
         return back()->with('success', 'Berhasil berlangganan Parenting Academy!');
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -57,7 +61,6 @@ class ParentingAcademyController extends Controller
         $academies = ParentingAcademy::latest()->get();
         $videos = Video::latest()->get();
 
-        // Mengarahkan ke satu folder view admin yang terpusat
         return view('admin.parenting_academy.index', compact('academies', 'videos'));
     }
 
@@ -133,7 +136,6 @@ class ParentingAcademyController extends Controller
         return back()->with('success', 'Buku panduan berhasil dihapus!');
     }
 
-
     // --- CRUD VIDEO REKOMENDASI ---
     public function createVideo()
     {
@@ -144,6 +146,7 @@ class ParentingAcademyController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'category' => 'required|string|max:255', // <-- Ditambahkan validasi kategori
             'duration' => 'required|string',
             'instructor' => 'required|string',
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
@@ -154,6 +157,7 @@ class ParentingAcademyController extends Controller
 
         Video::create([
             'title' => $request->title,
+            'category' => $request->category, // <-- Disimpan ke database
             'duration' => $request->duration,
             'instructor' => $request->instructor,
             'thumbnail' => $thumbnailPath,
@@ -175,6 +179,7 @@ class ParentingAcademyController extends Controller
 
         $request->validate([
             'title' => 'required|string|max:255',
+            'category' => 'required|string|max:255', // <-- Ditambahkan validasi kategori
             'duration' => 'required|string',
             'instructor' => 'required|string',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -190,6 +195,7 @@ class ParentingAcademyController extends Controller
 
         $video->update([
             'title' => $request->title,
+            'category' => $request->category, // <-- Diupdate ke database
             'duration' => $request->duration,
             'instructor' => $request->instructor,
             'video_url' => $request->video_url,
