@@ -326,92 +326,109 @@
             {{-- PROFILE --}}
             <li class="nav-item dropdown profile-item">
 
+    <a
+        href="#"
+        class="action-btn profile-btn"
+    >
+
+        @if(auth()->user()->foto)
+
+            <img
+                src="{{ asset('storage/' . auth()->user()->foto) }}"
+                alt="Profile"
+                class="profile-image"
+            >
+
+        @else
+
+            <div class="profile-placeholder">
+
+                <i class="fa-solid fa-user"></i>
+
+            </div>
+
+        @endif
+
+    </a>
+
+
+    <div class="dropdown-menu profile-menu">
+
+        <div class="dropdown-header">
+            Akun Saya
+        </div>
+        
+        <ul class="dropdown-list">
+
+            <li>
+
                 <a
-                    href="#"
-                    class="action-btn profile-btn"
+                    href="{{ route('profile.show') }}"
+                    class="{{ request()->routeIs('profile.*') ? 'active-sub' : '' }}"
                 >
 
-                    @if(auth()->user()->foto)
+                    <i class="fa-solid fa-user-pen"></i>
 
-                        <img
-                            src="{{ asset('storage/' . auth()->user()->foto) }}"
-                            alt="Profile"
-                            class="profile-image"
-                        >
-
-                    @else
-
-                        <div class="profile-placeholder">
-
-                            <i class="fa-solid fa-user"></i>
-
-                        </div>
-
-                    @endif
+                    Lihat Profil
 
                 </a>
 
-
-                <div class="dropdown-menu profile-menu">
-
-                    <div class="dropdown-header">
-                        Akun Saya
-                    </div>
-                    
-                    <ul class="dropdown-list">
-
-                        <li>
-
-                            <a
-                                href="{{ route('profile.show') }}"
-                                class="{{ request()->routeIs('profile.*') ? 'active-sub' : '' }}"
-                            >
-
-                                <i class="fa-solid fa-user-pen"></i>
-
-                                Lihat Profil
-
-                            </a>
-
-                        </li>
+            </li>
 
 
-                        <li>
+            <li>
 
-                            <a
-                                href="{{ route('shop.myorders') }}"
-                                class="{{ request()->routeIs('shop.myorders') || request()->routeIs('shop.myorders.show') ? 'active-sub' : '' }}"
-                            >
+                <a
+                    href="{{ route('shop.myorders') }}"
+                    class="{{ request()->routeIs('shop.myorders') || request()->routeIs('shop.myorders.show') ? 'active-sub' : '' }}"
+                >
 
-                                <i class="fa-solid fa-box"></i>
+                    <i class="fa-solid fa-box"></i>
 
-                                My Order
+                    My Order
 
-                            </a>
-
-                        </li>
-
-
-                        <li>
-
-                            <a
-                                href="{{ route('user.partnership') }}"
-                                class="{{ request()->routeIs('user.partnership') ? 'active-sub' : '' }}"
-                            >
-
-                                <i class="fa-solid fa-handshake"></i>
-
-                                Partnership
-
-                            </a>
-
-                        </li>
-
-                    </ul>
-
-                </div>
+                </a>
 
             </li>
+
+
+            <!-- Menu Baru: My Consultations -->
+            <li>
+
+                <a
+                    href="{{ route('user.consultations.index') }}"
+                    class="{{ request()->routeIs('user.consultations.*') ? 'active-sub' : '' }}"
+                >
+
+                    <i class="fa-solid fa-comments"></i>
+
+                    My Consultations
+
+                </a>
+
+            </li>
+
+
+            <li>
+
+                <a
+                    href="{{ route('user.partnership') }}"
+                    class="{{ request()->routeIs('user.partnership') ? 'active-sub' : '' }}"
+                >
+
+                    <i class="fa-solid fa-handshake"></i>
+
+                    Partnership
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</li>
 
         </div>
 
@@ -942,9 +959,9 @@
 
     right: 0;
 
-    min-width: 170px;
+    min-width: 220px;
 
-    width: 170px;
+    width: 220px;
 
 }
 
