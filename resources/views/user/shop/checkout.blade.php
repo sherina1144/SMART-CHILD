@@ -1045,70 +1045,148 @@
                         <div class="checkout-product-list">
 
 
-                            @foreach ($cart as $productId => $item)
+                            @foreach ($cart as $cartKey => $item)
 
-                                @if (isset($products[$productId]))
-
-                                    @php
-
-                                        $product = $products[$productId];
-
-                                        $quantity = $item['quantity'];
-
-                                        $subtotal =
-                                            $product->harga * $quantity;
-
-                                    @endphp
+                                @php
+                                    $quantity = (int) $item['quantity'];
+                                @endphp
 
 
-                                    <div class="checkout-product">
+                                {{-- =================================================
+                                    SMART CHILD BOX
+                                ================================================= --}}
+
+                                @if (($item['type'] ?? 'product') === 'box')
+
+                                    @if (isset($boxes[$item['box_id']]))
+
+                                        @php
+                                            $box = $boxes[$item['box_id']];
+                                            $subtotal = $box->harga * $quantity;
+                                        @endphp
 
 
-                                        <div class="checkout-product-image">
+                                        <div class="checkout-product">
 
-                                            @if ($product->gambar)
 
-                                                <img
-                                                    src="{{ asset('images/' . $product->gambar) }}"
-                                                    alt="{{ $product->nama_produk }}"
-                                                >
+                                            <div class="checkout-product-image">
 
-                                            @else
+                                                @if ($box->gambar)
 
-                                                <div class="checkout-product-no-image">
-                                                    Gambar belum tersedia
+                                                    <img
+                                                        src="{{ asset('images/' . $box->gambar) }}"
+                                                        alt="{{ $box->nama_box }}"
+                                                    >
+
+                                                @else
+
+                                                    <div class="checkout-product-no-image">
+                                                        Gambar belum tersedia
+                                                    </div>
+
+                                                @endif
+
+                                            </div>
+
+
+                                            <div class="checkout-product-info">
+
+                                                <div class="checkout-product-name">
+                                                    {{ $box->nama_box }}
                                                 </div>
 
-                                            @endif
+                                                <div class="checkout-product-quantity">
 
-                                        </div>
+                                                    {{ $quantity }} ×
 
+                                                    Rp {{ number_format($box->harga, 0, ',', '.') }}
 
-                                        <div class="checkout-product-info">
-
-                                            <div class="checkout-product-name">
-                                                {{ $product->nama_produk }}
-                                            </div>
-
-                                            <div class="checkout-product-quantity">
-
-                                                {{ $quantity }} ×
-
-                                                Rp {{ number_format($product->harga, 0, ',', '.') }}
+                                                </div>
 
                                             </div>
 
+
+                                            <div class="checkout-product-price">
+
+                                                Rp {{ number_format($subtotal, 0, ',', '.') }}
+
+                                            </div>
+
+
                                         </div>
 
+                                    @endif
 
-                                        <div class="checkout-product-price">
 
-                                            Rp {{ number_format($subtotal, 0, ',', '.') }}
+                                {{-- =================================================
+                                    PRODUCT BIASA
+                                ================================================= --}}
+
+                                @else
+
+                                    @if (isset($products[$item['product_id']]))
+
+                                        @php
+                                            $product = $products[$item['product_id']];
+
+                                            $subtotal =
+                                                $product->harga * $quantity;
+                                        @endphp
+
+
+                                        <div class="checkout-product">
+
+
+                                            <div class="checkout-product-image">
+
+                                                @if ($product->gambar)
+
+                                                    <img
+                                                        src="{{ asset('images/' . $product->gambar) }}"
+                                                        alt="{{ $product->nama_produk }}"
+                                                    >
+
+                                                @else
+
+                                                    <div class="checkout-product-no-image">
+                                                        Gambar belum tersedia
+                                                    </div>
+
+                                                @endif
+
+                                            </div>
+
+
+                                            <div class="checkout-product-info">
+
+                                                <div class="checkout-product-name">
+
+                                                    {{ $product->nama_produk }}
+
+                                                </div>
+
+
+                                                <div class="checkout-product-quantity">
+
+                                                    {{ $quantity }} ×
+
+                                                    Rp {{ number_format($product->harga, 0, ',', '.') }}
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <div class="checkout-product-price">
+
+                                                Rp {{ number_format($subtotal, 0, ',', '.') }}
+
+                                            </div>
+
 
                                         </div>
 
-
-                                    </div>
+                                    @endif
 
                                 @endif
 

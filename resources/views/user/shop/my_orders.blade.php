@@ -541,7 +541,61 @@
 
                         @foreach ($order->items as $item)
 
-                        @if ($item->product)
+                        {{-- =================================================
+                            SMART CHILD BOX
+                        ================================================= --}}
+
+                        @if ($item->box)
+
+                            <div class="order-item">
+
+                                <div class="order-item-image">
+
+                                    @if ($item->box->gambar)
+
+                                        <img
+                                            src="{{ asset('images/' . $item->box->gambar) }}"
+                                            alt="{{ $item->box->nama_box }}"
+                                        >
+
+                                    @else
+
+                                        <div class="order-item-no-image">
+                                            Gambar belum tersedia
+                                        </div>
+
+                                    @endif
+
+                                </div>
+
+
+                                <div class="order-item-info">
+
+                                    <div class="order-item-name">
+                                        {{ $item->box->nama_box }}
+                                    </div>
+
+                                    <div class="order-item-quantity">
+                                        {{ $item->jumlah }}
+                                        ×
+                                        Rp {{ number_format($item->box->harga, 0, ',', '.') }}
+                                    </div>
+
+                                </div>
+
+
+                                <div class="order-item-subtotal">
+                                    Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                                </div>
+
+                            </div>
+
+
+                        {{-- =================================================
+                            PRODUCT BIASA
+                        ================================================= --}}
+
+                        @elseif ($item->product)
 
                             <div class="order-item">
 
@@ -564,6 +618,7 @@
 
                                 </div>
 
+
                                 <div class="order-item-info">
 
                                     <div class="order-item-name">
@@ -577,6 +632,7 @@
                                     </div>
 
                                 </div>
+
 
                                 <div class="order-item-subtotal">
                                     Rp {{ number_format($item->subtotal, 0, ',', '.') }}

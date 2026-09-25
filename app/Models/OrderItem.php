@@ -15,6 +15,7 @@ class OrderItem extends Model
     protected $fillable = [
         'order_id',
         'product_id',
+        'box_id',
         'jumlah',
         'subtotal',
     ];
@@ -34,6 +35,15 @@ class OrderItem extends Model
             Product::class,
             'product_id',
             'product_id'
+        );
+    }
+
+    public function box()
+    {
+        return $this->belongsTo(
+            SmartChildBox::class,
+            'box_id',
+            'box_id'
         );
     }
 }

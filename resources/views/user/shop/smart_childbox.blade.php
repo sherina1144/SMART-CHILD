@@ -3,16 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Smart Child Box - Smart Child</title>
+
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
+
 <body>
 
     @include('layout.header')
 
+
     <style>
+
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
 
         :root {
             --sage-green: #6FAF9B;
@@ -26,21 +32,87 @@
 
 
         /* =====================================================
+        RESET
+        ===================================================== */
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            width: 100%;
+            font-family: 'Poppins', sans-serif;
+        }
+
+
+        /* =====================================================
         PAGE
         ===================================================== */
 
         .smart-box-page {
             min-height: calc(100vh - 90px);
+
             background: var(--cream);
+
             font-family: 'Poppins', sans-serif;
+
             color: #25322E;
-            padding-bottom: 25px;
+
+            padding-bottom: 0;
         }
+
 
         .smart-box-page *,
         .smart-box-page *::before,
         .smart-box-page *::after {
             box-sizing: border-box;
+        }
+
+
+        /* =====================================================
+        CART TOAST NOTIFICATION
+        ===================================================== */
+
+        .cart-toast {
+            position: fixed;
+
+            top: 85px;
+            right: 30px;
+
+            z-index: 9999;
+
+            min-width: 280px;
+
+            padding: 14px 18px;
+
+            background: var(--dark-green);
+            color: var(--white);
+
+            border-radius: 10px;
+
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+
+            box-shadow:
+                0 8px 25px rgba(49, 92, 80, .18);
+
+            opacity: 0;
+            visibility: hidden;
+
+            transform: translateY(-10px);
+
+            transition: .3s ease;
+        }
+
+
+        .cart-toast.show {
+            opacity: 1;
+            visibility: visible;
+
+            transform: translateY(0);
         }
 
 
@@ -399,6 +471,12 @@
         }
 
 
+        .box-choose-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+
         .box-choose-btn i {
             margin-left: 17px;
         }
@@ -721,6 +799,30 @@
 
 
         /* =====================================================
+        FOOTER
+        ===================================================== */
+
+        .sbd-footer {
+            width: 100%;
+
+            padding: 25px 20px;
+
+            background: var(--dark-green);
+
+            text-align: center;
+        }
+
+
+        .sbd-footer p {
+            margin: 0;
+
+            font-size: 11px;
+
+            color: rgba(255, 255, 255, .75);
+        }
+
+
+        /* =====================================================
         RESPONSIVE
         ===================================================== */
 
@@ -759,6 +861,7 @@
             .box-lower {
                 grid-template-columns: 1fr;
             }
+
         }
 
 
@@ -858,6 +961,7 @@
             .box-feature {
                 margin: 5px 0;
             }
+
         }
 
 
@@ -888,11 +992,23 @@
             .box-feature:last-child {
                 border-bottom: 0;
             }
+
+
+            .cart-toast {
+                top: 75px;
+                right: 15px;
+                left: 15px;
+
+                min-width: unset;
+            }
+
         }
+
     </style>
 
 
     <div class="smart-box-page">
+
 
         {{-- =====================================================
             HERO
@@ -904,22 +1020,28 @@
                 Smart Child Box
             </h1>
 
+
             <p>
                 Paket lengkap untuk mendukung<br>
                 tumbuh kembang anak sesuai usianya.
             </p>
 
+
             <i class="fa-solid fa-leaf hero-leaf"></i>
+
 
             <span class="hero-flower">
                 ✦
             </span>
 
-            <<div class="hero-decoration">
+
+            <div class="hero-decoration">
+
                 <img
                     src="{{ asset('images/smart-box-decoration.png') }}"
                     alt=""
                 >
+
             </div>
 
         </section>
@@ -962,6 +1084,7 @@
                                 {{ $box->nama_box }}
                             </h3>
 
+
                             <p>
                                 {{ $box->kategori_usia }}
                             </p>
@@ -993,6 +1116,7 @@
 
 
                     <div class="box-product-copy">
+
 
                         <h2>
 
@@ -1045,6 +1169,8 @@
                             <button
                                 type="button"
                                 class="box-choose-btn"
+                                onclick="addBoxToCart({{ $activeBox->box_id }})"
+                                @if ($activeBox->harga === null) disabled @endif
                             >
 
                                 Pilih Box Ini
@@ -1057,7 +1183,8 @@
                             <button
                                 type="button"
                                 class="box-cart-btn"
-                                title="Tambah ke keranjang"
+                                title="Lihat keranjang"
+                                onclick="window.location.href='{{ route('shop.cart') }}'"
                             >
 
                                 <i class="fa-solid fa-cart-shopping"></i>
@@ -1104,6 +1231,7 @@
                     ================================================= --}}
 
                     <article class="box-contents-card">
+
 
                         <h2 class="box-section-title">
 
@@ -1191,6 +1319,7 @@
 
                     <article class="box-why-card">
 
+
                         <h2 class="box-section-title">
 
                             Kenapa Memilih Smart Child Box?
@@ -1205,6 +1334,7 @@
                                 <i class="fa-solid fa-shield-halved"></i>
 
                             </div>
+
 
                             <div>
 
@@ -1229,6 +1359,7 @@
 
                             </div>
 
+
                             <div>
 
                                 <h3>
@@ -1251,6 +1382,7 @@
                                 <i class="fa-solid fa-gift"></i>
 
                             </div>
+
 
                             <div>
 
@@ -1275,6 +1407,7 @@
 
                             </div>
 
+
                             <div>
 
                                 <h3>
@@ -1288,6 +1421,7 @@
                             </div>
 
                         </div>
+
 
                     </article>
 
@@ -1384,7 +1518,149 @@
 
         </section>
 
+
+        {{-- =====================================================
+            FOOTER
+        ===================================================== --}}
+
+        <footer class="sbd-footer">
+
+            <p>
+                © {{ date('Y') }} SmartChild.
+                Tumbuh Cerdas, Bahagia Setiap Hari.
+            </p>
+
+        </footer>
+
+
     </div>
+
+
+    {{-- =====================================================
+        SMART CHILD BOX CART SCRIPT
+    ===================================================== --}}
+
+    <script>
+
+        function addBoxToCart(boxId) {
+
+            fetch("{{ url('/shop/cart/add-box') }}/" + boxId, {
+
+                method: "POST",
+
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                }
+
+            })
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                if (data.success) {
+
+                    /*
+                     * Update angka cart di header
+                     */
+
+                    const cartBadge =
+                        document.querySelector('.cart-badge');
+
+
+                    if (cartBadge) {
+
+                        cartBadge.textContent =
+                            data.cart_badge;
+
+
+                        cartBadge.style.display =
+                            data.cart_badge > 0
+                                ? 'flex'
+                                : 'none';
+
+                    }
+
+
+                    /*
+                     * Tampilkan notif
+                     */
+
+                    showBoxCartToast(data.message);
+
+                } else {
+
+                    showBoxCartToast(data.message);
+
+                }
+
+            })
+
+            .catch(error => {
+
+                console.error(error);
+
+
+                showBoxCartToast(
+                    'Terjadi kesalahan saat menambahkan ke keranjang.'
+                );
+
+            });
+
+        }
+
+
+        /*
+         * Toast notification
+         */
+
+        function showBoxCartToast(message) {
+
+            let toast =
+                document.querySelector('.cart-toast');
+
+
+            /*
+             * Kalau elemen toast belum ada,
+             * buat otomatis.
+             */
+
+            if (!toast) {
+
+                toast =
+                    document.createElement('div');
+
+                toast.className =
+                    'cart-toast';
+
+                document.body.appendChild(toast);
+
+            }
+
+
+            toast.textContent =
+                message;
+
+
+            toast.classList.add('show');
+
+
+            /*
+             * Hilangkan notif setelah 2,5 detik.
+             */
+
+            setTimeout(function () {
+
+                toast.classList.remove('show');
+
+            }, 2500);
+
+        }
+
+    </script>
+
 
 </body>
 </html>

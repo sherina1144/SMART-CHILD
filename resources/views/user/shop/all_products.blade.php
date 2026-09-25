@@ -553,20 +553,16 @@
            FOOTER
            ===================================================== */
 
-        .all-products-footer {
+        .sbd-footer {
             width: 100%;
-
             padding: 25px 20px;
-
             background: var(--dark-green);
-
             text-align: center;
         }
 
-
-        .all-products-footer p {
+        .sbd-footer p {
+            margin: 0;
             font-size: 11px;
-
             color: rgba(255, 255, 255, .75);
         }
 
@@ -1134,10 +1130,11 @@
          FOOTER
          ===================================================== --}}
 
-    <footer class="all-products-footer">
+    <footer class="sbd-footer">
 
         <p>
-            © {{ date('Y') }} Smart Child. All rights reserved.
+            © {{ date('Y') }} SmartChild.
+            Tumbuh Cerdas, Bahagia Setiap Hari.
         </p>
 
     </footer>

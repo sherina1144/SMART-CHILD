@@ -617,125 +617,254 @@
 
                     <div class="cart-items-box">
 
-                        @foreach ($cart as $productId => $item)
+                        @foreach ($cart as $cartKey => $item)
 
-                            @if (isset($products[$productId]))
+                            {{-- =================================================
+                                 SMART CHILD BOX
+                            ================================================= --}}
 
-                                @php
-                                    $product = $products[$productId];
+                            @if (($item['type'] ?? 'product') === 'box')
 
-                                    $quantity = $item['quantity'];
+                                @if (isset($boxes[$item['box_id']]))
 
-                                    $subtotal = $product->harga * $quantity;
+                                    @php
+                                        $box = $boxes[$item['box_id']];
+                                        $quantity = $item['quantity'];
+                                        $subtotal = $box->harga * $quantity;
 
-                                    $total += $subtotal;
+                                        $total += $subtotal;
+                                        $totalQuantity += $quantity;
+                                    @endphp
 
-                                    $totalQuantity += $quantity;
-                                @endphp
-
-                                <div class="cart-item">
-
-
-                                    {{-- IMAGE --}}
-
-                                    <div class="cart-item-image">
-
-                                        @if ($product->gambar)
-
-                                            <img
-                                                src="{{ asset('images/' . $product->gambar) }}"
-                                                alt="{{ $product->nama_produk }}"
-                                            >
-
-                                        @else
-
-                                            <div class="cart-item-no-image">
-                                                Gambar belum tersedia
-                                            </div>
-
-                                        @endif
-
-                                    </div>
+                                    <div class="cart-item">
 
 
-                                    {{-- INFO --}}
+                                        {{-- IMAGE --}}
 
-                                    <div class="cart-item-info">
+                                        <div class="cart-item-image">
 
-                                        <span class="cart-item-category">
-                                            {{ $product->kategori_perkembangan }}
-                                        </span>
+                                            @if ($box->gambar)
 
-                                        <h3 class="cart-item-name">
-                                            {{ $product->nama_produk }}
-                                        </h3>
+                                                <img
+                                                    src="{{ asset('images/' . $box->gambar) }}"
+                                                    alt="{{ $box->nama_box }}"
+                                                >
 
-                                        <p class="cart-item-price">
-                                            Rp {{ number_format($product->harga, 0, ',', '.') }}
-                                            / produk
-                                        </p>
+                                            @else
 
-                                    </div>
+                                                <div class="cart-item-no-image">
+                                                    Gambar belum tersedia
+                                                </div>
 
+                                            @endif
 
-                                    {{-- ACTIONS --}}
-
-                                    <div class="cart-item-actions">
+                                        </div>
 
 
-                                        {{-- QUANTITY --}}
+                                        {{-- INFO --}}
 
-                                        <div class="cart-quantity">
+                                        <div class="cart-item-info">
 
-                                            <button
-                                                type="button"
-                                                class="quantity-minus"
-                                                data-product-id="{{ $product->product_id }}"
-                                                title="Kurangi jumlah"
-                                            >
-                                                <i class="fa-solid fa-minus"></i>
-                                            </button>
-
-                                            <span id="quantity-{{ $product->product_id }}">
-                                                {{ $quantity }}
+                                            <span class="cart-item-category">
+                                                Smart Child Box
                                             </span>
 
+                                            <h3 class="cart-item-name">
+                                                {{ $box->nama_box }}
+                                            </h3>
+
+                                            <p class="cart-item-price">
+                                                Rp {{ number_format($box->harga, 0, ',', '.') }}
+                                                / box
+                                            </p>
+
+                                        </div>
+
+
+                                        {{-- ACTIONS --}}
+
+                                        <div class="cart-item-actions">
+
+
+                                            {{-- QUANTITY --}}
+
+                                            <div class="cart-quantity">
+
+                                                <button
+                                                    type="button"
+                                                    class="quantity-minus"
+                                                    data-cart-key="{{ $cartKey }}"
+                                                    title="Kurangi jumlah"
+                                                >
+                                                    <i class="fa-solid fa-minus"></i>
+                                                </button>
+
+                                                <span id="quantity-{{ $cartKey }}">
+                                                    {{ $quantity }}
+                                                </span>
+
+                                                <button
+                                                    type="button"
+                                                    class="quantity-plus"
+                                                    data-cart-key="{{ $cartKey }}"
+                                                    title="Tambah jumlah"
+                                                >
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
+
+                                            </div>
+
+
+                                            {{-- SUBTOTAL --}}
+
+                                            <div
+                                                class="cart-item-subtotal"
+                                                id="subtotal-{{ $cartKey }}"
+                                            >
+                                                Rp {{ number_format($subtotal, 0, ',', '.') }}
+                                            </div>
+
+
+                                            {{-- REMOVE --}}
+
                                             <button
                                                 type="button"
-                                                class="quantity-plus"
-                                                data-product-id="{{ $product->product_id }}"
-                                                title="Tambah jumlah"
+                                                class="cart-remove"
+                                                data-cart-key="{{ $cartKey }}"
+                                                title="Hapus item"
                                             >
-                                                <i class="fa-solid fa-plus"></i>
+                                                <i class="fa-solid fa-trash"></i>
                                             </button>
 
                                         </div>
 
+                                    </div>
 
-                                        {{-- SUBTOTAL --}}
+                                @endif
 
-                                        <div
-                                            class="cart-item-subtotal"
-                                            id="subtotal-{{ $product->product_id }}"
-                                        >
-                                            Rp {{ number_format($subtotal, 0, ',', '.') }}
+
+                            {{-- =================================================
+                                 NORMAL PRODUCT
+                            ================================================= --}}
+
+                            @else
+
+                                @if (isset($products[$item['product_id']]))
+
+                                    @php
+                                        $product = $products[$item['product_id']];
+                                        $quantity = $item['quantity'];
+                                        $subtotal = $product->harga * $quantity;
+
+                                        $total += $subtotal;
+                                        $totalQuantity += $quantity;
+                                    @endphp
+
+                                    <div class="cart-item">
+
+
+                                        {{-- IMAGE --}}
+
+                                        <div class="cart-item-image">
+
+                                            @if ($product->gambar)
+
+                                                <img
+                                                    src="{{ asset('images/' . $product->gambar) }}"
+                                                    alt="{{ $product->nama_produk }}"
+                                                >
+
+                                            @else
+
+                                                <div class="cart-item-no-image">
+                                                    Gambar belum tersedia
+                                                </div>
+
+                                            @endif
+
                                         </div>
 
 
-                                        {{-- REMOVE --}}
+                                        {{-- INFO --}}
 
-                                        <button
-                                            type="button"
-                                            class="cart-remove"
-                                            data-product-id="{{ $product->product_id }}"
-                                            title="Hapus produk"
-                                        >
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
+                                        <div class="cart-item-info">
+
+                                            <span class="cart-item-category">
+                                                {{ $product->kategori_perkembangan }}
+                                            </span>
+
+                                            <h3 class="cart-item-name">
+                                                {{ $product->nama_produk }}
+                                            </h3>
+
+                                            <p class="cart-item-price">
+                                                Rp {{ number_format($product->harga, 0, ',', '.') }}
+                                                / produk
+                                            </p>
+
+                                        </div>
+
+
+                                        {{-- ACTIONS --}}
+
+                                        <div class="cart-item-actions">
+
+
+                                            {{-- QUANTITY --}}
+
+                                            <div class="cart-quantity">
+
+                                                <button
+                                                    type="button"
+                                                    class="quantity-minus"
+                                                    data-cart-key="{{ $cartKey }}"
+                                                    title="Kurangi jumlah"
+                                                >
+                                                    <i class="fa-solid fa-minus"></i>
+                                                </button>
+
+                                                <span id="quantity-{{ $cartKey }}">
+                                                    {{ $quantity }}
+                                                </span>
+
+                                                <button
+                                                    type="button"
+                                                    class="quantity-plus"
+                                                    data-cart-key="{{ $cartKey }}"
+                                                    title="Tambah jumlah"
+                                                >
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
+
+                                            </div>
+
+
+                                            {{-- SUBTOTAL --}}
+
+                                            <div
+                                                class="cart-item-subtotal"
+                                                id="subtotal-{{ $cartKey }}"
+                                            >
+                                                Rp {{ number_format($subtotal, 0, ',', '.') }}
+                                            </div>
+
+
+                                            {{-- REMOVE --}}
+
+                                            <button
+                                                type="button"
+                                                class="cart-remove"
+                                                data-cart-key="{{ $cartKey }}"
+                                                title="Hapus produk"
+                                            >
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+
+                                        </div>
 
                                     </div>
 
-                                </div>
+                                @endif
 
                             @endif
 
@@ -761,7 +890,7 @@
                                 Jumlah Produk
                             </span>
 
-                            <span>
+                            <span id="cart-total-quantity">
                                 {{ $totalQuantity }}
                             </span>
 
@@ -811,6 +940,7 @@
 
     </main>
 
+
     <script>
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -826,12 +956,12 @@
 
             button.addEventListener('click', function () {
 
-                const productId =
-                    this.dataset.productId;
+                const cartKey =
+                    this.dataset.cartKey;
 
                 const quantityElement =
                     document.getElementById(
-                        'quantity-' + productId
+                        'quantity-' + cartKey
                     );
 
                 let quantity =
@@ -842,9 +972,10 @@
                     quantity--;
 
                     updateCartQuantity(
-                        productId,
+                        cartKey,
                         quantity
                     );
+
                 }
 
             });
@@ -856,12 +987,12 @@
 
             button.addEventListener('click', function () {
 
-                const productId =
-                    this.dataset.productId;
+                const cartKey =
+                    this.dataset.cartKey;
 
                 const quantityElement =
                     document.getElementById(
-                        'quantity-' + productId
+                        'quantity-' + cartKey
                     );
 
                 let quantity =
@@ -870,7 +1001,7 @@
                 quantity++;
 
                 updateCartQuantity(
-                    productId,
+                    cartKey,
                     quantity
                 );
 
@@ -881,7 +1012,7 @@
 
         /*
         ==========================================
-        REMOVE PRODUCT
+        REMOVE ITEM
         ==========================================
         */
 
@@ -889,10 +1020,10 @@
 
             button.addEventListener('click', function () {
 
-                const productId =
-                    this.dataset.productId;
+                const cartKey =
+                    this.dataset.cartKey;
 
-                removeCartProduct(productId);
+                removeCartItem(cartKey);
 
             });
 
@@ -908,14 +1039,14 @@
     */
 
     async function updateCartQuantity(
-        productId,
+        cartKey,
         quantity
     ) {
 
         try {
 
             const response = await fetch(
-                `/shop/cart/update/${productId}`,
+                `/shop/cart/update/${encodeURIComponent(cartKey)}`,
                 {
                     method: 'POST',
 
@@ -955,7 +1086,7 @@
 
             const quantityElement =
                 document.getElementById(
-                    'quantity-' + productId
+                    'quantity-' + cartKey
                 );
 
             if (quantityElement) {
@@ -972,7 +1103,7 @@
 
             const subtotalElement =
                 document.getElementById(
-                    'subtotal-' + productId
+                    'subtotal-' + cartKey
                 );
 
             if (subtotalElement) {
@@ -996,6 +1127,34 @@
 
                 totalElement.textContent =
                     data.total_formatted;
+
+            }
+
+
+            /*
+            UPDATE JUMLAH PRODUK
+            */
+
+            const totalQuantityElement =
+                document.getElementById(
+                    'cart-total-quantity'
+                );
+
+            if (totalQuantityElement) {
+
+                let totalQuantity = 0;
+
+                document.querySelectorAll(
+                    '.cart-quantity span'
+                ).forEach(function (element) {
+
+                    totalQuantity +=
+                        parseInt(element.textContent) || 0;
+
+                });
+
+                totalQuantityElement.textContent =
+                    totalQuantity;
 
             }
 
@@ -1025,17 +1184,17 @@
 
     /*
     ==========================================
-    REMOVE CART PRODUCT
+    REMOVE CART ITEM
     ==========================================
     */
 
-    async function removeCartProduct(productId)
+    async function removeCartItem(cartKey)
     {
 
         try {
 
             const response = await fetch(
-                `/shop/cart/remove/${productId}`,
+                `/shop/cart/remove/${encodeURIComponent(cartKey)}`,
                 {
                     method: 'DELETE',
 
@@ -1101,7 +1260,8 @@
 
             if (badge) {
 
-                badge.textContent = count;
+                badge.textContent =
+                    count;
 
             }
 
@@ -1127,7 +1287,9 @@
                     cartIcon.appendChild(
                         newBadge
                     );
+
                 }
+
             }
 
         }

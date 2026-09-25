@@ -3,19 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\SmartChildBox;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | TAMBAH PRODUK KE KERANJANG
+    | Tambah Produk Biasa ke Keranjang
     |--------------------------------------------------------------------------
     */
 
     public function add(Product $product)
     {
-        // Cek stok
         if ($product->stok <= 0) {
             return response()->json([
                 'success' => false,
@@ -23,48 +23,33 @@ class CartController extends Controller
             ], 422);
         }
 
-        // Ambil cart dari session
         $cart = session()->get('cart', []);
 
-        $productId = $product->product_id;
+        $cartKey = 'product_' . $product->product_id;
 
-        // Kalau produk sudah ada di cart
-        if (isset($cart[$productId])) {
+        if (isset($cart[$cartKey])) {
 
-            // Jangan melebihi stok
-            if ($cart[$productId]['quantity'] >= $product->stok) {
+            if ($cart[$cartKey]['quantity'] >= $product->stok) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Jumlah produk sudah mencapai stok yang tersedia.'
                 ], 422);
             }
 
-            $cart[$productId]['quantity']++;
-        }
+            $cart[$cartKey]['quantity']++;
 
-        // Kalau produk belum ada
-        else {
+        } else {
 
-            $cart[$productId] = [
-                'product_id' => $productId,
+            $cart[$cartKey] = [
+                'type' => 'product',
+                'product_id' => $product->product_id,
                 'quantity' => 1,
             ];
         }
 
-        // Simpan cart
         session()->put('cart', $cart);
 
-        /*
-        |--------------------------------------------------------------------------
-        | HEADER = JUMLAH JENIS PRODUK
-        |--------------------------------------------------------------------------
-        | Contoh:
-        | Rainbow x2 = 1
-        | Rainbow x2 + Shape x3 = 2
-        |--------------------------------------------------------------------------
-        */
-
-        $cartCount = count($cart);
+        $cartCount = $this->getCartCount($cart);
 
         return response()->json([
             'success' => true,
@@ -77,7 +62,45 @@ class CartController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | HALAMAN KERANJANG
+    | Tambah Smart Child Box ke Keranjang
+    |--------------------------------------------------------------------------
+    */
+
+    public function addBox(SmartChildBox $box)
+    {
+        $cart = session()->get('cart', []);
+
+        $cartKey = 'box_' . $box->box_id;
+
+        if (isset($cart[$cartKey])) {
+
+            $cart[$cartKey]['quantity']++;
+
+        } else {
+
+            $cart[$cartKey] = [
+                'type' => 'box',
+                'box_id' => $box->box_id,
+                'quantity' => 1,
+            ];
+        }
+
+        session()->put('cart', $cart);
+
+        $cartCount = $this->getCartCount($cart);
+
+        return response()->json([
+            'success' => true,
+            'message' => $box->nama_box . ' berhasil ditambahkan ke keranjang.',
+            'cart_count' => $cartCount,
+            'cart_badge' => min($cartCount, 99),
+        ]);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Menampilkan Keranjang
     |--------------------------------------------------------------------------
     */
 
@@ -85,36 +108,49 @@ class CartController extends Controller
     {
         $cart = session()->get('cart', []);
 
-        // Kalau cart kosong
         if (empty($cart)) {
-
             return view('user.shop.cart', [
                 'cart' => [],
                 'products' => collect(),
+                'boxes' => collect(),
             ]);
         }
 
-        // Ambil ID produk yang ada di cart
-        $productIds = array_keys($cart);
+        $productIds = [];
+        $boxIds = [];
 
-        // Ambil data produk dari database
+        foreach ($cart as $item) {
+
+            if (($item['type'] ?? 'product') === 'box') {
+                $boxIds[] = $item['box_id'];
+            } else {
+                $productIds[] = $item['product_id'];
+            }
+        }
+
         $products = Product::whereIn('product_id', $productIds)
             ->get()
             ->keyBy('product_id');
 
+        $boxes = SmartChildBox::whereIn('box_id', $boxIds)
+            ->get()
+            ->keyBy('box_id');
+
         return view('user.shop.cart', compact(
             'cart',
-            'products'
+            'products',
+            'boxes'
         ));
     }
 
+
     /*
     |--------------------------------------------------------------------------
-    | UPDATE JUMLAH PRODUK
+    | Update Jumlah Produk / Box
     |--------------------------------------------------------------------------
     */
 
-    public function update(Request $request, $productId)
+    public function update(Request $request, $cartKey)
     {
         $request->validate([
             'quantity' => 'required|integer|min:1',
@@ -122,72 +158,101 @@ class CartController extends Controller
 
         $cart = session()->get('cart', []);
 
-        if (!isset($cart[$productId])) {
+        if (!isset($cart[$cartKey])) {
             return response()->json([
                 'success' => false,
-                'message' => 'Produk tidak ditemukan di keranjang.'
+                'message' => 'Item tidak ditemukan di keranjang.'
             ], 404);
         }
 
-        $product = Product::find($productId);
+        $item = $cart[$cartKey];
+        $quantity = (int) $request->quantity;
 
-        if (!$product) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Produk tidak ditemukan.'
-            ], 404);
+        /*
+        |--------------------------------------------------------------------------
+        | Produk Biasa
+        |--------------------------------------------------------------------------
+        */
+
+        if (($item['type'] ?? 'product') === 'product') {
+
+            $product = Product::find($item['product_id']);
+
+            if (!$product) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Produk tidak ditemukan.'
+                ], 404);
+            }
+
+            if ($quantity > $product->stok) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Jumlah melebihi stok yang tersedia.'
+                ], 422);
+            }
+
+            $cart[$cartKey]['quantity'] = $quantity;
+
+            $subtotal = $product->harga * $quantity;
         }
 
-        $quantity = $request->quantity;
+        /*
+        |--------------------------------------------------------------------------
+        | Smart Child Box
+        |--------------------------------------------------------------------------
+        */
 
-        // Jangan melebihi stok
-        if ($quantity > $product->stok) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Jumlah melebihi stok yang tersedia.'
-            ], 422);
+        else {
+
+            $box = SmartChildBox::find($item['box_id']);
+
+            if (!$box) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Smart Child Box tidak ditemukan.'
+                ], 404);
+            }
+
+            $cart[$cartKey]['quantity'] = $quantity;
+
+            $subtotal = $box->harga * $quantity;
         }
-
-        $cart[$productId]['quantity'] = $quantity;
 
         session()->put('cart', $cart);
 
         /*
         |--------------------------------------------------------------------------
-        | HITUNG SUBTOTAL PRODUK
-        |--------------------------------------------------------------------------
-        */
-
-        $subtotal = $product->harga * $quantity;
-
-        /*
-        |--------------------------------------------------------------------------
-        | HITUNG TOTAL SEMUA PRODUK
+        | Hitung Total
         |--------------------------------------------------------------------------
         */
 
         $total = 0;
 
-        foreach ($cart as $id => $item) {
+        foreach ($cart as $key => $cartItem) {
 
-            $cartProduct = Product::find($id);
+            if (($cartItem['type'] ?? 'product') === 'box') {
 
-            if ($cartProduct) {
-                $total += $cartProduct->harga * $item['quantity'];
+                $box = SmartChildBox::find($cartItem['box_id']);
+
+                if ($box) {
+                    $total += $box->harga * $cartItem['quantity'];
+                }
+
+            } else {
+
+                $product = Product::find($cartItem['product_id']);
+
+                if ($product) {
+                    $total += $product->harga * $cartItem['quantity'];
+                }
             }
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | HEADER = JUMLAH JENIS PRODUK
-        |--------------------------------------------------------------------------
-        */
-
-        $cartCount = count($cart);
+        $cartCount = $this->getCartCount($cart);
 
         return response()->json([
             'success' => true,
-
             'quantity' => $quantity,
 
             'subtotal' => $subtotal,
@@ -222,42 +287,50 @@ class CartController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | HAPUS PRODUK DARI KERANJANG
+    | Hapus Item dari Keranjang
     |--------------------------------------------------------------------------
     */
 
-    public function remove($productId)
+    public function remove($cartKey)
     {
         $cart = session()->get('cart', []);
 
-        if (!isset($cart[$productId])) {
-
+        if (!isset($cart[$cartKey])) {
             return response()->json([
                 'success' => false,
-                'message' => 'Produk tidak ditemukan di keranjang.'
+                'message' => 'Item tidak ditemukan di keranjang.'
             ], 404);
         }
 
-        unset($cart[$productId]);
+        unset($cart[$cartKey]);
 
         session()->put('cart', $cart);
 
-        /*
-        |--------------------------------------------------------------------------
-        | HEADER = JUMLAH JENIS PRODUK
-        |--------------------------------------------------------------------------
-        */
-
-        $cartCount = count($cart);
+        $cartCount = $this->getCartCount($cart);
 
         return response()->json([
             'success' => true,
-            'message' => 'Produk berhasil dihapus dari keranjang.',
+            'message' => 'Item berhasil dihapus dari keranjang.',
             'cart_count' => $cartCount,
-            'cart_badge' => min(
-                $cartCount,
-                99
-            ),
+            'cart_badge' => min($cartCount, 99),
         ]);
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Hitung Jumlah Item Keranjang
+    |--------------------------------------------------------------------------
+    */
+
+    private function getCartCount($cart)
+    {
+        $count = 0;
+
+        foreach ($cart as $item) {
+            $count += $item['quantity'] ?? 0;
+        }
+
+        return $count;
     }
 }

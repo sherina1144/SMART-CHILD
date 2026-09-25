@@ -72,8 +72,8 @@
                             </li>
 
                             <li>
-                                <a href="{{ route('development.recommendation') }}"
-                                    class="{{ request()->routeIs('development.recommendation') ? 'active-sub' : '' }}">
+                                <a href="{{ route('development.smartrecommendation') }}"
+                                    class="{{ request()->routeIs('development.smartrecommendation') ? 'active-sub' : '' }}">
                                     Smart Recommendation
                                 </a>
                             </li>
