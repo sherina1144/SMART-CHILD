@@ -1,7 +1,8 @@
-@include('layout.header')
+@extends('layout.app')
 
+@section('content')
 <main class="home-page">
-
+ 
     <!-- =========================
          HERO SECTION
     ========================== -->
@@ -252,6 +253,7 @@
 </main>
 
 
+
 @include('layout.footer')
 
 <script>
@@ -325,3 +327,7 @@
 
     });
 </script>
+
+
+@endsection
+
