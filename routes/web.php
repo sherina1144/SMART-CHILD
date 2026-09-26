@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ShopDevelopmentController;
@@ -15,7 +16,6 @@ use App\Http\Controllers\NewsletterController;
 use App\Models\Consultation;
 use App\Http\Controllers\PartnershipController;
 use App\Http\Controllers\ContactController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -45,9 +45,11 @@ Route::post('/logout', [AuthController::class, 'logout'])
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return redirect('/login');
-});
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+
+
 
 
 /*
@@ -59,7 +61,7 @@ Route::get('/', function () {
 // HOME
 Route::get('/home', function () {
     return view('user.home');
-})->name('home')->middleware('auth');
+})->middleware('auth');
 
 Route::get('/about', function () {
     return view('user.about');
@@ -78,7 +80,7 @@ Route::prefix('development')
     ->group(function () {
 
         Route::get('/child-development', function () {
-            return view('user.development.child_development');
+            return view('user.child_development');
         })->name('child');
 
         Route::get('/assessment', function () {
@@ -447,7 +449,6 @@ Route::get('/api/check-booked-slots', function (Request $request) {
         ->toArray();
 
     return response()->json($bookedTimes);
-
 })->middleware('auth');
 
 
