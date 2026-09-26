@@ -80,7 +80,7 @@ Route::prefix('development')
     ->group(function () {
 
         Route::get('/child-development', function () {
-            return view('user.development.child_development');
+            return view('user.child_development');
         })->name('child');
 
         Route::get('/assessment', function () {

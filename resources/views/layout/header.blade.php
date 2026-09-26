@@ -331,7 +331,7 @@
         class="action-btn profile-btn"
     >
 
-        @if(auth()->user()->foto)
+        @if(auth()->check() && auth()->user()->foto)
 
             <img
                 src="{{ asset('storage/' . auth()->user()->foto) }}"
