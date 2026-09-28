@@ -51,6 +51,7 @@ class OrderController extends Controller
         $totalQuantity = 0;
 
         foreach ($cart as $item) {
+
             $quantity = (int) ($item['quantity'] ?? 0);
 
             if ($quantity <= 0) {
@@ -178,6 +179,7 @@ class OrderController extends Controller
                 ->get()
                 ->keyBy('product_id');
 
+
             /*
             |--------------------------------------------------------------------------
             | AMBIL DATA SMART CHILD BOX
@@ -190,6 +192,7 @@ class OrderController extends Controller
                 ->keyBy('box_id');
 
             $total = 0;
+
 
             /*
             |--------------------------------------------------------------------------
@@ -206,6 +209,7 @@ class OrderController extends Controller
                         'Jumlah produk tidak valid.'
                     );
                 }
+
 
                 /*
                 |--------------------------------------------------------------------------
@@ -234,6 +238,7 @@ class OrderController extends Controller
                     continue;
                 }
 
+
                 /*
                 |--------------------------------------------------------------------------
                 | PRODUCT BIASA
@@ -249,13 +254,17 @@ class OrderController extends Controller
                 $product = $products[$item['product_id']];
 
                 /*
-                | Stok belum dikurangi di sini.
+                |--------------------------------------------------------------------------
+                | STOK BELUM DIKURANGI DI SINI
+                |
                 | Stok baru dikurangi ketika admin ACC pesanan.
+                |--------------------------------------------------------------------------
                 */
 
                 if ($quantity > $product->stok) {
                     throw new \Exception(
-                        'Stok ' . $product->nama_produk .
+                        'Stok ' .
+                        $product->nama_produk .
                         ' tidak mencukupi.'
                     );
                 }
@@ -277,7 +286,8 @@ class OrderController extends Controller
                     '-' .
                     Auth::id(),
 
-                'user_id' => Auth::id(),
+                'user_id' =>
+                    Auth::id(),
 
                 'nama_penerima' =>
                     $request->nama_penerima,
@@ -312,6 +322,7 @@ class OrderController extends Controller
 
                 $quantity = (int) ($item['quantity'] ?? 0);
 
+
                 /*
                 |--------------------------------------------------------------------------
                 | SMART CHILD BOX
@@ -344,6 +355,7 @@ class OrderController extends Controller
 
                     continue;
                 }
+
 
                 /*
                 |--------------------------------------------------------------------------
@@ -487,10 +499,30 @@ class OrderController extends Controller
 
     /*
     |--------------------------------------------------------------------------
+    | ADMIN - DETAIL ORDER
+    |--------------------------------------------------------------------------
+    */
+
+    public function adminShow($id)
+    {
+        $order = Order::with([
+            'user',
+            'items.product',
+            'items.box'
+        ])
+            ->findOrFail($id);
+
+        return view(
+            'admin.shop.orders.show',
+            compact('order')
+        );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
     | ADMIN - ACC / TERIMA ORDER
     |--------------------------------------------------------------------------
-    |
-    | Ketika admin menerima pesanan:
     |
     | Product biasa:
     | stok dikurangi sesuai jumlah yang dipesan.
@@ -499,7 +531,7 @@ class OrderController extends Controller
     | stok setiap isi box dikurangi berdasarkan:
     |
     | jumlah produk dalam box x jumlah box yang dipesan.
-    |
+    |--------------------------------------------------------------------------
     */
 
     public function adminAccept($id)
@@ -575,12 +607,14 @@ class OrderController extends Controller
                         );
                     }
 
+
                     /*
                     | KURANGI STOK
                     */
 
                     $product->stok =
-                        $product->stok - $item->jumlah;
+                        $product->stok -
+                        $item->jumlah;
 
                     $product->save();
 
@@ -630,14 +664,10 @@ class OrderController extends Controller
                         /*
                         | Contoh:
                         |
-                        | Box berisi:
-                        | Shape Sorter = 1
+                        | Isi Box = 1 produk
+                        | User beli = 2 Box
                         |
-                        | User beli:
-                        | 2 Box
-                        |
-                        | Stok dikurangi:
-                        | 1 x 2 = 2
+                        | Stok dikurangi = 1 x 2 = 2
                         */
 
                         $jumlahDibutuhkan =
@@ -646,8 +676,7 @@ class OrderController extends Controller
 
 
                         if (
-                            $product->stok
-                            <
+                            $product->stok <
                             $jumlahDibutuhkan
                         ) {
 
@@ -664,8 +693,7 @@ class OrderController extends Controller
                         */
 
                         $product->stok =
-                            $product->stok
-                            -
+                            $product->stok -
                             $jumlahDibutuhkan;
 
                         $product->save();

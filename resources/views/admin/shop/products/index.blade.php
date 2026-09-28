@@ -246,13 +246,14 @@
         color: #C76E2D;
     }
 
-    .badge-available {
-        background: #E8F7EF;
-        color: #25734A;
+    /* STOCK */
+    .stock-number {
+        font-size: 14px;
+        font-weight: 800;
+        color: #315C50;
     }
 
-    .badge-empty {
-        background: #FDECEC;
+    .stock-zero {
         color: #B42318;
     }
 
@@ -639,14 +640,14 @@
 
                                 @if($product->stok > 0)
 
-                                    <span class="badge badge-available">
-                                        Tersedia
+                                    <span class="stock-number">
+                                        {{ $product->stok }}
                                     </span>
 
                                 @else
 
-                                    <span class="badge badge-empty">
-                                        Stok Habis
+                                    <span class="stock-number stock-zero">
+                                        0
                                     </span>
 
                                 @endif

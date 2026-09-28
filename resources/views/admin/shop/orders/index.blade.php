@@ -5,26 +5,37 @@
 <div class="container-fluid">
 
     <div class="page-header">
+
         <div>
+
             <h1>Pesanan</h1>
-            <p>Kelola pesanan pelanggan Smart Child.</p>
+
+            <p>
+                Kelola pesanan pelanggan Smart Child.
+            </p>
+
         </div>
+
     </div>
 
 
     {{-- ALERT SUCCESS --}}
     @if(session('success'))
+
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
+
     @endif
 
 
     {{-- ALERT ERROR --}}
     @if(session('error'))
+
         <div class="alert alert-danger">
             {{ session('error') }}
         </div>
+
     @endif
 
 
@@ -35,16 +46,27 @@
             <table class="order-table">
 
                 <thead>
+
                     <tr>
+
                         <th>No. Order</th>
+
                         <th>Pelanggan</th>
+
                         <th>Tanggal</th>
+
                         <th>Total</th>
+
                         <th>Pembayaran</th>
+
                         <th>Status</th>
+
                         <th>Aksi</th>
+
                     </tr>
+
                 </thead>
+
 
                 <tbody>
 
@@ -54,31 +76,48 @@
 
                             {{-- NOMOR ORDER --}}
                             <td>
+
                                 <strong>
                                     {{ $order->nomor_order }}
                                 </strong>
+
                             </td>
 
 
                             {{-- PELANGGAN --}}
                             <td>
+
                                 @if($order->user)
+
                                     {{ $order->user->nama }}
+
                                 @else
+
                                     {{ $order->nama_penerima }}
+
                                 @endif
+
                             </td>
 
 
                             {{-- TANGGAL --}}
                             <td>
+
                                 {{ $order->created_at->format('d/m/Y H:i') }}
+
                             </td>
 
 
                             {{-- TOTAL --}}
                             <td>
-                                Rp{{ number_format($order->total_harga, 0, ',', '.') }}
+
+                                Rp{{ number_format(
+                                    $order->total_harga,
+                                    0,
+                                    ',',
+                                    '.'
+                                ) }}
+
                             </td>
 
 
@@ -117,6 +156,12 @@
                                         Ditolak
                                     </span>
 
+                                @elseif($order->status_pesanan === 'Selesai')
+
+                                    <span class="status completed">
+                                        Selesai
+                                    </span>
+
                                 @else
 
                                     <span class="status">
@@ -131,17 +176,34 @@
                             {{-- AKSI --}}
                             <td>
 
-                                @if($order->status_pesanan === 'Pending')
+                                <div class="action-wrapper">
 
-                                    <div class="action-wrapper">
+                                    {{-- DETAIL --}}
+                                    <a
+                                        href="{{ route(
+                                            'admin.orders.show',
+                                            $order->order_id
+                                        ) }}"
+                                        class="btn-detail"
+                                    >
+                                        Detail
+                                    </a>
+
+
+                                    {{-- AKSI PENDING --}}
+                                    @if($order->status_pesanan === 'Pending')
 
                                         {{-- ACC --}}
                                         <form
-                                            action="{{ route('admin.orders.accept', $order->order_id) }}"
+                                            action="{{ route(
+                                                'admin.orders.accept',
+                                                $order->order_id
+                                            ) }}"
                                             method="POST"
                                         >
 
                                             @csrf
+
                                             @method('PATCH')
 
                                             <button
@@ -157,11 +219,15 @@
 
                                         {{-- TOLAK --}}
                                         <form
-                                            action="{{ route('admin.orders.reject', $order->order_id) }}"
+                                            action="{{ route(
+                                                'admin.orders.reject',
+                                                $order->order_id
+                                            ) }}"
                                             method="POST"
                                         >
 
                                             @csrf
+
                                             @method('PATCH')
 
                                             <button
@@ -174,19 +240,14 @@
 
                                         </form>
 
-                                    </div>
+                                    @endif
 
-                                @else
-
-                                    <span class="no-action">
-                                        Sudah diproses
-                                    </span>
-
-                                @endif
+                                </div>
 
                             </td>
 
                         </tr>
+
 
                     @empty
 
@@ -333,10 +394,17 @@
     }
 
 
+    .status.completed {
+        background: #E8F1FF;
+        color: #315C50;
+    }
+
+
     .action-wrapper {
         display: flex;
         align-items: center;
         gap: 8px;
+        flex-wrap: wrap;
     }
 
 
@@ -345,9 +413,12 @@
     }
 
 
+    .btn-detail,
     .btn-accept,
     .btn-reject {
-        border: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         border-radius: 8px;
         padding: 8px 13px;
         font-family: 'Poppins', sans-serif;
@@ -355,12 +426,27 @@
         font-weight: 600;
         cursor: pointer;
         transition: 0.2s ease;
+        text-decoration: none;
+        box-sizing: border-box;
+    }
+
+
+    .btn-detail {
+        background: #FFF9F2;
+        color: #315C50;
+        border: 1px solid #E8E4DC;
+    }
+
+
+    .btn-detail:hover {
+        background: #F4EFE7;
     }
 
 
     .btn-accept {
         background: #6FAF9B;
         color: #FFFFFF;
+        border: none;
     }
 
 
@@ -372,17 +458,12 @@
     .btn-reject {
         background: #FDECEC;
         color: #B42318;
+        border: none;
     }
 
 
     .btn-reject:hover {
         background: #F8D7D5;
-    }
-
-
-    .no-action {
-        color: #98A2B3;
-        font-size: 11px;
     }
 
 

@@ -407,25 +407,21 @@ Route::middleware(['auth', 'role:admin'])
         */
 
         Route::prefix('orders')
-        ->name('orders.')
-        ->group(function () {
+            ->name('orders.')
+            ->group(function () {
 
-            Route::get(
-                '/',
-                [OrderController::class, 'adminIndex']
-            )->name('index');
+                Route::get('/', [OrderController::class, 'adminIndex'])
+                    ->name('index');
 
-            Route::patch(
-                '/{id}/accept',
-                [OrderController::class, 'adminAccept']
-            )->name('accept');
+                Route::get('/{id}', [OrderController::class, 'adminShow'])
+                    ->name('show');
 
-            Route::patch(
-                '/{id}/reject',
-                [OrderController::class, 'adminReject']
-            )->name('reject');
+                Route::patch('/{id}/accept', [OrderController::class, 'adminAccept'])
+                    ->name('accept');
 
-        });
+                Route::patch('/{id}/reject', [OrderController::class, 'adminReject'])
+                    ->name('reject');
+            });
 
 
         /*

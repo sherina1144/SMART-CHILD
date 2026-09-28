@@ -50,6 +50,57 @@
 
         @forelse($boxes as $box)
 
+            @php
+                /*
+                 * Stok Smart Child Box dihitung berdasarkan
+                 * stok produk yang paling sedikit di dalam box.
+                 *
+                 * Contoh:
+                 * Produk A = 20
+                 * Produk B = 15
+                 * Produk C = 25
+                 *
+                 * Jika masing-masing membutuhkan 1,
+                 * maka stok box = 15.
+                 */
+
+                $boxStock = null;
+
+                if ($box->items->count() > 0) {
+
+                    foreach ($box->items as $item) {
+
+                        if ($item->product) {
+
+                            $productStock = $item->product->stok;
+
+                            $requiredQuantity = max(1, $item->jumlah);
+
+                            $available = intdiv(
+                                $productStock,
+                                $requiredQuantity
+                            );
+
+                            if ($boxStock === null || $available < $boxStock) {
+                                $boxStock = $available;
+                            }
+
+                        } else {
+
+                            $boxStock = 0;
+
+                        }
+
+                    }
+
+                } else {
+
+                    $boxStock = 0;
+
+                }
+            @endphp
+
+
             <div class="box-card">
 
                 {{-- GAMBAR --}}
@@ -104,6 +155,30 @@
                         @else
 
                             <span>Harga belum diatur</span>
+
+                        @endif
+
+                    </div>
+
+
+                    {{-- STOK BOX --}}
+                    <div class="box-stock">
+
+                        <span class="stock-label">
+                            Stok Box
+                        </span>
+
+                        @if($boxStock > 0)
+
+                            <span class="stock-number">
+                                {{ $boxStock }} box
+                            </span>
+
+                        @else
+
+                            <span class="stock-number stock-zero">
+                                0 box
+                            </span>
 
                         @endif
 
@@ -250,6 +325,7 @@
 
 
 <style>
+
     /* =========================================================
        PAGE
     ========================================================= */
@@ -373,8 +449,9 @@
 
         box-shadow: 0 3px 14px rgba(37, 61, 50, 0.055);
 
-        transition: transform 0.2s ease,
-                    box-shadow 0.2s ease;
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
     }
 
     .box-card:hover {
@@ -390,9 +467,11 @@
     .box-image {
         height: 155px;
         background: #FFF9F2;
+
         display: flex;
         align-items: center;
         justify-content: center;
+
         overflow: hidden;
         padding: 8px;
     }
@@ -400,6 +479,7 @@
     .box-image img {
         width: 100%;
         height: 100%;
+
         object-fit: contain;
         display: block;
     }
@@ -491,6 +571,37 @@
 
         font-size: 12px;
         font-weight: 600;
+    }
+
+
+    /* =========================================================
+       STOK BOX
+    ========================================================= */
+
+    .box-stock {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+
+        margin-top: 8px;
+    }
+
+    .stock-label {
+        color: #667085;
+
+        font-size: 11.5px;
+        font-weight: 600;
+    }
+
+    .stock-number {
+        color: #315C50;
+
+        font-size: 12px;
+        font-weight: 800;
+    }
+
+    .stock-zero {
+        color: #B42318;
     }
 
 
@@ -761,6 +872,7 @@
         }
 
     }
+
 </style>
 
 @endsection
