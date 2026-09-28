@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\SmartRecommendationController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ShopDevelopmentController;
@@ -18,7 +19,6 @@ use App\Models\Consultation;
 use App\Http\Controllers\PartnershipController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProductController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -48,9 +48,7 @@ Route::post('/logout', [AuthController::class, 'logout'])
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', function () {
-    return redirect('/login');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 
 /*
@@ -62,7 +60,7 @@ Route::get('/', function () {
 // HOME
 Route::get('/home', function () {
     return view('user.home');
-})->name('home')->middleware('auth');
+})->middleware('auth');
 
 Route::get('/about', function () {
     return view('user.about');
@@ -81,7 +79,7 @@ Route::prefix('development')
     ->group(function () {
 
         Route::get('/child-development', function () {
-            return view('user.development.child_development');
+            return view('user.child_development');
         })->name('child');
 
         Route::get('/assessment', function () {
@@ -329,13 +327,6 @@ Route::middleware(['auth', 'role:admin'])
         |--------------------------------------------------------------------------
         | ADMIN SHOP - PRODUCTS
         |--------------------------------------------------------------------------
-        |
-        | URL:
-        | /admin/products
-        |
-        | View:
-        | resources/views/admin/shop/products/
-        |
         */
 
         Route::prefix('products')
@@ -366,44 +357,36 @@ Route::middleware(['auth', 'role:admin'])
         |--------------------------------------------------------------------------
         | ADMIN SHOP - SMART CHILD BOX
         |--------------------------------------------------------------------------
-        |
-        | Nanti controller-nya kita sambungkan setelah halaman CRUD Box dibuat.
-        |
         */
 
-        Route::prefix('smart-child-box')->name('smartbox.')->group(function () {
+        Route::prefix('smart-child-box')
+            ->name('smartbox.')
+            ->group(function () {
 
-            Route::get('/', [SmartChildBoxController::class, 'adminIndex'])
-                ->name('index');
+                Route::get('/', [SmartChildBoxController::class, 'adminIndex'])
+                    ->name('index');
 
-            Route::get('/create', [SmartChildBoxController::class, 'adminCreate'])
-                ->name('create');
+                Route::get('/create', [SmartChildBoxController::class, 'adminCreate'])
+                    ->name('create');
 
-            Route::post('/', [SmartChildBoxController::class, 'adminStore'])
-                ->name('store');
+                Route::post('/', [SmartChildBoxController::class, 'adminStore'])
+                    ->name('store');
 
-            Route::get('/{box}/edit', [SmartChildBoxController::class, 'adminEdit'])
-                ->name('edit');
+                Route::get('/{box}/edit', [SmartChildBoxController::class, 'adminEdit'])
+                    ->name('edit');
 
-            Route::put('/{box}', [SmartChildBoxController::class, 'adminUpdate'])
-                ->name('update');
+                Route::put('/{box}', [SmartChildBoxController::class, 'adminUpdate'])
+                    ->name('update');
 
-            Route::delete('/{box}', [SmartChildBoxController::class, 'adminDestroy'])
-                ->name('destroy');
-        });
+                Route::delete('/{box}', [SmartChildBoxController::class, 'adminDestroy'])
+                    ->name('destroy');
+            });
 
 
         /*
         |--------------------------------------------------------------------------
         | ADMIN SHOP - PESANAN
         |--------------------------------------------------------------------------
-        |
-        | Nanti controller pesanan kita sambungkan untuk:
-        | - melihat pesanan
-        | - konfirmasi pesanan
-        | - proses pesanan
-        | - selesai
-        |
         */
 
         Route::prefix('orders')
@@ -582,7 +565,6 @@ Route::get('/api/check-booked-slots', function (Request $request) {
         ->toArray();
 
     return response()->json($bookedTimes);
-
 })->middleware('auth');
 
 

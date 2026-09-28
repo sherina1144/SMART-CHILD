@@ -2,7 +2,7 @@
 
 @section('content')
 <main class="home-page">
-
+ 
     <!-- =========================
          HERO SECTION
     ========================== -->
@@ -24,18 +24,15 @@
                 panduan, dan komunitas terbaik.
             </p>
 
-            <a href="#" class="home-btn">
-                Mulai Jelajahi
-                <span>→</span>
+            <a href="{{ route('development.child') }}" class="home-btn">
+                Mulai Jelajahi <span>→</span>
             </a>
 
         </div>
 
         <!-- Gambar sementara dikosongkan -->
         <div class="hero-image">
-            <div class="image-placeholder">
-                Gambar
-            </div>
+            <img src="{{ asset('images/hero2.jpg') }}" alt="Smart Child">
         </div>
 
     </section>
@@ -119,9 +116,7 @@
 
         <!-- Gambar sementara -->
         <div class="box-image">
-            <div class="image-placeholder">
-                Gambar
-            </div>
+            <img src="{{ asset('images/smart-child-box2.jpg') }}" alt="Smart Child Box">
         </div>
 
     </section>
@@ -151,85 +146,50 @@
 
         <!-- Filter kategori -->
         <div class="category-filter">
-
-            <button class="active">Semua</button>
-            <button>Mainan Edukasi</button>
-            <button>Buku Anak</button>
-            <button>Perlengkapan</button>
-            <button>Kesehatan</button>
-
+            <button class="active" onclick="filterCategory('semua', this)">Semua</button>
+            <button onclick="filterCategory('kognitif', this)">Kognitif</button>
+            <button onclick="filterCategory('motorik', this)">Motorik</button>
+            <button onclick="filterCategory('bahasa', this)">Bahasa</button>
+            <button onclick="filterCategory('sosial', this)">Sosial</button>
+            <button onclick="filterCategory('emosional', this)">Emosional</button>
+            <button onclick="filterCategory('kreativitas', this)">Kreativitas</button>
         </div>
+
+           
+
+            
 
 
         <!-- Product Cards -->
+        <!-- Product Cards -->
         <div class="product-grid">
 
-            <div class="product-card">
+            @foreach($products as $product)
+
+            <div class="product-card" data-category="{{ strtolower($product->kategori_perkembangan) }}">
 
                 <div class="product-image">
+                    @if($product->gambar)
+                    <img src="{{ asset('images/' . $product->gambar) }}"
+                        alt="{{ $product->nama_produk }}">
+                    @else
                     Gambar
+                    @endif
                 </div>
 
-                <h3>Stacking Rings</h3>
+                <h3>{{ $product->nama_produk }}</h3>
 
                 <p>
-                    Melatih koordinasi tangan dan konsentrasi.
+                    {{ $product->deskripsi }}
                 </p>
 
-                <strong>Rp 125.000</strong>
+                <strong>
+                    Rp {{ number_format($product->harga, 0, ',', '.') }}
+                </strong>
 
             </div>
 
-
-            <div class="product-card">
-
-                <div class="product-image">
-                    Gambar
-                </div>
-
-                <h3>Busy Board Mini</h3>
-
-                <p>
-                    Melatih motorik halus dan konsentrasi.
-                </p>
-
-                <strong>Rp 175.000</strong>
-
-            </div>
-
-
-            <div class="product-card">
-
-                <div class="product-image">
-                    Gambar
-                </div>
-
-                <h3>Play Tunnel</h3>
-
-                <p>
-                    Melatih kemampuan motorik kasar.
-                </p>
-
-                <strong>Rp 225.000</strong>
-
-            </div>
-
-
-            <div class="product-card">
-
-                <div class="product-image">
-                    Gambar
-                </div>
-
-                <h3>Building Blocks</h3>
-
-                <p>
-                    Mainan edukatif untuk kreativitas anak.
-                </p>
-
-                <strong>Rp 150.000</strong>
-
-            </div>
+            @endforeach
 
         </div>
 
@@ -293,5 +253,81 @@
 </main>
 
 
-</main>
+
+@include('layout.footer')
+
+<script>
+    function filterCategory(category, button) {
+
+        // Mengubah tombol aktif
+        const buttons = document.querySelectorAll('.category-filter button');
+
+        buttons.forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+
+        button.classList.add('active');
+
+
+        // Ambil semua produk
+        const products = document.querySelectorAll('.product-card');
+
+        // Sembunyikan semua produk terlebih dahulu
+        products.forEach(function(product) {
+            product.style.display = 'none';
+        });
+
+
+        // Tampilkan produk sesuai kategori
+        if (category === 'semua') {
+    let count = 0;
+
+    products.forEach(function(product) {
+        if (count < 4) {
+            product.style.display = 'block';
+            count++;
+        }
+    });
+
+        } else {
+
+            // Kategori lain maksimal 4 produk
+            let count = 0;
+
+            products.forEach(function(product) {
+
+                const productCategory =
+                    product.getAttribute('data-category');
+
+                if (
+                    productCategory.includes(category) &&
+                    count < 4
+                ) {
+                    product.style.display = 'block';
+                    count++;
+                }
+
+            });
+
+        }
+
+    }
+
+
+    // =========================
+    // FILTER SAAT HALAMAN DIBUKA
+    // =========================
+
+    window.addEventListener('DOMContentLoaded', function() {
+
+        const semuaButton =
+            document.querySelector('.category-filter button');
+
+        filterCategory('semua', semuaButton);
+
+    });
+</script>
+
+
 @endsection
+
