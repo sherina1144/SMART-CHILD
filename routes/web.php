@@ -3,12 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\SmartRecommendationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\ConsultationController;
 use App\Http\Controllers\ShopDevelopmentController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\SmartChildBoxController;
 use App\Http\Controllers\ParentingAcademyController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\AuthController;
@@ -16,10 +18,11 @@ use App\Http\Controllers\NewsletterController;
 use App\Models\Consultation;
 use App\Http\Controllers\PartnershipController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
-| AUTHENTICATION ROUTES (Public)
+| AUTHENTICATION ROUTES
 |--------------------------------------------------------------------------
 */
 
@@ -45,11 +48,7 @@ Route::post('/logout', [AuthController::class, 'logout'])
 |--------------------------------------------------------------------------
 */
 
-
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
-
-
 
 
 /*
@@ -87,15 +86,14 @@ Route::prefix('development')
             return view('user.development.assesment');
         })->name('assessment');
 
-        Route::get('/smart-recommendation', function () {
-            return view('user.development.smart_recomendation');
-        })->name('recommendation');
+        Route::get('/smart-recommendation', [SmartRecommendationController::class, 'index'])
+            ->name('smartrecommendation');
     });
 
 
 /*
 |--------------------------------------------------------------------------
-| SHOP
+| SHOP USER
 |--------------------------------------------------------------------------
 */
 
@@ -104,25 +102,43 @@ Route::prefix('shop')
     ->middleware('auth')
     ->group(function () {
 
+        /*
+        | Shop By Age
+        */
+
         Route::get('/by-age', function () {
             return view('user.shop.shop_byage');
         })->name('byage');
 
+
+        /*
+        | Shop By Development
+        */
+
         Route::get('/shop-by-development', [ShopDevelopmentController::class, 'index'])
             ->name('bydevelopment');
+
+
+        /*
+        | All Products
+        */
 
         Route::get('/all-products', [ShopDevelopmentController::class, 'allProducts'])
             ->name('allproducts');
 
-        Route::get('/smart-box', function () {
-            return view('user.shop.smart_childbox');
-        })->name('smartbox');
+
+        /*
+        | Smart Child Box
+        */
+
+        Route::get('/smart-box', [SmartChildBoxController::class, 'index'])
+            ->name('smartbox');
 
 
         /*
-        |----------------------------------------------------------------------
+        |--------------------------------------------------------------------------
         | CART
-        |----------------------------------------------------------------------
+        |--------------------------------------------------------------------------
         */
 
         Route::get('/cart', [CartController::class, 'index'])
@@ -130,6 +146,9 @@ Route::prefix('shop')
 
         Route::post('/cart/add/{product}', [CartController::class, 'add'])
             ->name('cart.add');
+
+        Route::post('/cart/add-box/{box}', [CartController::class, 'addBox'])
+            ->name('cart.addbox');
 
         Route::post('/cart/update/{product}', [CartController::class, 'update'])
             ->name('cart.update');
@@ -139,9 +158,9 @@ Route::prefix('shop')
 
 
         /*
-        |----------------------------------------------------------------------
+        |--------------------------------------------------------------------------
         | CHECKOUT
-        |----------------------------------------------------------------------
+        |--------------------------------------------------------------------------
         */
 
         Route::get('/checkout', [OrderController::class, 'checkout'])
@@ -149,6 +168,13 @@ Route::prefix('shop')
 
         Route::post('/checkout/order', [OrderController::class, 'store'])
             ->name('checkout.order');
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | MY ORDERS
+        |--------------------------------------------------------------------------
+        */
 
         Route::get('/my-orders', [OrderController::class, 'index'])
             ->name('myorders');
@@ -160,7 +186,7 @@ Route::prefix('shop')
 
 /*
 |--------------------------------------------------------------------------
-| SERVICES (USER)
+| SERVICES USER
 |--------------------------------------------------------------------------
 */
 
@@ -220,7 +246,7 @@ Route::post('/newsletter/store', [NewsletterController::class, 'store'])
 
 /*
 |--------------------------------------------------------------------------
-| PARTNERSHIP
+| PARTNERSHIP USER
 |--------------------------------------------------------------------------
 */
 
@@ -286,15 +312,105 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
 
+        /*
+        |--------------------------------------------------------------------------
+        | ADMIN DASHBOARD
+        |--------------------------------------------------------------------------
+        */
+
         Route::get('/dashboard', function () {
             return view('layout.dashboard_admin');
         })->name('dashboard');
 
 
         /*
-        |----------------------------------------------------------------------
-        | Doctor
-        |----------------------------------------------------------------------
+        |--------------------------------------------------------------------------
+        | ADMIN SHOP - PRODUCTS
+        |--------------------------------------------------------------------------
+        */
+
+        Route::prefix('products')
+            ->name('products.')
+            ->group(function () {
+
+                Route::get('/', [ProductController::class, 'index'])
+                    ->name('index');
+
+                Route::get('/create', [ProductController::class, 'create'])
+                    ->name('create');
+
+                Route::post('/', [ProductController::class, 'store'])
+                    ->name('store');
+
+                Route::get('/{product}/edit', [ProductController::class, 'edit'])
+                    ->name('edit');
+
+                Route::put('/{product}', [ProductController::class, 'update'])
+                    ->name('update');
+
+                Route::delete('/{product}', [ProductController::class, 'destroy'])
+                    ->name('destroy');
+            });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ADMIN SHOP - SMART CHILD BOX
+        |--------------------------------------------------------------------------
+        */
+
+        Route::prefix('smart-child-box')
+            ->name('smartbox.')
+            ->group(function () {
+
+                Route::get('/', [SmartChildBoxController::class, 'adminIndex'])
+                    ->name('index');
+
+                Route::get('/create', [SmartChildBoxController::class, 'adminCreate'])
+                    ->name('create');
+
+                Route::post('/', [SmartChildBoxController::class, 'adminStore'])
+                    ->name('store');
+
+                Route::get('/{box}/edit', [SmartChildBoxController::class, 'adminEdit'])
+                    ->name('edit');
+
+                Route::put('/{box}', [SmartChildBoxController::class, 'adminUpdate'])
+                    ->name('update');
+
+                Route::delete('/{box}', [SmartChildBoxController::class, 'adminDestroy'])
+                    ->name('destroy');
+            });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ADMIN SHOP - PESANAN
+        |--------------------------------------------------------------------------
+        */
+
+        Route::prefix('orders')
+            ->name('orders.')
+            ->group(function () {
+
+                Route::get('/', [OrderController::class, 'adminIndex'])
+                    ->name('index');
+
+                Route::get('/{id}', [OrderController::class, 'adminShow'])
+                    ->name('show');
+
+                Route::patch('/{id}/accept', [OrderController::class, 'adminAccept'])
+                    ->name('accept');
+
+                Route::patch('/{id}/reject', [OrderController::class, 'adminReject'])
+                    ->name('reject');
+            });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ADMIN DOCTOR
+        |--------------------------------------------------------------------------
         */
 
         Route::get('/tambah-doctor', function () {
@@ -318,9 +434,9 @@ Route::middleware(['auth', 'role:admin'])
 
 
         /*
-        |----------------------------------------------------------------------
-        | Doctor Schedule
-        |----------------------------------------------------------------------
+        |--------------------------------------------------------------------------
+        | ADMIN DOCTOR SCHEDULE
+        |--------------------------------------------------------------------------
         */
 
         Route::post('/doctor/schedule/store', [DoctorController::class, 'storeSchedule'])
@@ -331,9 +447,9 @@ Route::middleware(['auth', 'role:admin'])
 
 
         /*
-        |----------------------------------------------------------------------
-        | Consultation
-        |----------------------------------------------------------------------
+        |--------------------------------------------------------------------------
+        | ADMIN CONSULTATION
+        |--------------------------------------------------------------------------
         */
 
         Route::get('/daftar-consultation', [ConsultationController::class, 'indexAdmin'])
@@ -347,9 +463,9 @@ Route::middleware(['auth', 'role:admin'])
 
 
         /*
-        |----------------------------------------------------------------------
-        | Contact
-        |----------------------------------------------------------------------
+        |--------------------------------------------------------------------------
+        | ADMIN CONTACT
+        |--------------------------------------------------------------------------
         */
 
         Route::get('/contact', [ContactController::class, 'adminIndex'])
@@ -360,9 +476,9 @@ Route::middleware(['auth', 'role:admin'])
 
 
         /*
-        |----------------------------------------------------------------------
-        | Parenting Academy
-        |----------------------------------------------------------------------
+        |--------------------------------------------------------------------------
+        | ADMIN PARENTING ACADEMY
+        |--------------------------------------------------------------------------
         */
 
         Route::prefix('parenting-academy')
@@ -432,7 +548,7 @@ Route::get('/my-consultations', [ConsultationController::class, 'myConsultations
 
 /*
 |--------------------------------------------------------------------------
-| API INTERNAL (ANTI DOUBLE BOOKING)
+| API INTERNAL
 |--------------------------------------------------------------------------
 */
 

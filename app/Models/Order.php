@@ -16,11 +16,33 @@ class Order extends Model
         'nama_penerima',
         'no_hp',
         'alamat',
+        'metode_pembayaran',
         'bukti_pembayaran',
         'payment_status',
         'total_harga',
         'status_pesanan',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | RELASI USER
+    |--------------------------------------------------------------------------
+    */
+
+    public function user()
+    {
+        return $this->belongsTo(
+            User::class,
+            'user_id',
+            'user_id'
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | RELASI ORDER ITEMS
+    |--------------------------------------------------------------------------
+    */
 
     public function items()
     {
