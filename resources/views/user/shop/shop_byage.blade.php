@@ -782,7 +782,7 @@
 
             color: var(--white);
 
-            font-size: 13px;
+            font-size: 11px;
 
             text-align: center;
 
