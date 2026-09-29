@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\SmartChildBox;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -16,6 +17,13 @@ class CartController extends Controller
 
     public function add(Product $product)
     {
+        if (!auth()->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Silakan login terlebih dahulu.'
+            ], 401);
+        }
+
         if ($product->stok <= 0) {
             return response()->json([
                 'success' => false,
@@ -23,31 +31,67 @@ class CartController extends Controller
             ], 422);
         }
 
-        $cart = session()->get('cart', []);
+        $userId = auth()->id();
 
-        $cartKey = 'product_' . $product->product_id;
+        /*
+        |--------------------------------------------------------------------------
+        | Cari Produk di Cart User
+        |--------------------------------------------------------------------------
+        */
 
-        if (isset($cart[$cartKey])) {
+        $cartItem = DB::table('cart_items')
+            ->where('user_id', $userId)
+            ->where('product_id', $product->product_id)
+            ->whereNull('box_id')
+            ->first();
 
-            if ($cart[$cartKey]['quantity'] >= $product->stok) {
+        /*
+        |--------------------------------------------------------------------------
+        | Kalau Produk Sudah Ada
+        |--------------------------------------------------------------------------
+        */
+
+        if ($cartItem) {
+
+            if ($cartItem->quantity >= $product->stok) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Jumlah produk sudah mencapai stok yang tersedia.'
                 ], 422);
             }
 
-            $cart[$cartKey]['quantity']++;
+            DB::table('cart_items')
+                ->where('cart_item_id', $cartItem->cart_item_id)
+                ->update([
+                    'quantity' => $cartItem->quantity + 1,
+                    'updated_at' => now(),
+                ]);
 
         } else {
 
-            $cart[$cartKey] = [
-                'type' => 'product',
+            /*
+            |--------------------------------------------------------------------------
+            | Tambahkan Produk Baru
+            |--------------------------------------------------------------------------
+            */
+
+            DB::table('cart_items')->insert([
+                'user_id' => $userId,
                 'product_id' => $product->product_id,
+                'box_id' => null,
                 'quantity' => 1,
-            ];
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
 
-        session()->put('cart', $cart);
+        /*
+        |--------------------------------------------------------------------------
+        | Sinkronkan Database ke Session
+        |--------------------------------------------------------------------------
+        */
+
+        $cart = $this->syncCartToSession();
 
         $cartCount = $this->getCartCount($cart);
 
@@ -68,9 +112,16 @@ class CartController extends Controller
 
     public function addBox(SmartChildBox $box)
     {
+        if (!auth()->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Silakan login terlebih dahulu.'
+            ], 401);
+        }
+
         /*
         |--------------------------------------------------------------------------
-        | Cek stok isi Smart Child Box
+        | Cek Stok Isi Smart Child Box
         |--------------------------------------------------------------------------
         */
 
@@ -85,40 +136,41 @@ class CartController extends Controller
             ], 422);
         }
 
+        $userId = auth()->id();
 
         /*
         |--------------------------------------------------------------------------
-        | Ambil Cart
+        | Cari Box di Cart User
         |--------------------------------------------------------------------------
         */
 
-        $cart = session()->get('cart', []);
-
-        $cartKey = 'box_' . $box->box_id;
-
+        $cartItem = DB::table('cart_items')
+            ->where('user_id', $userId)
+            ->where('box_id', $box->box_id)
+            ->whereNull('product_id')
+            ->first();
 
         /*
         |--------------------------------------------------------------------------
-        | Kalau Box sudah ada di Cart
+        | Kalau Box Sudah Ada
         |--------------------------------------------------------------------------
         */
 
-        if (isset($cart[$cartKey])) {
+        if ($cartItem) {
 
-            $currentQuantity = $cart[$cartKey]['quantity'];
-
-            /*
-            | Jangan boleh melebihi stok Box
-            */
-
-            if ($currentQuantity >= $boxStock) {
+            if ($cartItem->quantity >= $boxStock) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Jumlah Smart Child Box sudah mencapai stok yang tersedia.'
                 ], 422);
             }
 
-            $cart[$cartKey]['quantity']++;
+            DB::table('cart_items')
+                ->where('cart_item_id', $cartItem->cart_item_id)
+                ->update([
+                    'quantity' => $cartItem->quantity + 1,
+                    'updated_at' => now(),
+                ]);
 
         } else {
 
@@ -128,21 +180,23 @@ class CartController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            $cart[$cartKey] = [
-                'type' => 'box',
+            DB::table('cart_items')->insert([
+                'user_id' => $userId,
+                'product_id' => null,
                 'box_id' => $box->box_id,
                 'quantity' => 1,
-            ];
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
-
 
         /*
         |--------------------------------------------------------------------------
-        | Simpan Cart
+        | Sinkronkan Database ke Session
         |--------------------------------------------------------------------------
         */
 
-        session()->put('cart', $cart);
+        $cart = $this->syncCartToSession();
 
         $cartCount = $this->getCartCount($cart);
 
@@ -163,7 +217,17 @@ class CartController extends Controller
 
     public function index()
     {
-        $cart = session()->get('cart', []);
+        if (!auth()->check()) {
+            return redirect()->route('login');
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Ambil Cart dari Database
+        |--------------------------------------------------------------------------
+        */
+
+        $cart = $this->syncCartToSession();
 
         if (empty($cart)) {
             return view('user.shop.cart', [
@@ -172,6 +236,12 @@ class CartController extends Controller
                 'boxes' => collect(),
             ]);
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Pisahkan Product ID dan Box ID
+        |--------------------------------------------------------------------------
+        */
 
         $productIds = [];
         $boxIds = [];
@@ -185,13 +255,33 @@ class CartController extends Controller
             }
         }
 
-        $products = Product::whereIn('product_id', $productIds)
-            ->get()
-            ->keyBy('product_id');
+        /*
+        |--------------------------------------------------------------------------
+        | Ambil Produk
+        |--------------------------------------------------------------------------
+        */
 
-        $boxes = SmartChildBox::whereIn('box_id', $boxIds)
-            ->get()
-            ->keyBy('box_id');
+        $products = collect();
+
+        if (!empty($productIds)) {
+            $products = Product::whereIn('product_id', $productIds)
+                ->get()
+                ->keyBy('product_id');
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Ambil Smart Child Box
+        |--------------------------------------------------------------------------
+        */
+
+        $boxes = collect();
+
+        if (!empty($boxIds)) {
+            $boxes = SmartChildBox::whereIn('box_id', $boxIds)
+                ->get()
+                ->keyBy('box_id');
+        }
 
         return view('user.shop.cart', compact(
             'cart',
@@ -209,33 +299,38 @@ class CartController extends Controller
 
     public function update(Request $request, $cartKey)
     {
+        if (!auth()->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Silakan login terlebih dahulu.'
+            ], 401);
+        }
+
         $request->validate([
             'quantity' => 'required|integer|min:1',
         ]);
 
-        $cart = session()->get('cart', []);
-
-        if (!isset($cart[$cartKey])) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Item tidak ditemukan di keranjang.'
-            ], 404);
-        }
-
-        $item = $cart[$cartKey];
+        $userId = auth()->id();
 
         $quantity = (int) $request->quantity;
 
-
         /*
         |--------------------------------------------------------------------------
-        | Produk Biasa
+        | Tentukan Jenis Cart
         |--------------------------------------------------------------------------
         */
 
-        if (($item['type'] ?? 'product') === 'product') {
+        if (str_starts_with($cartKey, 'product_')) {
 
-            $product = Product::find($item['product_id']);
+            $productId = (int) str_replace('product_', '', $cartKey);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Ambil Produk
+            |--------------------------------------------------------------------------
+            */
+
+            $product = Product::find($productId);
 
             if (!$product) {
                 return response()->json([
@@ -243,6 +338,12 @@ class CartController extends Controller
                     'message' => 'Produk tidak ditemukan.'
                 ], 404);
             }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Cek Stok Produk
+            |--------------------------------------------------------------------------
+            */
 
             if ($product->stok <= 0) {
                 return response()->json([
@@ -258,22 +359,52 @@ class CartController extends Controller
                 ], 422);
             }
 
-            $cart[$cartKey]['quantity'] = $quantity;
+            /*
+            |--------------------------------------------------------------------------
+            | Cari Cart Item
+            |--------------------------------------------------------------------------
+            */
+
+            $cartItem = DB::table('cart_items')
+                ->where('user_id', $userId)
+                ->where('product_id', $productId)
+                ->whereNull('box_id')
+                ->first();
+
+            if (!$cartItem) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Item tidak ditemukan di keranjang.'
+                ], 404);
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Update Quantity
+            |--------------------------------------------------------------------------
+            */
+
+            DB::table('cart_items')
+                ->where('cart_item_id', $cartItem->cart_item_id)
+                ->update([
+                    'quantity' => $quantity,
+                    'updated_at' => now(),
+                ]);
 
             $subtotal = $product->harga * $quantity;
-        }
 
+        } elseif (str_starts_with($cartKey, 'box_')) {
 
-        /*
-        |--------------------------------------------------------------------------
-        | Smart Child Box
-        |--------------------------------------------------------------------------
-        */
+            $boxId = (int) str_replace('box_', '', $cartKey);
 
-        else {
+            /*
+            |--------------------------------------------------------------------------
+            | Ambil Smart Child Box
+            |--------------------------------------------------------------------------
+            */
 
             $box = SmartChildBox::with('items.product')
-                ->find($item['box_id']);
+                ->find($boxId);
 
             if (!$box) {
                 return response()->json([
@@ -282,10 +413,9 @@ class CartController extends Controller
                 ], 404);
             }
 
-
             /*
             |--------------------------------------------------------------------------
-            | Cek stok Box
+            | Cek Stok Box
             |--------------------------------------------------------------------------
             */
 
@@ -298,13 +428,6 @@ class CartController extends Controller
                 ], 422);
             }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | Cek jumlah Box
-            |--------------------------------------------------------------------------
-            */
-
             if ($quantity > $boxStock) {
                 return response()->json([
                     'success' => false,
@@ -312,6 +435,24 @@ class CartController extends Controller
                 ], 422);
             }
 
+            /*
+            |--------------------------------------------------------------------------
+            | Cari Cart Item
+            |--------------------------------------------------------------------------
+            */
+
+            $cartItem = DB::table('cart_items')
+                ->where('user_id', $userId)
+                ->where('box_id', $boxId)
+                ->whereNull('product_id')
+                ->first();
+
+            if (!$cartItem) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Item tidak ditemukan di keranjang.'
+                ], 404);
+            }
 
             /*
             |--------------------------------------------------------------------------
@@ -319,20 +460,30 @@ class CartController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            $cart[$cartKey]['quantity'] = $quantity;
+            DB::table('cart_items')
+                ->where('cart_item_id', $cartItem->cart_item_id)
+                ->update([
+                    'quantity' => $quantity,
+                    'updated_at' => now(),
+                ]);
 
             $subtotal = $box->harga * $quantity;
-        }
 
+        } else {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Format item keranjang tidak valid.'
+            ], 400);
+        }
 
         /*
         |--------------------------------------------------------------------------
-        | Simpan Cart
+        | Sinkronkan Database ke Session
         |--------------------------------------------------------------------------
         */
 
-        session()->put('cart', $cart);
-
+        $cart = $this->syncCartToSession();
 
         /*
         |--------------------------------------------------------------------------
@@ -340,43 +491,9 @@ class CartController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        $total = 0;
-
-        foreach ($cart as $key => $cartItem) {
-
-            if (($cartItem['type'] ?? 'product') === 'box') {
-
-                $box = SmartChildBox::find($cartItem['box_id']);
-
-                if ($box) {
-                    $total += $box->harga * $cartItem['quantity'];
-                }
-
-            } else {
-
-                $product = Product::find($cartItem['product_id']);
-
-                if ($product) {
-                    $total += $product->harga * $cartItem['quantity'];
-                }
-            }
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Cart Count
-        |--------------------------------------------------------------------------
-        */
+        $total = $this->getCartTotal($cart);
 
         $cartCount = $this->getCartCount($cart);
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Response
-        |--------------------------------------------------------------------------
-        */
 
         return response()->json([
             'success' => true,
@@ -421,18 +538,73 @@ class CartController extends Controller
 
     public function remove($cartKey)
     {
-        $cart = session()->get('cart', []);
+        if (!auth()->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Silakan login terlebih dahulu.'
+            ], 401);
+        }
 
-        if (!isset($cart[$cartKey])) {
+        $userId = auth()->id();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Hapus Produk
+        |--------------------------------------------------------------------------
+        */
+
+        if (str_starts_with($cartKey, 'product_')) {
+
+            $productId = (int) str_replace('product_', '', $cartKey);
+
+            $deleted = DB::table('cart_items')
+                ->where('user_id', $userId)
+                ->where('product_id', $productId)
+                ->whereNull('box_id')
+                ->delete();
+
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Hapus Smart Child Box
+        |--------------------------------------------------------------------------
+        */
+
+        elseif (str_starts_with($cartKey, 'box_')) {
+
+            $boxId = (int) str_replace('box_', '', $cartKey);
+
+            $deleted = DB::table('cart_items')
+                ->where('user_id', $userId)
+                ->where('box_id', $boxId)
+                ->whereNull('product_id')
+                ->delete();
+
+        }
+
+        else {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Format item keranjang tidak valid.'
+            ], 400);
+        }
+
+        if ($deleted === 0) {
             return response()->json([
                 'success' => false,
                 'message' => 'Item tidak ditemukan di keranjang.'
             ], 404);
         }
 
-        unset($cart[$cartKey]);
+        /*
+        |--------------------------------------------------------------------------
+        | Sinkronkan Database ke Session
+        |--------------------------------------------------------------------------
+        */
 
-        session()->put('cart', $cart);
+        $cart = $this->syncCartToSession();
 
         $cartCount = $this->getCartCount($cart);
 
@@ -447,18 +619,146 @@ class CartController extends Controller
 
     /*
     |--------------------------------------------------------------------------
+    | Sinkronkan Cart Database ke Session
+    |--------------------------------------------------------------------------
+    |
+    | Database = penyimpanan utama
+    | Session   = salinan untuk kebutuhan halaman/cart/checkout
+    |
+    */
+
+    private function syncCartToSession()
+    {
+        if (!auth()->check()) {
+            session()->forget('cart');
+
+            return [];
+        }
+
+        $userId = auth()->id();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Ambil Semua Cart User
+        |--------------------------------------------------------------------------
+        */
+
+        $cartItems = DB::table('cart_items')
+            ->where('user_id', $userId)
+            ->get();
+
+        $cart = [];
+
+        foreach ($cartItems as $item) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | Produk Biasa
+            |--------------------------------------------------------------------------
+            */
+
+            if (!is_null($item->product_id)) {
+
+                $cartKey = 'product_' . $item->product_id;
+
+                $cart[$cartKey] = [
+                    'type' => 'product',
+                    'product_id' => $item->product_id,
+                    'quantity' => $item->quantity,
+                ];
+
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Smart Child Box
+            |--------------------------------------------------------------------------
+            */
+
+            elseif (!is_null($item->box_id)) {
+
+                $cartKey = 'box_' . $item->box_id;
+
+                $cart[$cartKey] = [
+                    'type' => 'box',
+                    'box_id' => $item->box_id,
+                    'quantity' => $item->quantity,
+                ];
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Simpan ke Session
+        |--------------------------------------------------------------------------
+        */
+
+        session()->put('cart', $cart);
+
+        return $cart;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Hitung Total Harga Cart
+    |--------------------------------------------------------------------------
+    */
+
+    private function getCartTotal($cart)
+    {
+        $total = 0;
+
+        foreach ($cart as $cartItem) {
+
+            /*
+            |--------------------------------------------------------------------------
+            | Smart Child Box
+            |--------------------------------------------------------------------------
+            */
+
+            if (($cartItem['type'] ?? 'product') === 'box') {
+
+                $box = SmartChildBox::find($cartItem['box_id']);
+
+                if ($box) {
+                    $total +=
+                        $box->harga *
+                        $cartItem['quantity'];
+                }
+
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Produk Biasa
+            |--------------------------------------------------------------------------
+            */
+
+            else {
+
+                $product = Product::find(
+                    $cartItem['product_id']
+                );
+
+                if ($product) {
+                    $total +=
+                        $product->harga *
+                        $cartItem['quantity'];
+                }
+            }
+        }
+
+        return $total;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
     | Hitung Stok Smart Child Box
     |--------------------------------------------------------------------------
     |
     | Stok Box ditentukan oleh produk dengan stok paling sedikit.
-    |
-    | Contoh:
-    |
-    | Produk A = 20, kebutuhan 1
-    | Produk B = 15, kebutuhan 1
-    | Produk C = 25, kebutuhan 1
-    |
-    | Maka stok Box = 15.
     |
     */
 
@@ -482,7 +782,6 @@ class CartController extends Controller
                 return 0;
             }
 
-
             /*
             |--------------------------------------------------------------------------
             | Stok Produk
@@ -490,7 +789,6 @@ class CartController extends Controller
             */
 
             $productStock = (int) $item->product->stok;
-
 
             /*
             |--------------------------------------------------------------------------
@@ -503,7 +801,6 @@ class CartController extends Controller
                 (int) $item->jumlah
             );
 
-
             /*
             |--------------------------------------------------------------------------
             | Hitung Berapa Box yang Bisa Dibuat
@@ -515,14 +812,16 @@ class CartController extends Controller
                 $requiredQuantity
             );
 
-
             /*
             |--------------------------------------------------------------------------
-            | Ambil stok paling kecil
+            | Ambil Stok Paling Kecil
             |--------------------------------------------------------------------------
             */
 
-            if ($boxStock === null || $available < $boxStock) {
+            if (
+                $boxStock === null ||
+                $available < $boxStock
+            ) {
                 $boxStock = $available;
             }
         }
