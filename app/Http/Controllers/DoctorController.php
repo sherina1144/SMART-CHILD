@@ -60,10 +60,18 @@ class DoctorController extends Controller
         return redirect()->back()->with('success', 'Data dokter berhasil ditambahkan!');
     }
 
-    // Tampilan untuk User
-    public function userIndex()
+    // Tampilan untuk User (Sudah ditambahkan logika filter kategori)
+    public function userIndex(Request $request)
     {
-        $doctors = Doctor::with('schedules')->get();
+        $query = Doctor::with('schedules');
+
+        // Cek apakah ada parameter kategori dari dropdown filter
+        if ($request->has('kategori') && !empty($request->kategori)) {
+            $query->where('kategori', $request->kategori);
+        }
+
+        $doctors = $query->get();
+
         return view('user.services.doctor_trapis', compact('doctors'));
     }
 
@@ -102,11 +110,11 @@ class DoctorController extends Controller
         }
 
         // 2. Update Data Profil Dokter
-        $doctor->nama_lengkap     = $request->nama_lengkap;
-        $doctor->kategori         = $request->kategori;
-        $doctor->spesialisasi     = $request->spesialisasi;
+        $doctor->nama_lengkap    = $request->nama_lengkap;
+        $doctor->kategori        = $request->kategori;
+        $doctor->spesialisasi    = $request->spesialisasi;
         $doctor->lama_pengalaman = $request->lama_pengalaman;
-        $doctor->rating           = $request->rating;
+        $doctor->rating          = $request->rating;
         $doctor->biaya_konsultasi = $request->biaya_konsultasi;
         $doctor->save();
 

@@ -242,6 +242,40 @@
             .doctor-grid { grid-template-columns: 1fr; }
             .hero-text h1 { font-size: 2.2rem; }
         }
+
+        /* Styling Filter Dropdown */
+    .filter-container {
+        max-width: 1300px;
+        margin: 0 auto 1.5rem auto;
+        padding: 0 2rem;
+        display: flex;
+        justify-content: flex-end; /* Posisi di pojok kanan */
+    }
+    .filter-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .filter-wrapper label {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #2c3e35;
+    }
+    .filter-dropdown {
+        padding: 8px 15px;
+        border-radius: 10px;
+        border: 1px solid #dcdcdc;
+        background-color: #ffffff;
+        color: #333;
+        font-size: 0.88rem;
+        cursor: pointer;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    .filter-dropdown:focus {
+        border-color: #f26d5b;
+    }
+
     </style>
 </head>
 <body>
@@ -294,6 +328,22 @@
             </div>
         </div>
     </section>
+
+    <!-- FILTER DROPDOWN SECTION -->
+    <div class="filter-container">
+        <form action="{{ route('user.doctor.index') }}" method="GET" id="filterForm">
+            <div class="filter-wrapper">
+                <label for="kategori">Filter Kategori:</label>
+                <select name="kategori" id="kategori" class="filter-dropdown" onchange="document.getElementById('filterForm').submit()">
+                    <option value="">Semua Kategori</option>
+                    <option value="Dokter Spesialis" {{ request('kategori') == 'Dokter Spesialis' ? 'selected' : '' }}>Dokter Spesialis</option>
+                    <option value="Psikolog" {{ request('kategori') == 'Psikolog' ? 'selected' : '' }}>Psikolog</option>
+                    <option value="Terapis" {{ request('kategori') == 'Terapis' ? 'selected' : '' }}>Terapis</option>
+                    <option value="Konselor Laktasi" {{ request('kategori') == 'Konselor Laktasi' ? 'selected' : '' }}>Konselor Laktasi</option>
+                </select>
+            </div>
+        </form>
+    </div>
 
     <!-- GRID LIST DOCTOR -->
     <main class="doctor-grid">
