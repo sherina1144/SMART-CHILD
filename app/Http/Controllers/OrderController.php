@@ -394,6 +394,10 @@ class OrderController extends Controller
             |--------------------------------------------------------------------------
             */
 
+            DB::table('cart_items')
+                ->where('user_id', Auth::id())
+                ->delete();
+
             session()->forget('cart');
 
             DB::commit();

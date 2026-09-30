@@ -58,9 +58,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 */
 
 // HOME
-Route::get('/home', function () {
-    return view('user.home');
-})->middleware('auth');
+Route::get('/home', [HomeController::class, 'index'])->middleware('auth');
 
 Route::get('/about', function () {
     return view('user.about');
