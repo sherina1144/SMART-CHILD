@@ -302,13 +302,17 @@
                 <i class="fa-solid fa-cart-shopping"></i>
 
                 @php
+                    use Illuminate\Support\Facades\DB;
 
-                    $cart = session('cart', []);
+                    $cartCount = 0;
 
-                    $cartCount = collect($cart)->sum('quantity');
+                    if (auth()->check()) {
+                        $cartCount = DB::table('cart_items')
+                            ->where('user_id', auth()->id())
+                            ->sum('quantity');
+                    }
 
                     $cartBadge = min($cartCount, 99);
-
                 @endphp
 
 
@@ -326,109 +330,109 @@
             {{-- PROFILE --}}
             <li class="nav-item dropdown profile-item">
 
-    <a
-        href="#"
-        class="action-btn profile-btn"
-    >
-
-        @if(auth()->check() && auth()->user()->foto)
-
-            <img
-                src="{{ asset('storage/' . auth()->user()->foto) }}"
-                alt="Profile"
-                class="profile-image"
-            >
-
-        @else
-
-            <div class="profile-placeholder">
-
-                <i class="fa-solid fa-user"></i>
-
-            </div>
-
-        @endif
-
-    </a>
-
-
-    <div class="dropdown-menu profile-menu">
-
-        <div class="dropdown-header">
-            Akun Saya
-        </div>
-        
-        <ul class="dropdown-list">
-
-            <li>
-
                 <a
-                    href="{{ route('profile.show') }}"
-                    class="{{ request()->routeIs('profile.*') ? 'active-sub' : '' }}"
+                    href="#"
+                    class="action-btn profile-btn"
                 >
 
-                    <i class="fa-solid fa-user-pen"></i>
+                    @if(auth()->check() && auth()->user()->foto)
 
-                    Lihat Profil
+                        <img
+                            src="{{ asset('storage/' . auth()->user()->foto) }}"
+                            alt="Profile"
+                            class="profile-image"
+                        >
+
+                    @else
+
+                        <div class="profile-placeholder">
+
+                            <i class="fa-solid fa-user"></i>
+
+                        </div>
+
+                    @endif
 
                 </a>
 
+
+                <div class="dropdown-menu profile-menu">
+
+                    <div class="dropdown-header">
+                        Akun Saya
+                    </div>
+
+                    <ul class="dropdown-list">
+
+                        <li>
+
+                            <a
+                                href="{{ route('profile.show') }}"
+                                class="{{ request()->routeIs('profile.*') ? 'active-sub' : '' }}"
+                            >
+
+                                <i class="fa-solid fa-user-pen"></i>
+
+                                Lihat Profil
+
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a
+                                href="{{ route('shop.myorders') }}"
+                                class="{{ request()->routeIs('shop.myorders') || request()->routeIs('shop.myorders.show') ? 'active-sub' : '' }}"
+                            >
+
+                                <i class="fa-solid fa-box"></i>
+
+                                My Order
+
+                            </a>
+
+                        </li>
+
+
+                        {{-- My Consultations --}}
+                        <li>
+
+                            <a
+                                href="{{ route('user.consultations.index') }}"
+                                class="{{ request()->routeIs('user.consultations.*') ? 'active-sub' : '' }}"
+                            >
+
+                                <i class="fa-solid fa-comments"></i>
+
+                                My Consultations
+
+                            </a>
+
+                        </li>
+
+
+                        <li>
+
+                            <a
+                                href="{{ route('user.partnership') }}"
+                                class="{{ request()->routeIs('user.partnership') ? 'active-sub' : '' }}"
+                            >
+
+                                <i class="fa-solid fa-handshake"></i>
+
+                                Partnership
+
+                            </a>
+
+                        </li>
+
+                    </ul>
+
+                </div>
+
             </li>
-
-
-            <li>
-
-                <a
-                    href="{{ route('shop.myorders') }}"
-                    class="{{ request()->routeIs('shop.myorders') || request()->routeIs('shop.myorders.show') ? 'active-sub' : '' }}"
-                >
-
-                    <i class="fa-solid fa-box"></i>
-
-                    My Order
-
-                </a>
-
-            </li>
-
-
-            <!-- Menu Baru: My Consultations -->
-            <li>
-
-                <a
-                    href="{{ route('user.consultations.index') }}"
-                    class="{{ request()->routeIs('user.consultations.*') ? 'active-sub' : '' }}"
-                >
-
-                    <i class="fa-solid fa-comments"></i>
-
-                    My Consultations
-
-                </a>
-
-            </li>
-
-
-            <li>
-
-                <a
-                    href="{{ route('user.partnership') }}"
-                    class="{{ request()->routeIs('user.partnership') ? 'active-sub' : '' }}"
-                >
-
-                    <i class="fa-solid fa-handshake"></i>
-
-                    Partnership
-
-                </a>
-
-            </li>
-
-        </ul>
-
-    </div>
-
-</li>
 
         </div>
 
@@ -441,6 +445,7 @@
 
 /* Font Awesome DIHAPUS dari sini - sudah dimuat sekali lewat <link> di atas.
    Memuat 2x lewat @import + <link> adalah salah satu penyebab icon kotak. */
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
 
