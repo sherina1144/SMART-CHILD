@@ -1,9 +1,13 @@
 <footer class="smart-footer">
     <div class="footer-container">
+
         <!-- Brand & Description -->
         <div class="footer-brand">
             <h3>SMARTCHILD</h3>
-            <p>Platform terpadu untuk mendukung tumbuh kembang anak secara optimal melalui asesmen ilmiah, kurikulum parenting, dan komunitas orang tua hebat.</p>
+            <p>
+                Platform terpadu untuk mendukung tumbuh kembang anak secara optimal
+                melalui asesmen ilmiah, kurikulum parenting, dan komunitas orang tua hebat.
+            </p>
         </div>
 
         <!-- Quick Links -->
@@ -22,19 +26,34 @@
             <a href="{{ route('development.assessment') }}">Asesmen Anak</a>
             <a href="{{ route('contact.us') }}">Hubungi Kami</a>
         </div>
+
     </div>
 
     <div class="footer-bottom">
-        <p>&copy; {{ date('Y') }} SmartChild. Hak Cipta Dilindungi Undang-Undang.</p>
+        <p>
+            &copy; {{ date('Y') }} SmartChild. Tumbuh Cerdas, Bahagia Setiap Hari.
+        </p>
     </div>
 </footer>
 
 <style>
+    /* Font Poppins */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
     .smart-footer {
         width: 100%;
-        background-color: #1E3A2F; /* Hijau tua khas SmartChild */
+        background-color: #1E3A2F;
         color: #ffffff;
         margin-top: auto;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .smart-footer *,
+    .smart-footer a,
+    .smart-footer p,
+    .smart-footer h3,
+    .smart-footer h4 {
+        font-family: 'Poppins', sans-serif;
     }
 
     .footer-container {
@@ -71,13 +90,14 @@
         margin: 0 0 0.5rem 0;
         font-size: 0.95rem;
         font-weight: 700;
-        color: #F4D06F; /* Aksen kuning hangat */
+        color: #F4D06F;
     }
 
     .footer-menu a {
         color: rgba(255, 255, 255, 0.8);
         text-decoration: none;
         font-size: 0.85rem;
+        font-weight: 400;
         transition: color 0.2s ease;
     }
 
@@ -95,6 +115,7 @@
     .footer-bottom p {
         margin: 0;
         font-size: 0.75rem;
+        font-weight: 400;
         color: rgba(255, 255, 255, 0.7);
     }
 

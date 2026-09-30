@@ -1,4 +1,506 @@
-@include('layout.header')
+
+@extends('layout.app')
+
+@section('title', 'Child Development')
+
+@section('content')
+
+<style>
+    /* =========================
+       CHILD DEVELOPMENT PAGE
+    ========================= */
+
+    .child-development-page {
+        min-height: 100vh;
+
+        background: #FFFDF9;
+        color: #315C50;
+
+        padding: 35px 50px 45px;
+
+        font-family: 'Poppins', sans-serif;
+    }
+
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .child-header {
+        max-width: 1200px;
+        margin: 0 auto 12px;
+    }
+
+    .page-number {
+        display: inline-block;
+
+        padding: 5px 13px;
+
+        background: #315C50;
+        color: #FFFFFF;
+
+        border-radius: 0 0 8px 8px;
+
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+    }
+
+    .child-title {
+        margin-top: 15px;
+    }
+
+    .child-title h1 {
+        margin: 0 0 7px;
+
+        font-size: 36px;
+        font-weight: 700;
+        line-height: 1.2;
+
+        color: #315C50;
+    }
+
+    .child-title p {
+        margin: 0;
+
+        font-size: 14px;
+        line-height: 1.6;
+
+        color: #667085;
+    }
+
+
+    /* =========================
+       AGE FILTER
+    ========================= */
+
+    .age-filter {
+        max-width: 1200px;
+        margin: 18px auto 12px;
+
+        display: flex;
+        gap: 8px;
+    }
+
+    .age-btn {
+        padding: 8px 15px;
+
+        border: none;
+        border-radius: 15px;
+
+        background: #F4F1EA;
+
+        color: #667085;
+
+        font-family: 'Poppins', sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+
+        cursor: pointer;
+    }
+
+    .age-btn.active {
+        background: #6FAF9B;
+        color: #FFFFFF;
+    }
+
+
+    /* =========================
+       DEVELOPMENT CONTENT
+    ========================= */
+
+    .development-content {
+        max-width: 1200px;
+        margin: 0 auto;
+
+        display: grid;
+        grid-template-columns: 1.55fr 1fr;
+
+        gap: 18px;
+    }
+
+
+    /* =========================
+       LEFT
+    ========================= */
+
+    .development-left {
+        min-width: 0;
+    }
+
+    .development-tabs {
+        display: flex;
+        gap: 7px;
+
+        margin-bottom: 9px;
+    }
+
+    .development-tab {
+        padding: 7px 13px;
+
+        border: 1px solid #E5E7EB;
+        border-radius: 15px;
+
+        background: #FFFFFF;
+
+        color: #667085;
+
+        font-family: 'Poppins', sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+
+        cursor: pointer;
+    }
+
+    .development-tab.active {
+        background: #6FAF9B;
+        border-color: #6FAF9B;
+
+        color: #FFFFFF;
+    }
+
+
+    /* =========================
+       MAIN DEVELOPMENT CARD
+    ========================= */
+
+    .development-card {
+        min-height: 210px;
+
+        display: grid;
+        grid-template-columns: 1fr 0.9fr;
+
+        align-items: center;
+
+        overflow: hidden;
+
+        background: #F4A89A;
+
+        border-radius: 10px;
+    }
+
+    .development-info {
+        padding: 22px 24px;
+    }
+
+    .development-info h2 {
+        margin: 0 0 9px;
+
+        font-size: 20px;
+        line-height: 1.3;
+        font-weight: 700;
+
+        color: #274B3D;
+    }
+
+    .development-info p {
+        max-width: 300px;
+
+        margin: 0 0 10px;
+
+        font-size: 13px;
+        line-height: 1.6;
+
+        color: #426F5C;
+    }
+
+    .development-info h4 {
+        margin: 0 0 6px;
+
+        font-size: 13px;
+        font-weight: 700;
+
+        color: #274B3D;
+    }
+
+    .development-info ul {
+        margin: 0 0 13px;
+        padding-left: 18px;
+
+        font-size: 12px;
+        line-height: 1.8;
+
+        color: #426F5C;
+    }
+
+    .recommend-btn {
+        display: inline-block;
+
+        padding: 8px 11px;
+
+        background: #315C50;
+        color: #FFFFFF;
+
+        border-radius: 5px;
+
+        text-decoration: none;
+
+        font-family: 'Poppins', sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+
+    /* =========================
+       IMAGE
+    ========================= */
+
+    .development-image img {
+    width: 90%;
+    height: 175px;
+    object-fit: cover;
+    display: block;
+
+    border-radius: 70px 70px 0 0;
+    }
+
+    
+
+
+    /* =========================
+       RIGHT
+    ========================= */
+
+    .development-right {
+        padding: 17px 18px;
+
+        background: #FFFFFF;
+
+        border-radius: 10px;
+
+        border: 1px solid #E8E8E8;
+    }
+
+    .development-right h2 {
+        margin: 0 0 11px;
+
+        font-size: 16px;
+        font-weight: 700;
+
+        color: #315C50;
+    }
+
+
+    /* =========================
+       STAGE
+    ========================= */
+
+    .stage-list {
+        display: flex;
+        flex-direction: column;
+
+        gap: 7px;
+    }
+
+    .stage-item {
+        display: flex;
+        align-items: center;
+
+        gap: 10px;
+
+        padding: 10px;
+
+        border-radius: 7px;
+
+        background: #FFFDF9;
+
+        cursor: pointer;
+
+        transition: 0.2s ease;
+    }
+
+    .stage-item:hover {
+        background: #F4F7EF;
+        transform: translateY(-2px);
+    }
+
+    .stage-item.active {
+        background: #EEF3E7;
+    }
+
+    .stage-icon {
+        width: 30px;
+        height: 30px;
+
+        flex-shrink: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 17px;
+    }
+
+    .stage-info strong {
+        display: block;
+
+        margin-bottom: 3px;
+
+        font-size: 13px;
+        font-weight: 700;
+
+        color: #315C50;
+    }
+
+    .stage-info p {
+        margin: 0;
+
+        font-size: 11px;
+        line-height: 1.5;
+
+        color: #667085;
+    }
+
+
+    /* =========================
+       TIPS
+    ========================= */
+
+    .parent-tips {
+        max-width: 1200px;
+
+        margin: 15px auto 0;
+
+        padding: 13px 17px;
+
+        background: #FFF9F2;
+
+        border: 1px solid #E8E8E8;
+
+        border-radius: 8px;
+    }
+
+    .tips-title h2 {
+        margin: 0 0 10px;
+
+        font-size: 16px;
+        font-weight: 700;
+
+        color: #274B3D;
+    }
+
+    .tips-list {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+
+        gap: 15px;
+    }
+
+    .tip-item {
+        display: flex;
+        align-items: center;
+
+        gap: 8px;
+    }
+
+    .tip-icon {
+        width: 28px;
+        height: 28px;
+
+        flex-shrink: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border: 1px solid #6FAF9B;
+        border-radius: 50%;
+
+        color: #315C50;
+
+        font-size: 12px;
+    }
+
+    .tip-item p {
+        margin: 0;
+
+        font-size: 12px;
+        line-height: 1.5;
+
+        color: #667085;
+    }
+
+
+    /* =========================
+       FOOTER CHILD DEVELOPMENT
+    ========================= */
+
+    .child-footer {
+        width: 100%;
+        height: 45px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #315C50;
+    }
+
+    .child-footer p {
+        margin: 0;
+
+        font-size: 11px;
+        font-weight: 400;
+
+        color: #FFFFFF;
+    }
+
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 900px) {
+
+        .child-development-page {
+            padding: 30px 25px;
+        }
+
+        .development-content {
+            grid-template-columns: 1fr;
+        }
+
+        .tips-list {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+    }
+
+
+    @media (max-width: 600px) {
+
+        .child-development-page {
+            padding: 25px 15px;
+        }
+
+        .child-title h1 {
+            font-size: 32px;
+        }
+
+        .age-filter {
+            flex-wrap: wrap;
+        }
+
+        .development-tabs {
+            flex-wrap: wrap;
+        }
+
+        .development-card {
+            grid-template-columns: 1fr;
+        }
+
+        .development-image {
+            min-height: 150px;
+        }
+
+        .tips-list {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+</style>
+
 
 <main class="child-development-page">
 
@@ -10,9 +512,9 @@
 
         <div class="child-title">
 
-            
-
-            <h1>Child Development</h1>
+            <h1>
+                Child Development
+            </h1>
 
             <p>
                 Kenali tahap perkembangan anak dan temukan
@@ -30,21 +532,21 @@
 
     <section class="age-filter">
 
-       <button type="button" class="age-btn active" data-age="0-2">
-    0 - 2 Tahun
-</button>
+        <button type="button" class="age-btn active" data-age="0-2">
+            0 - 2 Tahun
+        </button>
 
-<button type="button" class="age-btn" data-age="3-5">
-    3 - 5 Tahun
-</button>
+        <button type="button" class="age-btn" data-age="3-5">
+            3 - 5 Tahun
+        </button>
 
-<button type="button" class="age-btn" data-age="6-8">
-    6 - 8 Tahun
-</button>
+        <button type="button" class="age-btn" data-age="6-8">
+            6 - 8 Tahun
+        </button>
 
-<button type="button" class="age-btn" data-age="9-12">
-    9 - 12 Tahun
-</button>
+        <button type="button" class="age-btn" data-age="9-12">
+            9 - 12 Tahun
+        </button>
 
     </section>
 
@@ -61,25 +563,45 @@
 
             <div class="development-tabs">
 
-               <button type="button" class="development-tab active" data-development="kognitif">
-    Kognitif
-</button>
+                <button
+                    type="button"
+                    class="development-tab active"
+                    data-development="kognitif"
+                >
+                    Kognitif
+                </button>
 
-<button type="button" class="development-tab" data-development="motorik">
-    Motorik
-</button>
+                <button
+                    type="button"
+                    class="development-tab"
+                    data-development="motorik"
+                >
+                    Motorik
+                </button>
 
-<button type="button" class="development-tab" data-development="bahasa">
-    Bahasa
-</button>
+                <button
+                    type="button"
+                    class="development-tab"
+                    data-development="bahasa"
+                >
+                    Bahasa
+                </button>
 
-<button type="button" class="development-tab" data-development="sosial">
-    Sosial
-</button>
+                <button
+                    type="button"
+                    class="development-tab"
+                    data-development="sosial"
+                >
+                    Sosial
+                </button>
 
-<button type="button" class="development-tab" data-development="emosional">
-    Emosional
-</button> 
+                <button
+                    type="button"
+                    class="development-tab"
+                    data-development="emosional"
+                >
+                    Emosional
+                </button>
 
             </div>
 
@@ -117,9 +639,12 @@
 
 
                 <div class="development-image">
-                    <div class="image-placeholder">
-                        Gambar Anak
-                    </div>
+
+                    <img
+                        src="{{ asset('images/child-development.jpg') }}"
+                        alt="Child Development"
+                    >
+
                 </div>
 
             </div>
@@ -135,42 +660,106 @@
                 Tahap Perkembangan
             </h2>
 
-
             <div class="stage-list">
 
-             <div class="stage-item active" data-age="0-2" onclick="selectAge('0-2')">
-    <span class="stage-icon">👶</span>
-    <div class="stage-info">
-        <strong>0 - 2 Tahun</strong>
-        <p>Eksplorasi awal dan beradaptasi.</p>
-    </div>
-</div>
+                <div
+                    class="stage-item active"
+                    data-age="0-2"
+                    onclick="selectAge('0-2')"
+                >
 
-<div class="stage-item" data-age="3-5" onclick="selectAge('3-5')">
-    <span class="stage-icon">👦</span>
-    <div class="stage-info">
-        <strong>3 - 5 Tahun</strong>
-        <p>Masa eksplorasi & rasa ingin tahu yang tinggi.</p>
-    </div>
-</div>
+                    <span class="stage-icon">
+                        👶
+                    </span>
 
-<div class="stage-item" data-age="6-8" onclick="selectAge('6-8')">
-    <span class="stage-icon">🌱</span>
-    <div class="stage-info">
-        <strong>6 - 8 Tahun</strong>
-        <p>Mulai berpikir logis dan mandiri.</p>
-    </div>
-</div>
+                    <div class="stage-info">
 
-<div class="stage-item" data-age="9-12" onclick="selectAge('9-12')">
-    <span class="stage-icon">⭐</span>
-    <div class="stage-info">
-        <strong>9 - 12 Tahun</strong>
-        <p>Pengembangan potensi dan kreativitas.</p>
-    </div>
-</div>  
-   
+                        <strong>
+                            0 - 2 Tahun
+                        </strong>
 
+                        <p>
+                            Eksplorasi awal dan beradaptasi.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="stage-item"
+                    data-age="3-5"
+                    onclick="selectAge('3-5')"
+                >
+
+                    <span class="stage-icon">
+                        👦
+                    </span>
+
+                    <div class="stage-info">
+
+                        <strong>
+                            3 - 5 Tahun
+                        </strong>
+
+                        <p>
+                            Masa eksplorasi & rasa ingin tahu yang tinggi.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="stage-item"
+                    data-age="6-8"
+                    onclick="selectAge('6-8')"
+                >
+
+                    <span class="stage-icon">
+                        🌱
+                    </span>
+
+                    <div class="stage-info">
+
+                        <strong>
+                            6 - 8 Tahun
+                        </strong>
+
+                        <p>
+                            Mulai berpikir logis dan mandiri.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="stage-item"
+                    data-age="9-12"
+                    onclick="selectAge('9-12')"
+                >
+
+                    <span class="stage-icon">
+                        ⭐
+                    </span>
+
+                    <div class="stage-info">
+
+                        <strong>
+                            9 - 12 Tahun
+                        </strong>
+
+                        <p>
+                            Pengembangan potensi dan kreativitas.
+                        </p>
+
+                    </div>
+
+                </div>
 
             </div>
 
@@ -186,7 +775,11 @@
     <section class="parent-tips">
 
         <div class="tips-title">
-            <h2>Tips untuk Orang Tua</h2>
+
+            <h2>
+                Tips untuk Orang Tua
+            </h2>
+
         </div>
 
 
@@ -253,6 +846,7 @@
 
 </main>
 
+
 <!-- =========================
      FOOTER CHILD DEVELOPMENT
 ========================= -->
@@ -265,513 +859,6 @@
 
 </footer>
 
-
-<!-- =========================
-     CSS CHILD DEVELOPMENT
-========================== -->
-
-<style>
-
-/* =========================
-   PAGE
-========================= */
-
-.child-development-page {
-    min-height: 100vh;
-
-    background: #FFFDF9;
-    color: #315C50;
-
-    padding: 35px 50px 45px;
-}
-
-
-/* =========================
-   HEADER
-========================= */
-
-.child-header {
-    max-width: 1200px;
-    margin: 0 auto 12px;
-}
-
-.page-number {
-    display: inline-block;
-
-    padding: 4px 12px;
-
-    background: #315C50;
-    color: #FFFFFF;
-
-    border-radius: 0 0 8px 8px;
-
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-}
-
-.child-title {
-    margin-top: 15px;
-}
-
-.child-title h1 {
-    margin: 0 0 5px;
-
-    font-size: 30px;
-    font-weight: 700;
-
-    color: #315C50;
-}
-
-.child-title p {
-    margin: 0;
-
-    font-size: 11px;
-    line-height: 1.5;
-
-    color: #667085;
-}
-
-
-/* =========================
-   AGE FILTER
-========================= */
-
-.age-filter {
-    max-width: 1200px;
-    margin: 15px auto 10px;
-
-    display: flex;
-    gap: 7px;
-}
-
-.age-btn {
-    padding: 6px 13px;
-
-    border: none;
-    border-radius: 15px;
-
-    background: #F4F1EA;
-
-    color: #667085;
-
-    font-size: 10px;
-    font-weight: 500;
-
-    cursor: pointer;
-}
-
-.age-btn.active {
-    background: #6FAF9B;
-    color: #FFFFFF;
-}
-
-
-/* =========================
-   DEVELOPMENT CONTENT
-========================= */
-
-.development-content {
-    max-width: 1200px;
-    margin: 0 auto;
-
-    display: grid;
-    grid-template-columns: 1.55fr 1fr;
-
-    gap: 18px;
-}
-
-
-/* =========================
-   LEFT
-========================= */
-
-.development-left {
-    min-width: 0;
-}
-
-.development-tabs {
-    display: flex;
-    gap: 6px;
-
-    margin-bottom: 8px;
-}
-
-.development-tab {
-    padding: 5px 11px;
-
-    border: 1px solid #E5E7EB;
-    border-radius: 15px;
-
-    background: #FFFFFF;
-
-    color: #667085;
-
-    font-size: 10px;
-
-    cursor: pointer;
-}
-
-.development-tab.active {
-    background: #6FAF9B;
-    border-color: #6FAF9B;
-
-    color: #FFFFFF;
-}
-
-
-/* =========================
-   MAIN DEVELOPMENT CARD
-========================= */
-
-.development-card {
-    min-height: 180px;
-
-    display: grid;
-    grid-template-columns: 1fr 0.9fr;
-
-    align-items: center;
-
-    overflow: hidden;
-
-    background: #F4A89A;
-
-    border-radius: 10px;
-}
-
-.development-info {
-    padding: 18px 20px;
-}
-
-.development-info h2 {
-    margin: 0 0 7px;
-
-    font-size: 16px;
-    font-weight: 700;
-
-    color: #274B3D;
-}
-
-.development-info p {
-    max-width: 230px;
-
-    margin: 0 0 8px;
-
-    font-size: 10px;
-    line-height: 1.5;
-
-    color: #426F5C;
-}
-
-.development-info h4 {
-    margin: 0 0 5px;
-
-    font-size: 10px;
-    font-weight: 700;
-
-    color: #274B3D;
-}
-
-.development-info ul {
-    margin: 0 0 10px;
-    padding-left: 15px;
-
-    font-size: 10px;
-    line-height: 1.7;
-
-    color: #426F5C;
-}
-
-.recommend-btn {
-    display: inline-block;
-
-    padding: 6px 9px;
-
-    background: #315C50;
-    color: #FFFFFF;
-
-    border-radius: 5px;
-
-    text-decoration: none;
-
-    font-size: 9px;
-    font-weight: 600;
-}
-
-
-/* =========================
-   IMAGE
-========================= */
-
-.development-image {
-    height: 100%;
-
-    display: flex;
-    align-items: end;
-    justify-content: center;
-}
-
-.development-image .image-placeholder {
-    width: 90%;
-    height: 155px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: #E8D8C8;
-
-    border-radius: 70px 70px 0 0;
-
-    color: #FFFFFF;
-
-    font-size: 8px;
-}
-
-
-/* =========================
-   RIGHT
-========================= */
-
-.development-right {
-    padding: 13px 15px;
-
-    background: #FFFFFF;
-
-    border-radius: 10px;
-
-    border: 1px solid #E8E8E8;
-}
-
-.development-right h2 {
-    margin: 0 0 9px;
-
-    font-size: 12px;
-    font-weight: 700;
-
-    color: #315C50;
-}
-
-
-/* =========================
-   STAGE
-========================= */
-
-.stage-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-
-
-.stage-icon {
-    width: 25px;
-    height: 25px;
-
-    flex-shrink: 0;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 14px;
-}
-
-.stage-info strong {
-    display: block;
-
-    margin-bottom: 2px;
-
-    font-size: 10px;
-    font-weight: 700;
-
-    color: #315C50;
-}
-
-.stage-info p {
-    margin: 0;
-
-    font-size: 9px;
-    line-height: 1.4;
-
-    color: #667085;
-}
-
-
-/* =========================
-   TIPS
-========================= */
-
-.parent-tips {
-    max-width: 1200px;
-
-    margin: 12px auto 0;
-
-    padding: 10px 15px;
-
-    background: #FFF9F2;
-
-    border: 1px solid #E8E8E8;
-
-    border-radius: 8px;
-}
-
-.tips-title h2 {
-    margin: 0 0 8px;
-
-    font-size: 12px;
-    font-weight: 700;
-
-    color: #274B3D;
-}
-
-.tips-list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-
-    gap: 15px;
-}
-
-.tip-item {
-    display: flex;
-    align-items: center;
-
-    gap: 7px;
-}
-
-.tip-icon {
-    width: 24px;
-    height: 24px;
-
-    flex-shrink: 0;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    border: 1px solid #6FAF9B;
-    border-radius: 50%;
-
-    color: #315C50;
-
-    font-size: 10px;
-}
-
-.tip-item p {
-    margin: 0;
-
-    font-size: 10px;
-    line-height: 1.4;
-
-    color: #667085;
-}
-
-
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media (max-width: 900px) {
-
-    .child-development-page {
-        padding: 30px 25px;
-    }
-
-    .development-content {
-        grid-template-columns: 1fr;
-    }
-
-    .tips-list {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-}
-
-@media (max-width: 600px) {
-
-    .child-development-page {
-        padding: 25px 15px;
-    }
-
-    .age-filter {
-        flex-wrap: wrap;
-    }
-
-    .development-card {
-        grid-template-columns: 1fr;
-    }
-
-    .development-image {
-        min-height: 150px;
-    }
-
-    .tips-list {
-        grid-template-columns: 1fr;
-    }
-
-}
-
-/* =========================
-   FOOTER CHILD DEVELOPMENT
-========================= */
-
-.child-footer {
-    width: 100%;
-    height: 45px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    background: #315C50;
-}
-
-.child-footer p {
-    margin: 0;
-
-    font-size: 11px;
-    font-weight: 400;
-
-    color: #FFFFFF;
-}
-
-.stage-item {
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-.stage-item:hover {
-    background: #EEF3E7;
-    transform: translateY(-2px);
-}
-
-.stage-item {
-    display: flex;
-    align-items: center;
-
-    gap: 9px;
-
-    padding: 8px;
-
-    border-radius: 7px;
-
-    background: #FFFDF9;
-
-    cursor: pointer;
-
-    transition: 0.2s ease;
-}
-
-.stage-item:hover {
-    background: #F4F7EF;
-}
-
-.stage-item.active {
-    background: #EEF3E7;
-}
-
-</style> 
 
 <script>
 
@@ -1007,10 +1094,14 @@
        ELEMENT
     ========================== */
 
-    const ageButtons = document.querySelectorAll(".age-btn");
-    const developmentButtons = document.querySelectorAll(".development-tab");
+    const ageButtons =
+        document.querySelectorAll(".age-btn");
 
-    const developmentInfo = document.querySelector(".development-info");
+    const developmentButtons =
+        document.querySelectorAll(".development-tab");
+
+    const developmentInfo =
+        document.querySelector(".development-info");
 
     let selectedAge = "0-2";
     let selectedDevelopment = "kognitif";
@@ -1059,13 +1150,13 @@
 
     ageButtons.forEach(button => {
 
-    button.addEventListener("click", function () {
+        button.addEventListener("click", function () {
 
-        selectAge(this.dataset.age);
+            selectAge(this.dataset.age);
+
+        });
 
     });
-
-});
 
 
     /* =========================
@@ -1091,38 +1182,47 @@
 
     });
 
+
     /* =========================
-   SELECT AGE DARI KOTAK KANAN
-========================= */
+       SELECT AGE DARI KOTAK KANAN
+    ========================== */
 
-function selectAge(age) {
+    function selectAge(age) {
 
-    // Simpan usia yang dipilih
-    selectedAge = age;
+        // Simpan usia yang dipilih
+        selectedAge = age;
 
-    // Aktifkan tombol usia di sebelah kiri
-    ageButtons.forEach(btn => {
-        btn.classList.remove("active");
+        // Aktifkan tombol usia di sebelah kiri
+        ageButtons.forEach(btn => {
 
-        if (btn.dataset.age === age) {
-            btn.classList.add("active");
-        }
-    });
+            btn.classList.remove("active");
 
-    // Aktifkan usia yang sesuai di kotak kanan
-    const stageItems = document.querySelectorAll(".stage-item");
+            if (btn.dataset.age === age) {
+                btn.classList.add("active");
+            }
 
-    stageItems.forEach(item => {
-        item.classList.remove("active");
+        });
 
-        if (item.dataset.age === age) {
-            item.classList.add("active");
-        }
-    });
 
-    // Update isi kartu perkembangan
-    updateDevelopmentContent();
-}
+        // Aktifkan usia yang sesuai di kotak kanan
+        const stageItems =
+            document.querySelectorAll(".stage-item");
+
+        stageItems.forEach(item => {
+
+            item.classList.remove("active");
+
+            if (item.dataset.age === age) {
+                item.classList.add("active");
+            }
+
+        });
+
+
+        // Update isi kartu perkembangan
+        updateDevelopmentContent();
+    }
+
 
     /* =========================
        INITIAL CONTENT
@@ -1131,3 +1231,6 @@ function selectAge(age) {
     updateDevelopmentContent();
 
 </script>
+
+@endsection
+
