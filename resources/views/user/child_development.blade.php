@@ -1136,7 +1136,7 @@
                 `).join("")}
             </ul>
 
-            <a href="#" class="recommend-btn">
+            <a href="{{ route('shop.allproducts') }}?age=${selectedAge}&development=${selectedDevelopment}" class="recommend-btn">
                 Lihat Rekomendasi Produk
             </a>
 
