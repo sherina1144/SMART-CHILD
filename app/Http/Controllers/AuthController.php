@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\Doctor; 
 
 class AuthController extends Controller
 {
@@ -30,11 +31,10 @@ class AuthController extends Controller
 
             if ($role === 'admin') {
                 return redirect()->intended('/admin/dashboard');
-            } elseif ($role === 'doctor') {
-                return redirect()->intended('/doctor/dashboard');
+            } elseif ($role === 'dokter') { // <--- SESUAIKAN JADI 'dokter'
+                return redirect()->intended('/doctor/dashboard'); // Pastikan route ini ada
             }
 
-            // Ubah bagian ini menjadi /home untuk user biasa
             return redirect()->intended('/home');
         }
 
@@ -52,14 +52,12 @@ class AuthController extends Controller
     // Proses simpan register ke database
     public function register(Request $request)
     {
-        // Validasi input dari form
         $request->validate([
             'nama' => ['required', 'string', 'max:100'],
             'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
 
-        // Simpan ke database
         $user = User::create([
             'nama' => $request->nama,
             'email' => $request->email,
@@ -67,10 +65,8 @@ class AuthController extends Controller
             'role' => 'user', 
         ]);
 
-        // Otomatis login setelah berhasil register
         Auth::login($user);
 
-        // Arahkan ke beranda
         return redirect()->intended('/');
     }
 
@@ -84,16 +80,32 @@ class AuthController extends Controller
         return redirect('/login');
     }
 
-    // Tampilkan halaman profil user
+    // Tampilkan halaman profil user / admin / dokter
     public function showProfile()
     {
         $user = Auth::user();
 
-        // Cek apakah user punya role admin atau cek berdasarkan field role/tipe akun di database 
         if ($user->role === 'admin') { 
-            return view('auth.profile_admin', compact('user')); // Tampilan khusus admin
+            return view('auth.profile_admin', compact('user')); 
+        } 
+        
+        // --- TAMBAHAN UNTUK PROFIL DOKTER ---
+        elseif ($user->role === 'dokter') {
+            // Cari data dokter berdasarkan user_id yang sedang login
+            $doctor = Doctor::where('user_id', $user->user_id)->with('schedules')->first();
+
+            if (!$doctor) {
+                // Tampilan jika akun dokternya belum dihubungkan admin ke tabel doctors
+                return view('auth.profile_dokter', [
+                    'doctor' => null,
+                    'message' => 'Akun Anda belum dihubungkan ke data profil dokter oleh Admin.'
+                ]);
+            }
+
+            return view('auth.profile_dokter', compact('user', 'doctor'));
         }
-        return view('auth.profile_user', compact('user'));  // Jika user biasa
+        
+        return view('auth.profile_user', compact('user')); 
     }
 
     // Tampilkan halaman form edit profil
@@ -103,6 +115,11 @@ class AuthController extends Controller
 
         if ($user->role === 'admin') {
             return view('auth.edit_profile_admin', compact('user'));
+        }
+
+        // Dokter tidak bisa edit profil lewat sini karena dikelola admin
+        if ($user->role === 'dokter') {
+            return redirect()->route('profile.show')->with('error', 'Profil dokter dikelola oleh Admin.');
         }
 
         return view('auth.edit_profile_user', compact('user'));
@@ -119,7 +136,7 @@ class AuthController extends Controller
             'no_hp' => ['nullable', 'string', 'max:20'],
             'alamat' => ['nullable', 'string'],
             'kota' => ['nullable', 'string', 'max:100'],
-            'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'], // Maksimal 2MB
+            'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
         ]);
 
         $user->nama = $request->nama;
@@ -128,13 +145,10 @@ class AuthController extends Controller
         $user->alamat = $request->alamat;
         $user->kota = $request->kota;
 
-        // Handle Upload Foto
         if ($request->hasFile('foto')) {
-            // Hapus foto lama jika ada
             if ($user->foto && file_exists(storage_path('app/public/' . $user->foto))) {
                 unlink(storage_path('app/public/' . $user->foto));
             }
-            // Simpan foto baru ke folder storage/app/public/profile_photos
             $path = $request->file('foto')->store('profile_photos', 'public');
             $user->foto = $path;
         }

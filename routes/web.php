@@ -288,15 +288,27 @@ Route::middleware(['auth'])->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['auth', 'role:doctor'])
+Route::middleware(['auth', 'role:dokter'])
     ->prefix('doctor')
     ->name('doctor.')
     ->group(function () {
 
         Route::get('/dashboard', function () {
-            return "Halaman Dashboard Khusus Dokter";
+            return view('layout.dashboard_dokter');
         })->name('dashboard');
+
+        Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
     });
+
+Route::middleware(['auth'])->prefix('dokter')->group(function () {
+    Route::post('/consultation/{id}/finish', [DoctorController::class, 'finishConsultation']);
+    Route::get('/dokter/dashboard', [DoctorController::class, 'index'])->name('dokter.dashboard');
+    Route::get('/dokter/consultations', [DoctorController::class, 'consultations'])->name('dokter.consultations');
+    Route::get('/dokter/schedules', [DoctorController::class, 'schedules'])->name('dokter.schedules');
+    Route::get('/dokter/profile', [DoctorController::class, 'myProfile'])->name('dokter.profile');
+    Route::patch('/consultation/{id}/finish', [DoctorController::class, 'finishConsultation'])->name('consultation.finish');
+});
+
 
 
 /*

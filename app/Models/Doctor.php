@@ -23,6 +23,11 @@ class Doctor extends Model
         'biaya_konsultasi',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id'); 
+    }
+
     public function schedules()
     {
         return $this->hasMany(DoctorSchedule::class, 'doctor_id', 'doctor_id');

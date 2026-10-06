@@ -215,6 +215,17 @@
 
     <form action="{{ route('admin.doctor.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
+
+        <div class="form-group">
+    <label>Pautan Akun User (Login Dokter)</label>
+    <select name="user_id" class="form-control" required>
+        <option value="">-- Pilih Akun User untuk Dokter Ini --</option>
+        @foreach($usersDokter as $usr)
+            <option value="{{ $usr->user_id }}">{{ $usr->nama }} ({{ $usr->email }})</option>
+        @endforeach
+    </select>
+    <small style="color: #64748B; font-size: 11px; margin-top: 4px;">Pastikan user ini sudah diubah rolenya menjadi 'dokter' di database.</small>
+</div>
         <div class="form-grid">
             <div class="form-group">
                 <label>Nama Lengkap & Gelar</label>

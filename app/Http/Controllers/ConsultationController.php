@@ -120,4 +120,13 @@ class ConsultationController extends Controller
 
         return view('user.services.daftar_consultation', compact('consultations'));
     }
+
+    public function finishConsultation($id)
+    {
+        $consultation = Consultation::findOrFail($id);
+        $consultation->status_konsultasi = 'Completed';
+        $consultation->save();
+
+        return redirect()->back()->with('success', 'Konsultasi ditandai sebagai selesai.');
+    }
 }
