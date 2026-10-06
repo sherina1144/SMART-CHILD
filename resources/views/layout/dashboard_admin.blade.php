@@ -8,21 +8,16 @@
     <title>{{ $title ?? 'Admin Dashboard - SmartChild' }}</title>
 
     <!-- Fonts & Icons -->
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
 
     <!-- Bootstrap 5 CSS -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- CSS Layout Admin -->
     <style>
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -309,7 +304,6 @@
             }
 
         }
-
     </style>
 
 </head>
@@ -352,10 +346,8 @@
 
                 <li class="nav-item">
 
-                    <a
-                        href="{{ route('admin.dashboard') }}"
-                        class="nav-link {{ Request::is('admin/dashboard*') ? 'active' : '' }}"
-                    >
+                    <a href="{{ route('admin.dashboard') }}"
+                        class="nav-link {{ Request::is('admin/dashboard*') ? 'active' : '' }}">
 
                         <i class="fa-solid fa-chart-pie"></i>
 
@@ -382,10 +374,8 @@
 
                 <li class="nav-item">
 
-                    <a
-                        href="{{ route('admin.doctor.add') }}"
-                        class="nav-link {{ Request::is('admin/doctor*') ? 'active' : '' }}"
-                    >
+                    <a href="{{ route('admin.doctor.add') }}"
+                        class="nav-link {{ Request::is('admin/doctor*') ? 'active' : '' }}">
 
                         <i class="fa-solid fa-user-doctor"></i>
 
@@ -400,10 +390,8 @@
 
                 <li class="nav-item">
 
-                    <a
-                        href="{{ route('admin.consultation.index') }}"
-                        class="nav-link {{ Request::is('admin/consultations*') ? 'active' : '' }}"
-                    >
+                    <a href="{{ route('admin.consultation.index') }}"
+                        class="nav-link {{ Request::is('admin/consultations*') ? 'active' : '' }}">
 
                         <i class="fa-solid fa-calendar-check"></i>
 
@@ -430,10 +418,8 @@
 
                 <li class="nav-item">
 
-                    <a
-                        href="{{ url('/admin/products') }}"
-                        class="nav-link {{ Request::is('admin/products*') ? 'active' : '' }}"
-                    >
+                    <a href="{{ url('/admin/products') }}"
+                        class="nav-link {{ Request::is('admin/products*') ? 'active' : '' }}">
 
                         <i class="fa-solid fa-box-open"></i>
 
@@ -448,10 +434,8 @@
 
                 <li class="nav-item">
 
-                    <a
-                        href="{{ route('admin.smartbox.index') }}"
-                        class="nav-link {{ Request::is('admin/smart-child-box*') ? 'active' : '' }}"
-                    >
+                    <a href="{{ route('admin.smartbox.index') }}"
+                        class="nav-link {{ Request::is('admin/smart-child-box*') ? 'active' : '' }}">
 
                         <i class="fa-solid fa-boxes-stacked"></i>
 
@@ -466,10 +450,8 @@
 
                 <li class="nav-item">
 
-                    <a
-                        href="{{ url('/admin/orders') }}"
-                        class="nav-link {{ Request::is('admin/orders*') ? 'active' : '' }}"
-                    >
+                    <a href="{{ url('/admin/orders') }}"
+                        class="nav-link {{ Request::is('admin/orders*') ? 'active' : '' }}">
 
                         <i class="fa-solid fa-receipt"></i>
 
@@ -496,10 +478,8 @@
 
                 <li class="nav-item">
 
-                    <a
-                        href="{{ route('admin.parenting.index') }}"
-                        class="nav-link {{ Request::is('admin/parenting*') ? 'active' : '' }}"
-                    >
+                    <a href="{{ route('admin.parenting.index') }}"
+                        class="nav-link {{ Request::is('admin/parenting*') ? 'active' : '' }}">
 
                         <i class="fa-solid fa-graduation-cap"></i>
 
@@ -509,6 +489,15 @@
 
                 </li>
 
+                <!-- NEWSLETTER -->
+
+                <li class="nav-item">
+
+                    <a href="{{ route('admin.newsletter.index') }}" class="nav-link">
+                        <i class="fa-solid fa-envelope"></i> Newsletter
+                    </a>
+
+                </li>
 
 
                 <!-- =================================================
@@ -526,10 +515,8 @@
 
                 <li class="nav-item">
 
-                    <a
-                        href="{{ route('admin.partnership') }}"
-                        class="nav-link {{ Request::is('admin/partnerships*') ? 'active' : '' }}"
-                    >
+                    <a href="{{ route('admin.partnership') }}"
+                        class="nav-link {{ Request::is('admin/partnerships*') ? 'active' : '' }}">
 
                         <i class="fa-solid fa-handshake"></i>
 
@@ -544,10 +531,8 @@
 
                 <li class="nav-item">
 
-                    <a
-                        href="{{ route('admin.contact') }}"
-                        class="nav-link {{ Request::is('admin/contact*') ? 'active' : '' }}"
-                    >
+                    <a href="{{ route('admin.contact') }}"
+                        class="nav-link {{ Request::is('admin/contact*') ? 'active' : '' }}">
 
                         <i class="fa-solid fa-envelope"></i>
 
@@ -574,23 +559,15 @@
 
             <!-- USER PROFILE -->
 
-            <a
-                href="{{ Route::has('profile.show') ? route('profile.show') : (Route::has('profile') ? route('profile') : url('/profile')) }}"
-                class="user-profile"
-            >
+            <a href="{{ Route::has('profile.show') ? route('profile.show') : (Route::has('profile') ? route('profile') : url('/profile')) }}"
+                class="user-profile">
 
-                <div
-                    class="avatar"
-                    style="overflow: hidden; padding: 0;"
-                >
+                <div class="avatar" style="overflow: hidden; padding: 0;">
 
                     @if(Auth::user()->foto ?? false)
 
-                        <img
-                            src="{{ asset('storage/' . Auth::user()->foto) }}"
-                            alt="Avatar"
-                            style="width: 100%; height: 100%; object-fit: cover;"
-                        >
+                        <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Avatar"
+                            style="width: 100%; height: 100%; object-fit: cover;">
 
                     @else
 
@@ -619,17 +596,11 @@
 
             <!-- LOGOUT -->
 
-            <form
-                action="{{ route('logout') }}"
-                method="POST"
-            >
+            <form action="{{ route('logout') }}" method="POST">
 
                 @csrf
 
-                <button
-                    type="submit"
-                    class="btn-logout"
-                >
+                <button type="submit" class="btn-logout">
 
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
 

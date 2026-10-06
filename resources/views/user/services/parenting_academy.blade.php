@@ -515,8 +515,18 @@
 
             <!-- Tampilkan pesan sukses -->
             @if(session('success'))
-                <div class="alert-success">
+                <div class="alert alert-success alert-dismissible fade show text-center mb-4" role="alert"
+                    style="border-radius: 50px;">
                     {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            @if($errors->any())
+                <div class="alert alert-danger alert-dismissible fade show text-center mb-4" role="alert"
+                    style="border-radius: 50px;">
+                    {{ $errors->first('email') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
 
@@ -623,13 +633,16 @@
 
                             <!-- Nama & Spesialisasi -->
                             <h4 style="font-size: 1.15rem; font-weight: bold; color: #1F2937; margin-bottom: 0.25rem;">
-                                {{ $expert->name }}</h4>
+                                {{ $expert->name }}
+                            </h4>
                             <p style="font-size: 0.9rem; color: #F97316; font-weight: 600; margin-bottom: 1rem;">
-                                {{ $expert->specialization }}</p>
+                                {{ $expert->specialization }}
+                            </p>
 
                             <!-- Deskripsi / Bio Singkat -->
                             <p style="font-size: 0.9rem; color: #4B5563; line-height: 1.5;">
-                                {{ $expert->bio ?? $expert->description }}</p>
+                                {{ $expert->bio ?? $expert->description }}
+                            </p>
                         </div>
                     @empty
                         <p style="grid-column: span 2; text-align: center; color: #9CA3AF; padding: 2rem;">Belum ada data
@@ -644,12 +657,19 @@
         <section class="newsletter-section">
             <div class="newsletter-container">
                 <h2 class="newsletter-title">Dapatkan Tips & Panduan Mingguan</h2>
-                <p class="newsletter-desc">Dafrarkan email Anda untuk berlangganan konten eksklusif tumbuh kembang anak
+                <p class="newsletter-desc">Daftarkan email Anda untuk berlangganan konten eksklusif tumbuh kembang anak
                     dari tim ahli medis SmartChild langsung ke inbox Anda.</p>
-
                 <form action="{{ route('newsletter.store') }}" method="POST" class="newsletter-form">
                     @csrf
-                    <input type="email" name="email" required placeholder="Alamat Email Anda" class="newsletter-input">
+                    <!-- Input untuk Nama Lengkap (menggunakan kelas CSS input yang sama) -->
+                    <input type="text" name="name" required placeholder="Nama Lengkap Anda" class="newsletter-input"
+                        value="{{ old('name') }}">
+
+                    <!-- Input untuk Email -->
+                    <input type="email" name="email" required placeholder="Alamat Email Anda" class="newsletter-input"
+                        value="{{ old('email') }}">
+
+                    <!-- Tombol Langganan -->
                     <button type="submit" class="newsletter-btn">Langganan</button>
                 </form>
             </div>

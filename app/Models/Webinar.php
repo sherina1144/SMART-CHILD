@@ -2,17 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Webinar extends Model
 {
-    use HasFactory;
-
-    protected $fillable = [
-        'title',
-        'schedule',
-        'speaker',
-        'image',
-    ];
+    protected $fillable = ['title', 'speaker', 'schedule', 'image', 'registration_url'];
 }

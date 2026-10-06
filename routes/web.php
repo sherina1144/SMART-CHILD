@@ -475,6 +475,19 @@ Route::middleware(['auth', 'role:admin'])
 
         /*
         |--------------------------------------------------------------------------
+        | ADMIN NEWSLETTER (DIPISAH AGAR BERSIH & TIDAK BENTROK)
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/newsletter', [NewsletterController::class, 'indexAdmin'])
+            ->name('newsletter.index');
+
+        Route::delete('/newsletter/{id}', [NewsletterController::class, 'destroy'])
+            ->name('newsletter.destroy');
+
+
+        /*
+        |--------------------------------------------------------------------------
         | ADMIN PARENTING ACADEMY
         |--------------------------------------------------------------------------
         */
@@ -486,9 +499,7 @@ Route::middleware(['auth', 'role:admin'])
                 Route::get('/', [ParentingAcademyController::class, 'indexAdmin'])
                     ->name('index');
 
-
                 // CRUD Academy
-
                 Route::get('/academy/create', [ParentingAcademyController::class, 'createAcademy'])
                     ->name('academy.create');
 
@@ -504,9 +515,7 @@ Route::middleware(['auth', 'role:admin'])
                 Route::delete('/academy/{id}/destroy', [ParentingAcademyController::class, 'destroyAcademy'])
                     ->name('academy.destroy');
 
-
                 // CRUD Video
-
                 Route::get('/video/create', [ParentingAcademyController::class, 'createVideo'])
                     ->name('video.create');
 
@@ -522,6 +531,7 @@ Route::middleware(['auth', 'role:admin'])
                 Route::delete('/video/{id}/destroy', [ParentingAcademyController::class, 'destroyVideo'])
                     ->name('video.destroy');
             });
+
     });
 
 

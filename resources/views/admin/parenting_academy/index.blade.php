@@ -45,6 +45,7 @@
                                             class="badge bg-success bg-opacity-10 text-success px-2 py-1">{{ $item->category }}</span>
                                     </td>
                                     <td>
+                                        <!-- Perbaikan Route Edit & Delete Artikel -->
                                         <a href="{{ route('admin.parenting.academy.edit', $item->id) }}"
                                             class="btn btn-warning btn-sm text-white">Edit</a>
                                         <form action="{{ route('admin.parenting.academy.destroy', $item->id) }}" method="POST"
@@ -71,7 +72,7 @@
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-video me-2 text-warning"></i> Daftar Video
                     Rekomendasi</h5>
-                <!-- PERBAIKAN ADA DI SINI (Kurung tutup route sudah lengkap) -->
+                <!-- Tombol Tambah Video -->
                 <a href="{{ route('admin.parenting.video.create') }}" class="btn btn-dark btn-sm">
                     <i class="fa-solid fa-plus me-1"></i> Tambah Video
                 </a>
@@ -107,9 +108,10 @@
                                             {{ $vid->instructor }}</span>
                                     </td>
                                     <td>
-                                        <a href="{{ route('admin.parenting.video.edit', $vid->id) }}"
+                                        <!-- Perbaikan Route Edit & Delete Video (Mengarah ke route academy karena tabelnya disatukan) -->
+                                        <a href="{{ route('admin.parenting.academy.edit', $vid->id) }}"
                                             class="btn btn-warning btn-sm text-white">Edit</a>
-                                        <form action="{{ route('admin.parenting.video.destroy', $vid->id) }}" method="POST"
+                                        <form action="{{ route('admin.parenting.academy.destroy', $vid->id) }}" method="POST"
                                             class="d-inline" onsubmit="return confirm('Yakin ingin menghapus video ini?')">
                                             @csrf
                                             @method('DELETE')

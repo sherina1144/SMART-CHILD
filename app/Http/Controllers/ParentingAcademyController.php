@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ParentingAcademy;
 use App\Models\Video;
+use App\Models\Newsletter;
 use App\Models\Doctor;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ParentingAcademyController extends Controller
 {
@@ -19,28 +21,34 @@ class ParentingAcademyController extends Controller
     {
         $category = $request->get('category', 'Semua Materi');
 
+        // Mengambil daftar kategori unik dari tabel tunggal ParentingAcademy berdasarkan tipe 'article' dan 'video'
         $categoriesFromAcademy = ParentingAcademy::where('status', 'published')
+            ->where('type', 'article')
             ->whereNotNull('category')
             ->pluck('category');
 
-        $categoriesFromVideo = Video::whereNotNull('category')
+        $categoriesFromVideo = ParentingAcademy::where('status', 'published')
+            ->where('type', 'video')
+            ->whereNotNull('category')
             ->pluck('category');
 
         $categories = $categoriesFromAcademy->merge($categoriesFromVideo)->unique()->sort()->values();
 
-        $coursesQuery = ParentingAcademy::where('status', 'published');
+        // Query untuk Artikel (Courses) dipanggil dari ParentingAcademy dengan type 'article'
+        $coursesQuery = ParentingAcademy::where('status', 'published')->where('type', 'article');
         if ($category && $category !== 'Semua Materi') {
             $coursesQuery->where('category', $category);
         }
         $courses = $coursesQuery->latest()->get();
 
-        $videosQuery = Video::query();
+        // Query untuk Video dipanggil dari ParentingAcademy dengan type 'video'
+        $videosQuery = ParentingAcademy::where('status', 'published')->where('type', 'video');
         if ($category && $category !== 'Semua Materi') {
             $videosQuery->where('category', $category);
         }
         $videos = $videosQuery->latest()->get();
 
-        // PASTIKAN BARIS INI ADA SUPAYA DATA DOKTER TERKIRIM KE VIEW!
+        // Data dokter/expert
         $experts = Doctor::all();
 
         return view('user.services.parenting_academy', compact('courses', 'videos', 'categories', 'category', 'experts'));
@@ -58,10 +66,17 @@ class ParentingAcademyController extends Controller
     */
     public function indexAdmin()
     {
-        $academies = ParentingAcademy::latest()->get();
-        $videos = Video::latest()->get();
+        // Ambil data yang tipenya article untuk tabel Buku Panduan
+        $academies = ParentingAcademy::where('type', 'article')->latest()->get();
 
-        return view('admin.parenting_academy.index', compact('academies', 'videos'));
+        // Ambil data yang tipenya video dari tabel yang sama (ParentingAcademy)
+        $videos = ParentingAcademy::where('type', 'video')->latest()->get();
+
+        // 2. Ambil data newsletter terbaru
+        $newsletters = Newsletter::latest()->get();
+
+        // 3. Tambahkan $newsletters ke dalam compact
+        return view('admin.parenting_academy.index', compact('academies', 'videos', 'newsletters'));
     }
 
     // --- CRUD BUKU PANDUAN / ARTIKEL ---
@@ -83,9 +98,11 @@ class ParentingAcademyController extends Controller
 
         ParentingAcademy::create([
             'title' => $request->title,
+            'slug' => Str::slug($request->title) . '-' . time(), // Ditambahkan slug agar konsisten
             'category' => $request->category,
             'description' => $request->description,
             'thumbnail' => $thumbnailPath,
+            'type' => 'article', // <-- Ditambahkan secara eksplisit
             'status' => 'published',
         ]);
 
@@ -146,7 +163,7 @@ class ParentingAcademyController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'category' => 'required|string|max:255', // <-- Ditambahkan validasi kategori
+            'category' => 'required|string',
             'duration' => 'required|string',
             'instructor' => 'required|string',
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
@@ -155,31 +172,36 @@ class ParentingAcademyController extends Controller
 
         $thumbnailPath = $request->file('thumbnail')->store('parenting/videos', 'public');
 
-        Video::create([
+        ParentingAcademy::create([
             'title' => $request->title,
-            'category' => $request->category, // <-- Disimpan ke database
+            'slug' => Str::slug($request->title) . '-' . time(),
+            'description' => $request->description ?? '-',
+            'category' => $request->category,
             'duration' => $request->duration,
             'instructor' => $request->instructor,
             'thumbnail' => $thumbnailPath,
             'video_url' => $request->video_url,
+            'type' => 'video', // <-- PASTIKAN BARIS INI ADA DI DALAM storeVideo
+            'status' => 'published',
         ]);
 
-        return redirect()->route('admin.parenting.index')->with('success', 'Video panduan berhasil ditambahkan!');
+        return redirect()->route('admin.parenting.index')->with('success', 'Video berhasil ditambahkan ke Parenting Academy!');
     }
 
     public function editVideo($id)
     {
-        $video = Video::findOrFail($id);
+        // Ubah dari Video:: menjadi ParentingAcademy dengan filter type video
+        $video = ParentingAcademy::where('type', 'video')->findOrFail($id);
         return view('admin.parenting_academy.edit_video', compact('video'));
     }
 
     public function updateVideo(Request $request, $id)
     {
-        $video = Video::findOrFail($id);
+        $video = ParentingAcademy::where('type', 'video')->findOrFail($id);
 
         $request->validate([
             'title' => 'required|string|max:255',
-            'category' => 'required|string|max:255', // <-- Ditambahkan validasi kategori
+            'category' => 'required|string|max:255',
             'duration' => 'required|string',
             'instructor' => 'required|string',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -195,7 +217,7 @@ class ParentingAcademyController extends Controller
 
         $video->update([
             'title' => $request->title,
-            'category' => $request->category, // <-- Diupdate ke database
+            'category' => $request->category,
             'duration' => $request->duration,
             'instructor' => $request->instructor,
             'video_url' => $request->video_url,
@@ -206,7 +228,7 @@ class ParentingAcademyController extends Controller
 
     public function destroyVideo($id)
     {
-        $video = Video::findOrFail($id);
+        $video = ParentingAcademy::where('type', 'video')->findOrFail($id);
         if ($video->thumbnail) {
             Storage::disk('public')->delete($video->thumbnail);
         }
