@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+it<html lang="id">
 
 <head>
     <meta charset="UTF-8">
@@ -11,6 +11,8 @@
         rel="stylesheet">
     <!-- FontAwesome untuk ikon komentar -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS (Opsional untuk styling modal popup agar rapi) -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         /* RESET & BASE STYLES */
@@ -24,7 +26,6 @@
             background-color: #ffffff;
             font-family: 'Plus Jakarta Sans', sans-serif;
             color: #292524;
-            /* text-stone-800 */
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
@@ -37,7 +38,6 @@
         /* TOMBOL & LINK */
         .btn-emerald {
             background-color: #064e3b;
-            /* emerald-900 */
             color: #ffffff;
             font-weight: 500;
             padding: 0.75rem 1.5rem;
@@ -52,14 +52,11 @@
 
         .btn-emerald:hover {
             background-color: #065f46;
-            /* emerald-800 */
         }
 
         .btn-outline-emerald {
             border: 1px solid #d6d3d1;
-            /* stone-300 */
             color: #022c22;
-            /* emerald-950 */
             font-weight: 500;
             padding: 0.75rem 1.5rem;
             border-radius: 9999px;
@@ -72,12 +69,10 @@
 
         .btn-outline-emerald:hover {
             background-color: #f5f5f4;
-            /* stone-50 */
         }
 
         .btn-orange {
             background-color: #fb923c;
-            /* orange-400 */
             color: #ffffff;
             font-weight: 500;
             padding: 0.625rem 1.25rem;
@@ -86,11 +81,12 @@
             text-decoration: none;
             transition: background-color 0.2s ease;
             display: inline-block;
+            border: none;
+            cursor: pointer;
         }
 
         .btn-orange:hover {
             background-color: #f97316;
-            /* orange-500 */
         }
 
         /* CONTAINER UTAMA */
@@ -120,30 +116,25 @@
         .hero-badge {
             display: inline-block;
             background-color: #f5f5f4;
-            /* stone-100 */
             color: #44403c;
-            /* stone-700 */
             font-size: 0.75rem;
             font-weight: 500;
             padding: 0.35rem 0.875rem;
             border-radius: 9999px;
             margin-bottom: 1.5rem;
             border: 1px solid #e7e5e4;
-            /* stone-200 */
         }
 
         .hero-title {
             font-size: clamp(2.25rem, 4vw, 3rem);
             font-weight: 700;
             color: #022c22;
-            /* emerald-950 */
             line-height: 1.2;
             margin-bottom: 1.5rem;
         }
 
         .hero-desc {
             color: #57534e;
-            /* stone-600 */
             line-height: 1.7;
             margin-bottom: 2rem;
             font-size: 0.95rem;
@@ -232,7 +223,6 @@
 
         .group-member-count {
             color: #f97316;
-            /* orange-500 */
             font-weight: 600;
             font-size: 0.875rem;
         }
@@ -308,7 +298,6 @@
 
         .thread-category {
             color: #ea580c;
-            /* orange-600 */
             font-weight: 600;
         }
 
@@ -316,6 +305,13 @@
             font-weight: 600;
             color: #022c22;
             font-size: 1rem;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .thread-title:hover {
+            color: #064e3b;
+            text-decoration: underline;
         }
 
         .thread-right {
@@ -468,9 +464,19 @@
 
     <main>
 
+        <!-- Pesan Sukses Notifikasi -->
+        @if(session('success'))
+            <div style="max-width: 80rem; margin: 1.5rem auto 0 auto; padding: 0 1.5rem;">
+                <div
+                    style="background-color: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 1rem; border-radius: 0.75rem; font-size: 0.875rem;">
+                    {{ session('success') }}
+                </div>
+            </div>
+        @endif
+
         <!-- =========================
-         HERO SECTION
-    ========================== -->
+          HERO SECTION
+        ========================== -->
         <section class="hero-section">
             <div>
                 <span class="hero-badge">
@@ -500,9 +506,8 @@
 
 
         <!-- =========================
-         GRUP DISKUSI SESUAI TAHAP USIA
-    ========================== -->
-        <!-- Bagian Grup Diskusi Sesuai Tahap Usia -->
+          GRUP DISKUSI SESUAI TAHAP USIA
+        ========================== -->
         <section class="container-max" style="padding-top: 4rem; padding-bottom: 4rem;">
             <div class="section-header-center">
                 <h2 class="section-title">Grup Diskusi Sesuai Tahap Usia</h2>
@@ -517,11 +522,10 @@
                             <p>{{ $group->description }}</p>
                         </div>
                         <div>
-                            <span class="group-member-count">{{ $group->active_members }} Anggota Aktif</span>
+                            <span class="group-member-count">{{ $group->active_members ?? '1.2k' }} Anggota Aktif</span>
                         </div>
                     </div>
                 @empty
-                    <!-- Contoh Tampilan Statis jika belum menggunakan database -->
                     <div class="group-card">
                         <div>
                             <h3>Newborn Parents</h3>
@@ -556,9 +560,10 @@
             </div>
         </section>
 
+
         <!-- =========================
-         DISKUSI HANGAT HARI INI
-    ========================== -->
+          DISKUSI HANGAT HARI INI
+        ========================== -->
         <section class="discussion-section">
             <div class="discussion-top-flex">
                 <div>
@@ -566,39 +571,75 @@
                         Hangat Hari Ini</h2>
                     <p class="section-desc">Ikuti obrolan hangat seputar keseharian mendidik si kecil</p>
                 </div>
-                <a href="#" class="btn-orange">
+                <!-- Tombol untuk memicu munculnya Modal Buat Thread Baru -->
+                <button type="button" onclick="openThreadModal()" class="btn-orange">
                     Buat Thread Baru
-                </a>
+                </button>
             </div>
 
             <div style="display: flex; flex-direction: column; gap: 1rem;">
-                @foreach($threads as $thread)
-                    <div class="thread-card">
-                        <div class="thread-left">
-                            <img src="{{ $thread->author_avatar ?? 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100' }}"
-                                alt="Avatar" class="thread-avatar">
-                            <div>
-                                <div class="thread-meta">
-                                    <span class="thread-category">{{ $thread->category }}</span> •
-                                    {{ $thread->author_name }}
+                @forelse($threads as $thread)
+                    <div class="thread-card"
+                        style="display: flex; flex-direction: column; align-items: flex-start; width: 100%;">
+                        <div style="display: flex; justify-content: space-between; width: 100%; align-items: flex-start;">
+                            <!-- Bagian Kiri (Avatar, Kategori, Nama, Judul, & Content) -->
+                            <div class="thread-left" style="align-items: flex-start; display: flex; gap: 1rem;">
+                                <!-- Mengambil nama asli dari relasi user, atau fallback ke akun yang sedang login, atau 'Pengguna' -->
+                                @php
+                                    $namaUser = $thread->user->nama ?? auth()->user()->nama ?? 'Pengguna';
+                                @endphp
+
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($namaUser) }}&background=0d9488&color=fff"
+                                    alt="Avatar" class="thread-avatar"
+                                    style="width: 40px; height: 40px; border-radius: 50%;">
+
+                                <div>
+                                    <div class="thread-meta">
+                                        <span class="thread-category">{{ $thread->category }}</span> •
+                                        <!-- Menampilkan nama yang konsisten dengan avatarnya -->
+                                        <strong>{{ $namaUser }}</strong>
+                                    </div>
+
+                                    <!-- Judul dan isi thread -->
+                                    <h4 class="thread-title" style="margin-top: 0.25rem;">
+                                        <a href="{{ route('community.show', $thread->id) }}"
+                                            style="text-decoration: none; color: inherit;">
+                                            {{ $thread->title }}
+                                        </a>
+                                    </h4>
+                                    <p class="thread-content"
+                                        style="color: #44403c; font-size: 0.875rem; margin-top: 0.25rem;">
+                                        {{ Str::limit($thread->content, 100) }}
+                                    </p>
                                 </div>
-                                <h4 class="thread-title">{{ $thread->title }}</h4>
+                            </div>
+
+                            <!-- Bagian Kanan (Ikon Komentar & Waktu) -->
+                            <div class="thread-right"
+                                style="margin-top: 0.5rem; display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem;">
+                                <a href="{{ route('community.show', $thread->id) }}" class="thread-comment-count"
+                                    style="text-decoration: none; color: #78716c; font-size: 0.875rem;">
+                                    <i class="far fa-comment"></i> {{ $thread->replies_count ?? 0 }}
+                                </a>
+                                <span style="font-size: 0.75rem; color: #a8a29e;">
+                                    {{ $thread->created_at ? $thread->created_at->diffForHumans() : 'Baru saja' }}
+                                </span>
                             </div>
                         </div>
-                        <div class="thread-right">
-                            <span class="thread-comment-count"><i class="far fa-comment"></i>
-                                {{ $thread->comments_count }}</span>
-                            <span>{{ $thread->time_ago }}</span>
-                        </div>
                     </div>
-                @endforeach
+                @empty
+                    <div style="text-align: center; padding: 3rem; background-color: #fafaf9; border-radius: 1rem;">
+                        <p style="color: #78716c; font-size: 0.875rem;">Belum ada diskusi hangat saat ini. Yuk buat thread
+                            pertama!</p>
+                    </div>
+                @endforelse
             </div>
         </section>
 
 
         <!-- =========================
-         WEBINAR & KELAS ONLINE MENDATANG
-    ========================== -->
+          WEBINAR & KELAS ONLINE MENDATANG
+        ========================== -->
         <section class="container-max" style="padding-top: 4rem; padding-bottom: 4rem;">
             <div class="section-header-center">
                 <h2 class="section-title">Webinar & Kelas Online Mendatang</h2>
@@ -609,7 +650,8 @@
                 @foreach($webinars as $webinar)
                     <div class="webinar-card">
                         <div>
-                            <img src="{{ $webinar->image }}" alt="Webinar" class="webinar-img">
+                            <img src="{{ $webinar->image ?? 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=600' }}"
+                                alt="Webinar" class="webinar-img">
                             <div class="webinar-body">
                                 <span class="webinar-schedule">{{ $webinar->schedule }}</span>
                                 <h3 class="webinar-title">{{ $webinar->title }}</h3>
@@ -628,8 +670,8 @@
 
 
         <!-- =========================
-         KISAH SUKSES ORANG TUA
-    ========================== -->
+          KISAH SUKSES ORANG TUA
+        ========================== -->
         <section class="testimonial-section">
             <div class="testimonial-container">
                 <h2 style="font-size: 1.5rem; font-weight: 700; color: #022c22; margin-bottom: 2rem;">Kisah Sukses Orang
@@ -646,8 +688,8 @@
 
 
         <!-- =========================
-         CALL TO ACTION BAWAH
-    ========================== -->
+          CALL TO ACTION BAWAH
+        ========================== -->
         <section class="cta-banner">
             <h2>Mari Menjadi Bagian dari Komunitas Kami</h2>
             <p>
@@ -660,6 +702,72 @@
         </section>
 
     </main>
+
+
+    <!-- ========================================== -->
+    <!-- MODAL POPUP: BUAT THREAD BARU (INTERAKTIF) -->
+    <!-- ========================================== -->
+    <div id="threadModal"
+        style="display: none; position: fixed; inset: 0; background-color: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; padding: 1rem;">
+        <div
+            style="background-color: #ffffff; border-radius: 1.5rem; max-width: 32rem; width: 100%; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #022c22;">Buat Thread Diskusi Baru</h3>
+                <button type="button" onclick="closeThreadModal()"
+                    style="background: none; border: none; font-size: 1.25rem; color: #78716c; cursor: pointer;">&times;</button>
+            </div>
+
+            <form action="{{ route('community.storeThread') }}" method="POST">
+                @csrf
+                <div style="margin-bottom: 1rem;">
+                    <label
+                        style="display: block; font-size: 0.875rem; font-weight: 600; color: #292524; margin-bottom: 0.375rem;">Kategori
+                        Topik</label>
+                    <select name="category" required
+                        style="width: 100%; padding: 0.625rem; border: 1px solid #d6d3d1; border-radius: 0.55rem; font-size: 0.875rem; font-family: 'Plus Jakarta Sans', sans-serif;">
+                        <option value="Nutrisi & MPASI">Nutrisi & MPASI</option>
+                        <option value="Stimulasi">Stimulasi</option>
+                        <option value="Sosial & Emosi">Sosial & Emosi</option>
+                        <option value="Kesehatan">Kesehatan</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label
+                        style="display: block; font-size: 0.875rem; font-weight: 600; color: #292524; margin-bottom: 0.375rem;">Judul
+                        Diskusi</label>
+                    <input type="text" name="title" placeholder="Contoh: Tips mengatasi anak GTM saat tumbuh gigi..."
+                        required
+                        style="width: 100%; padding: 0.625rem; border: 1px solid #d6d3d1; border-radius: 0.55rem; font-size: 0.875rem; font-family: 'Plus Jakarta Sans', sans-serif;">
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label
+                        style="display: block; font-size: 0.875rem; font-weight: 600; color: #292524; margin-bottom: 0.375rem;">Isi
+                        Pertanyaan / Cerita</label>
+                    <textarea name="content" rows="4"
+                        placeholder="Ceritakan detail kendala atau topik yang ingin didiskusikan..." required
+                        style="width: 100%; padding: 0.625rem; border: 1px solid #d6d3d1; border-radius: 0.55rem; font-size: 0.875rem; font-family: 'Plus Jakarta Sans', sans-serif;"></textarea>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+                    <button type="button" onclick="closeThreadModal()" class="btn-outline-emerald"
+                        style="padding: 0.5rem 1.25rem;">Batal</button>
+                    <button type="submit" class="btn-orange" style="padding: 0.5rem 1.25rem;">Posting Diskusi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- Script JavaScript untuk Mengontrol Modal Popup --}}
+    <script>
+        function openThreadModal() {
+            document.getElementById('threadModal').style.display = 'flex';
+        }
+        function closeThreadModal() {
+            document.getElementById('threadModal').style.display = 'none';
+        }
+    </script>
 
     @include('layout.footer')
 

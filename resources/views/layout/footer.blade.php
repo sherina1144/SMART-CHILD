@@ -16,7 +16,7 @@
             <a href="{{ route('home') }}">Beranda</a>
             <a href="{{ route('about') }}">Tentang Kami</a>
             <a href="{{ route('services.parenting_academy') }}">Parenting Academy</a>
-            <a href="{{ route('community') }}">Komunitas</a>
+            <a href="{{ route('community.index') }}">Komunitas</a>
         </div>
 
         <!-- Support / Contact -->

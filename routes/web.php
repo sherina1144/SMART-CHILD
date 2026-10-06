@@ -277,8 +277,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/contact/store', [ContactController::class, 'store'])
         ->name('contact.store');
 
+    // Community Routes
     Route::get('/community', [CommunityController::class, 'index'])
-        ->name('community');
+        ->name('community.index');
+
+    Route::post('/community/thread', [CommunityController::class, 'storeThread'])
+        ->name('community.storeThread');
+
+    Route::get('/community/{thread}', [CommunityController::class, 'show'])
+        ->name('community.show');
+
+    Route::post('/community/{thread}/reply', [CommunityController::class, 'storeReply'])
+        ->name('community.storeReply');
 });
 
 
