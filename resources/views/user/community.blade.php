@@ -493,7 +493,7 @@ it<html lang="id">
                     <a href="#" class="btn-emerald">
                         Gabung Komunitas
                     </a>
-                    <a href="#" class="btn-outline-emerald">
+                    <a href="{{ route('community.all') }}" class="btn-outline-emerald">
                         Jelajahi Forum Diskusi
                     </a>
                 </div>

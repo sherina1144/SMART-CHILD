@@ -281,6 +281,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/community', [CommunityController::class, 'index'])
         ->name('community.index');
 
+    // PINDAHKAN KE ATAS: Rute statis harus sebelum rute berparameter ({thread})
+    Route::get('/community/all', [CommunityController::class, 'allThreads'])
+        ->name('community.all');
+
     Route::post('/community/thread', [CommunityController::class, 'storeThread'])
         ->name('community.storeThread');
 

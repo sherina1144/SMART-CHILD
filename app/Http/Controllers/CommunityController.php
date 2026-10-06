@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DiscussionGroup;
 use App\Models\Thread;
 use App\Models\Reply;
+use App\Models\CommunityThread;
 use App\Models\Webinar;
 use Illuminate\Http\Request;
 
@@ -19,7 +20,7 @@ class CommunityController extends Controller
         $threads = Thread::with('user')
             ->withCount('replies') // <-- INI YANG KURANG TADI
             ->latest()
-            ->take(5)
+            ->take(3)
             ->get();
 
         // Ambil daftar webinar mendatang
@@ -73,5 +74,12 @@ class CommunityController extends Controller
         ]);
 
         return back()->with('success', 'Tanggapan berhasil dikirim!');
+    }
+
+    public function allThreads()
+    {
+        $threads = Thread::with('user')->withCount('replies')->latest()->paginate(10);
+
+        return view('user.community_all', compact('threads'));
     }
 }

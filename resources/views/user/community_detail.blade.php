@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container community-detail-container">
-        <!-- Tombol Kembali ala Template Laravel -->
+        <!-- Tombol Kembali -->
         <div class="mb-4">
             <a href="{{ route('community.index') }}" class="btn-back">
                 &larr; Kembali ke Komunitas
@@ -17,7 +17,7 @@
             <h1 class="thread-main-title">{{ $thread->title }}</h1>
             <p class="thread-info">
                 Diposting oleh
-                <strong>{{ $thread->user->nama ?? auth()->user()->nama }}</strong> pada
+                <strong>{{ $thread->user->name ?? $thread->author_name ?? 'Pengguna' }}</strong> pada
                 {{ $thread->created_at->format('d M Y, H:i') }}
             </p>
 
@@ -31,33 +31,35 @@
             <h3 class="replies-heading">Balasan Diskusi</h3>
 
             <!-- Form Kirim Komentar -->
-            <form action="{{ route('community.storeReply', $thread->id) }}" method="POST" class="reply-form">
+            <form action="{{ route('community.storeReply', $thread->id) }}" method="POST" class="reply-form mb-4">
                 @csrf
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <textarea name="content" rows="3" placeholder="Tulis tanggapan atau saran Anda..." required
                         class="form-textarea"></textarea>
                 </div>
                 <button type="submit" class="btn-submit">Kirim Komentar</button>
             </form>
 
-            <!-- Daftar Komentar Masuk (Bubble Chat Nuansa Hijau) -->
+            <!-- Daftar Komentar Masuk -->
             <div class="replies-list">
                 @forelse($thread->replies as $reply)
                     <div class="reply-card">
                         <div class="reply-header">
-                            <strong class="reply-author">{{ $reply->user->nama ?? 'Pengguna' }}</strong>
+                            <strong class="reply-author">{{ $reply->user->name ?? $reply->user->nama ?? 'Pengguna' }}</strong>
                             <span class="reply-time">{{ $reply->created_at->diffForHumans() }}</span>
                         </div>
-                        <p class="reply-content">{{ $reply->content }}</p>
+                        <p class="reply-content mb-0">{{ $reply->content }}</p>
                     </div>
                 @empty
-                    <p class="empty-replies">Belum ada balasan pada diskusi ini. Jadilah yang pertama memberikan tanggapan!</p>
+                    <div class="empty-replies">
+                        Belum ada balasan pada diskusi ini. Jadilah yang pertama memberikan tanggapan!
+                    </div>
                 @endforelse
             </div>
         </div>
     </div>
 
-    <!-- Styling CSS -->
+    <!-- Styling CSS yang sudah diperbaiki -->
     <style>
         .community-detail-container {
             padding: 2rem 1rem;
@@ -65,15 +67,10 @@
             margin: 0 auto;
         }
 
-        .mb-4 {
-            margin-bottom: 1.25rem;
-        }
-
-        /* Tombol Kembali ala Template Standar */
         .btn-back {
             display: inline-flex;
             align-items: center;
-            gap: 0.5Krem;
+            gap: 0.5rem; /* Diperbaiki dari 0.5Krem */
             padding: 0.4rem 0.9rem;
             background-color: #f3f4f6;
             color: #374151;
@@ -144,10 +141,6 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
         .form-textarea {
             width: 100%;
             padding: 0.75rem;
@@ -185,12 +178,9 @@
             gap: 1rem;
         }
 
-        /* Bubble Chat dengan Nuansa Warna Hijau */
         .reply-card {
             background: #f0fdf4;
-            /* Warna hijau sangat soft (light green tint) */
             border-left: 4px solid #0d9488;
-            /* Aksen garis hijau khas tema */
             padding: 1rem 1.5rem;
             border-radius: 0.5rem 0.75rem 0.75rem 0.5rem;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
