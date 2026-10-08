@@ -445,71 +445,221 @@
     </div>
 
 
-    @php
+        @php
 
         $pesananMenunggu = \App\Models\Order::where(
             'payment_status',
             'Menunggu Konfirmasi'
         )
-        ->latest('created_at')
-        ->take(5)
         ->get();
+
+        $konsultasiMenunggu = \App\Models\Consultation::where(
+            'status_konsultasi',
+            'Scheduled'
+        )
+        ->get();
+
+        $partnershipMenunggu = \App\Models\Partnership::where(
+            'status',
+            'Process'
+        )
+        ->get();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | GABUNGKAN SEMUA AKTIVITAS
+        |--------------------------------------------------------------------------
+        */
+
+        $aktivitasTerbaru = collect();
+
+
+        foreach ($pesananMenunggu as $order) {
+
+            $aktivitasTerbaru->push([
+                'type' => 'order',
+                'data' => $order,
+                'created_at' => $order->created_at,
+            ]);
+
+        }
+
+
+        foreach ($konsultasiMenunggu as $consultation) {
+
+            $aktivitasTerbaru->push([
+                'type' => 'consultation',
+                'data' => $consultation,
+                'created_at' => $consultation->created_at,
+            ]);
+
+        }
+
+
+        foreach ($partnershipMenunggu as $partnership) {
+
+            $aktivitasTerbaru->push([
+                'type' => 'partnership',
+                'data' => $partnership,
+                'created_at' => $partnership->created_at,
+            ]);
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | URUTKAN DARI YANG TERBARU
+        |--------------------------------------------------------------------------
+        */
+
+        $aktivitasTerbaru = $aktivitasTerbaru
+            ->sortByDesc('created_at')
+            ->take(5)
+            ->values();
 
     @endphp
 
 
-    @if($pesananMenunggu->count() > 0)
+    @if($aktivitasTerbaru->count() > 0)
 
         <div class="activity-list">
 
-            @foreach($pesananMenunggu as $order)
+            @foreach($aktivitasTerbaru as $aktivitas)
 
-                <div class="activity-item">
+                @if($aktivitas['type'] === 'order')
 
-                    <div class="activity-icon">
+                    @php
+                        $order = $aktivitas['data'];
+                    @endphp
 
-                        <i class="fa-solid fa-receipt"></i>
+                    <div class="activity-item">
+
+                        <div class="activity-icon">
+                            <i class="fa-solid fa-receipt"></i>
+                        </div>
+
+                        <div class="activity-content">
+
+                            <h4>
+                                Pesanan Baru
+                            </h4>
+
+                            <p>
+                                Pesanan
+                                <strong>
+                                    {{ $order->nomor_order }}
+                                </strong>
+                                menunggu konfirmasi pembayaran.
+                            </p>
+
+                        </div>
+
+                        <a
+                            href="{{ route(
+                                'admin.orders.show',
+                                $order->order_id
+                            ) }}"
+                            class="activity-action"
+                        >
+                            Lihat
+
+                            <i
+                                class="fa-solid fa-chevron-right"
+                                style="margin-left: 6px;"
+                            ></i>
+                        </a>
 
                     </div>
 
 
-                    <div class="activity-content">
+                @elseif($aktivitas['type'] === 'consultation')
 
-                        <h4>
-                            Pesanan Baru
-                        </h4>
+                    @php
+                        $consultation = $aktivitas['data'];
+                    @endphp
 
-                        <p>
+                    <div class="activity-item">
 
-                            Pesanan
-                            <strong>
-                                {{ $order->nomor_order }}
-                            </strong>
-                            menunggu konfirmasi pembayaran.
+                        <div class="activity-icon">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
 
-                        </p>
+                        <div class="activity-content">
+
+                            <h4>
+                                Konsultasi Baru
+                            </h4>
+
+                            <p>
+                                Konsultasi dari
+                                <strong>
+                                    {{ $consultation->parent_name }}
+                                </strong>
+                                menunggu konfirmasi.
+                            </p>
+
+                        </div>
+
+                        <a
+                            href="{{ route('admin.consultation.index') }}"
+                            class="activity-action"
+                        >
+                            Lihat
+
+                            <i
+                                class="fa-solid fa-chevron-right"
+                                style="margin-left: 6px;"
+                            ></i>
+                        </a>
 
                     </div>
 
 
-                    <a
-                        href="{{ route(
-                            'admin.orders.show',
-                            $order->order_id
-                        ) }}"
-                        class="activity-action"
-                    >
+                @elseif($aktivitas['type'] === 'partnership')
 
-                        Lihat
+                    @php
+                        $partnership = $aktivitas['data'];
+                    @endphp
 
-                        <i
-                            class="fa-solid fa-chevron-right"
-                            style="margin-left: 6px;"
-                        ></i>
+                    <div class="activity-item">
 
-                    </a>
+                        <div class="activity-icon">
+                            <i class="fa-solid fa-handshake"></i>
+                        </div>
 
-                </div>
+                        <div class="activity-content">
+
+                            <h4>
+                                Partnership Baru
+                            </h4>
+
+                            <p>
+                                Pengajuan partnership dari
+                                <strong>
+                                    {{ $partnership->nama_instansi }}
+                                </strong>
+                                menunggu tindakan admin.
+                            </p>
+
+                        </div>
+
+                        <a
+                            href="{{ route('admin.partnership') }}"
+                            class="activity-action"
+                        >
+                            Lihat
+
+                            <i
+                                class="fa-solid fa-chevron-right"
+                                style="margin-left: 6px;"
+                            ></i>
+                        </a>
+
+                    </div>
+
+                @endif
 
             @endforeach
 
