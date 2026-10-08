@@ -16,7 +16,11 @@
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- CSS Layout Admin -->
+
+    <!-- =====================================================
+         CSS LAYOUT ADMIN
+    ====================================================== -->
+
     <style>
         * {
             box-sizing: border-box;
@@ -29,7 +33,6 @@
             font-family: 'Poppins', sans-serif;
             background-color: #F8FAF9;
             color: #2D3748;
-            display: flex;
             min-height: 100vh;
         }
 
@@ -40,8 +43,10 @@
 
         .sidebar {
             width: 260px;
+
             background-color: #253D32;
             color: #ffffff;
+
             padding: 24px 20px;
 
             display: flex;
@@ -49,9 +54,12 @@
             justify-content: space-between;
 
             position: fixed;
+            top: 0;
+            left: 0;
+
             height: 100vh;
 
-            z-index: 100;
+            z-index: 1000;
 
             overflow-y: auto;
         }
@@ -71,6 +79,7 @@
 
             display: flex;
             align-items: center;
+
             gap: 10px;
         }
 
@@ -146,6 +155,44 @@
             letter-spacing: 0.8px;
 
             margin: 22px 8px 8px;
+        }
+
+
+        /* =====================================================
+           SIDEBAR BADGE PESANAN
+        ===================================================== */
+
+        .nav-link-with-badge {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            width: 100%;
+        }
+
+        .nav-link-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-badge {
+            min-width: 20px;
+            height: 20px;
+
+            padding: 0 6px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background-color: #F39C50;
+            color: #ffffff;
+
+            border-radius: 20px;
+
+            font-size: 10px;
+            font-weight: 700;
         }
 
 
@@ -276,14 +323,196 @@
 
 
         /* =====================================================
-           MAIN CONTENT
+           MAIN AREA
         ===================================================== */
 
         .main-wrapper {
             margin-left: 260px;
 
-            flex: 1;
+            min-height: 100vh;
 
+            background-color: #F8FAF9;
+        }
+
+
+        /* =====================================================
+           ADMIN NAVBAR
+        ===================================================== */
+
+        .admin-navbar {
+            height: 76px;
+
+            background-color: #ffffff;
+
+            border-bottom: 1px solid #E8E4DC;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 40px;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 900;
+        }
+
+
+        /* =====================================================
+           NAVBAR TITLE
+        ===================================================== */
+
+        .navbar-title {
+            font-size: 22px;
+            font-weight: 700;
+
+            color: #315C50;
+        }
+
+
+        /* =====================================================
+           NAVBAR RIGHT
+        ===================================================== */
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+
+            gap: 22px;
+        }
+
+
+        /* =====================================================
+           NOTIFICATION
+        ===================================================== */
+
+        .notification-btn {
+            position: relative;
+
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background-color: #FFF9F2;
+
+            color: #315C50;
+
+            text-decoration: none;
+
+            font-size: 18px;
+
+            transition: all 0.2s;
+        }
+
+        .notification-btn:hover {
+            background-color: #EAF3EF;
+            color: #315C50;
+        }
+
+
+        /* =====================================================
+           NOTIFICATION BADGE
+        ===================================================== */
+
+        .notification-badge {
+            position: absolute;
+
+            top: -3px;
+            right: -3px;
+
+            min-width: 19px;
+            height: 19px;
+
+            padding: 0 5px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background-color: #F4A89A;
+
+            color: #ffffff;
+
+            border-radius: 20px;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            border: 2px solid #ffffff;
+        }
+
+
+        /* =====================================================
+           ADMIN NAVBAR PROFILE
+        ===================================================== */
+
+        .navbar-profile {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            text-decoration: none;
+        }
+
+        .navbar-avatar {
+            width: 40px;
+            height: 40px;
+
+            border-radius: 50%;
+
+            background-color: #EAF3EF;
+
+            color: #315C50;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 15px;
+
+            overflow: hidden;
+        }
+
+        .navbar-avatar img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+        .navbar-user-info {
+            display: flex;
+            flex-direction: column;
+
+            line-height: 1.3;
+        }
+
+        .navbar-user-name {
+            font-size: 13px;
+            font-weight: 700;
+
+            color: #315C50;
+        }
+
+        .navbar-user-role {
+            font-size: 10px;
+
+            color: #667085;
+        }
+
+
+        /* =====================================================
+           PAGE CONTENT
+        ===================================================== */
+
+        .page-content {
             padding: 40px;
         }
 
@@ -300,7 +529,39 @@
 
             .main-wrapper {
                 margin-left: 220px;
+            }
+
+            .admin-navbar {
+                padding: 0 25px;
+            }
+
+            .page-content {
                 padding: 25px;
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-wrapper {
+                margin-left: 200px;
+            }
+
+            .admin-navbar {
+                padding: 0 18px;
+            }
+
+            .navbar-user-info {
+                display: none;
+            }
+
+            .page-content {
+                padding: 20px;
             }
 
         }
@@ -358,7 +619,6 @@
                 </li>
 
 
-
                 <!-- =================================================
                      LAYANAN
                 ================================================== -->
@@ -400,7 +660,6 @@
                     </a>
 
                 </li>
-
 
 
                 <!-- =================================================
@@ -450,17 +709,37 @@
 
                 <li class="nav-item">
 
-                    <a href="{{ url('/admin/orders') }}"
-                        class="nav-link {{ Request::is('admin/orders*') ? 'active' : '' }}">
+                    <a
+                        href="{{ url('/admin/orders') }}"
+                        class="nav-link nav-link-with-badge {{ Request::is('admin/orders*') ? 'active' : '' }}"
+                    >
 
-                        <i class="fa-solid fa-receipt"></i>
+                        <span class="nav-link-content">
 
-                        Pesanan
+                            <i class="fa-solid fa-receipt"></i>
+
+                            Pesanan
+
+                        </span>
+
+                        @php
+                            $pesananMenunggu = \App\Models\Order::where(
+                                'payment_status',
+                                'Menunggu Konfirmasi'
+                            )->count();
+                        @endphp
+
+                        @if($pesananMenunggu > 0)
+
+                            <span class="sidebar-badge">
+                                {{ $pesananMenunggu > 99 ? '99+' : $pesananMenunggu }}
+                            </span>
+
+                        @endif
 
                     </a>
 
                 </li>
-
 
 
                 <!-- =================================================
@@ -498,7 +777,6 @@
                     </a>
 
                 </li>
-
 
                 <!-- =================================================
                      LAINNYA
@@ -619,14 +897,139 @@
 
 
     <!-- =====================================================
-         KONTEN HALAMAN
+         MAIN CONTENT
     ===================================================== -->
 
-    <main class="main-wrapper">
+    <div class="main-wrapper">
 
-        @yield('content')
 
-    </main>
+        <!-- =================================================
+            NAVBAR
+        ================================================== -->
+
+        <header class="admin-navbar">
+
+
+            <!-- PAGE TITLE -->
+
+            <div class="navbar-title">
+
+                @yield('page-title', 'Dashboard')
+
+            </div>
+
+
+            <!-- RIGHT SIDE -->
+
+            <div class="navbar-right">
+
+
+                <!-- NOTIFICATION -->
+
+                @php
+
+                    $totalNotifikasi = \App\Models\Order::where(
+                        'payment_status',
+                        'Menunggu Konfirmasi'
+                    )->count();
+
+                @endphp
+
+
+                <a
+                    href="{{ route('admin.notifications') }}"
+                    class="notification-btn"
+                    title="Notifikasi"
+                >
+
+                    <i class="fa-regular fa-bell"></i>
+
+
+                    @if($totalNotifikasi > 0)
+
+                        <span class="notification-badge">
+
+                            {{ $totalNotifikasi > 99 ? '99+' : $totalNotifikasi }}
+
+                        </span>
+
+                    @endif
+
+                </a>
+
+
+                <!-- ADMIN PROFILE -->
+
+                <a
+                    href="{{ Route::has('profile.show') ? route('profile.show') : url('/profile') }}"
+                    class="navbar-profile"
+                >
+
+                    <div class="navbar-avatar">
+
+                        @if(Auth::user()->foto ?? false)
+
+                            <img
+                                src="{{ asset('storage/' . Auth::user()->foto) }}"
+                                alt="Avatar"
+                            >
+
+                        @else
+
+                            {{ strtoupper(
+                                substr(
+                                    Auth::user()->nama
+                                    ?? (Auth::user()->name ?? 'A'),
+                                    0,
+                                    1
+                                )
+                            ) }}
+
+                        @endif
+
+                    </div>
+
+
+                    <div class="navbar-user-info">
+
+                        <span class="navbar-user-name">
+
+                            {{ Auth::user()->nama
+                                ?? (Auth::user()->name ?? 'Admin')
+                            }}
+
+                        </span>
+
+
+                        <span class="navbar-user-role">
+
+                            Administrator
+
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+            </div>
+
+
+        </header>
+
+
+        <!-- =================================================
+            PAGE CONTENT
+        ================================================== -->
+
+        <main class="page-content">
+
+            @yield('content')
+
+        </main>
+
+
+    </div>
 
 
 

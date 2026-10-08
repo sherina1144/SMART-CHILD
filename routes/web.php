@@ -324,15 +324,45 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
 
-        /*
-        |--------------------------------------------------------------------------
-        | ADMIN DASHBOARD
-        |--------------------------------------------------------------------------
-        */
-
+        // Dashboard
         Route::get('/dashboard', function () {
-            return view('layout.dashboard_admin');
+
+            $totalDokter = \App\Models\Doctor::count();
+            $totalProduk = \App\Models\Product::count();
+            $totalPesanan = \App\Models\Order::count();
+            $totalKonsultasi = \App\Models\Consultation::count();
+            $totalPartnership = \App\Models\Partnership::count();
+
+            return view('admin.dashboard', compact(
+                'totalDokter',
+                'totalProduk',
+                'totalPesanan',
+                'totalKonsultasi',
+                'totalPartnership'
+            ));
+
         })->name('dashboard');
+
+
+        // =====================================================
+        // NOTIFICATIONS
+        // =====================================================
+
+        Route::get('/notifications', function () {
+
+            $pesananMenunggu = \App\Models\Order::where(
+                'payment_status',
+                'Menunggu Konfirmasi'
+            )
+            ->latest('created_at')
+            ->get();
+
+            return view(
+                'admin.notifications',
+                compact('pesananMenunggu')
+            );
+
+        })->name('notifications');
 
 
         /*
@@ -416,6 +446,12 @@ Route::middleware(['auth', 'role:admin'])
 
                 Route::patch('/{id}/reject', [OrderController::class, 'adminReject'])
                     ->name('reject');
+
+                Route::patch('/{id}/ship', [OrderController::class, 'adminShip'])
+                    ->name('ship');
+
+                Route::patch('/{id}/complete', [OrderController::class, 'adminComplete'])
+                    ->name('complete');
             });
 
 

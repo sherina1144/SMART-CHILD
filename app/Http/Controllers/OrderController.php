@@ -32,6 +32,7 @@ class OrderController extends Controller
         $boxIds = [];
 
         foreach ($cart as $item) {
+
             if (($item['type'] ?? 'product') === 'box') {
                 $boxIds[] = $item['box_id'];
             } else {
@@ -95,6 +96,7 @@ class OrderController extends Controller
             $product = $products[$item['product_id']];
 
             if ($quantity > $product->stok) {
+
                 return redirect()
                     ->route('shop.cart')
                     ->with(
@@ -130,51 +132,93 @@ class OrderController extends Controller
     {
         $request->validate([
             'nama_penerima' => 'required|string|max:150',
+
             'no_hp' => 'required|string|max:20',
+
             'alamat' => 'required|string',
+
             'metode_pembayaran' => [
                 'required',
                 'in:GoPay,DANA,OVO,ShopeePay,QRIS,Mandiri,BCA,BRI,BNI,BSI',
             ],
         ], [
-            'nama_penerima.required' => 'Nama penerima wajib diisi.',
-            'no_hp.required' => 'Nomor HP wajib diisi.',
-            'alamat.required' => 'Alamat wajib diisi.',
-            'metode_pembayaran.required' => 'Metode pembayaran wajib dipilih.',
-            'metode_pembayaran.in' => 'Metode pembayaran tidak valid.',
+            'nama_penerima.required' =>
+                'Nama penerima wajib diisi.',
+
+            'no_hp.required' =>
+                'Nomor HP wajib diisi.',
+
+            'alamat.required' =>
+                'Alamat wajib diisi.',
+
+            'metode_pembayaran.required' =>
+                'Metode pembayaran wajib dipilih.',
+
+            'metode_pembayaran.in' =>
+                'Metode pembayaran tidak valid.',
         ]);
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | AMBIL CART DARI SESSION
+        |--------------------------------------------------------------------------
+        */
 
         $cart = session('cart', []);
 
+
         if (empty($cart)) {
+
             return redirect()
                 ->route('shop.cart')
-                ->with('error', 'Keranjang masih kosong.');
+                ->with(
+                    'error',
+                    'Keranjang masih kosong.'
+                );
         }
 
+
         DB::beginTransaction();
+
 
         try {
 
             $productIds = [];
             $boxIds = [];
 
+
+            /*
+            |--------------------------------------------------------------------------
+            | PISAHKAN PRODUCT DAN BOX
+            |--------------------------------------------------------------------------
+            */
+
             foreach ($cart as $item) {
 
-                if (($item['type'] ?? 'product') === 'box') {
+                if (
+                    ($item['type'] ?? 'product') === 'box'
+                ) {
+
                     $boxIds[] = $item['box_id'];
+
                 } else {
+
                     $productIds[] = $item['product_id'];
                 }
             }
 
+
             /*
             |--------------------------------------------------------------------------
-            | AMBIL DATA PRODUCT
+            | AMBIL PRODUCT
             |--------------------------------------------------------------------------
             */
 
-            $products = Product::whereIn('product_id', $productIds)
+            $products = Product::whereIn(
+                'product_id',
+                $productIds
+            )
                 ->lockForUpdate()
                 ->get()
                 ->keyBy('product_id');
@@ -182,29 +226,37 @@ class OrderController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | AMBIL DATA SMART CHILD BOX
+            | AMBIL SMART CHILD BOX
             |--------------------------------------------------------------------------
             */
 
-            $boxes = SmartChildBox::whereIn('box_id', $boxIds)
+            $boxes = SmartChildBox::whereIn(
+                'box_id',
+                $boxIds
+            )
                 ->lockForUpdate()
                 ->get()
                 ->keyBy('box_id');
+
 
             $total = 0;
 
 
             /*
             |--------------------------------------------------------------------------
-            | CEK ISI KERANJANG
+            | CEK ISI CART
             |--------------------------------------------------------------------------
             */
 
             foreach ($cart as $item) {
 
-                $quantity = (int) ($item['quantity'] ?? 0);
+                $quantity = (int) (
+                    $item['quantity'] ?? 0
+                );
+
 
                 if ($quantity <= 0) {
+
                     throw new \Exception(
                         'Jumlah produk tidak valid.'
                     );
@@ -217,23 +269,39 @@ class OrderController extends Controller
                 |--------------------------------------------------------------------------
                 */
 
-                if (($item['type'] ?? 'product') === 'box') {
+                if (
+                    ($item['type'] ?? 'product') === 'box'
+                ) {
 
-                    if (!isset($boxes[$item['box_id']])) {
+                    if (
+                        !isset(
+                            $boxes[$item['box_id']]
+                        )
+                    ) {
+
                         throw new \Exception(
                             'Smart Child Box tidak ditemukan.'
                         );
                     }
 
-                    $box = $boxes[$item['box_id']];
+
+                    $box = $boxes[
+                        $item['box_id']
+                    ];
+
 
                     if ($box->harga === null) {
+
                         throw new \Exception(
                             'Smart Child Box belum memiliki harga.'
                         );
                     }
 
-                    $total += $box->harga * $quantity;
+
+                    $total +=
+                        $box->harga *
+                        $quantity;
+
 
                     continue;
                 }
@@ -245,23 +313,30 @@ class OrderController extends Controller
                 |--------------------------------------------------------------------------
                 */
 
-                if (!isset($products[$item['product_id']])) {
+                if (
+                    !isset(
+                        $products[
+                            $item['product_id']
+                        ]
+                    )
+                ) {
+
                     throw new \Exception(
                         'Produk tidak ditemukan.'
                     );
                 }
 
-                $product = $products[$item['product_id']];
 
-                /*
-                |--------------------------------------------------------------------------
-                | STOK BELUM DIKURANGI DI SINI
-                |
-                | Stok baru dikurangi ketika admin ACC pesanan.
-                |--------------------------------------------------------------------------
-                */
+                $product = $products[
+                    $item['product_id']
+                ];
 
-                if ($quantity > $product->stok) {
+
+                if (
+                    $quantity >
+                    $product->stok
+                ) {
+
                     throw new \Exception(
                         'Stok ' .
                         $product->nama_produk .
@@ -269,7 +344,10 @@ class OrderController extends Controller
                     );
                 }
 
-                $total += $product->harga * $quantity;
+
+                $total +=
+                    $product->harga *
+                    $quantity;
             }
 
 
@@ -280,6 +358,7 @@ class OrderController extends Controller
             */
 
             $order = Order::create([
+
                 'nomor_order' =>
                     'SC-' .
                     date('YmdHis') .
@@ -301,11 +380,19 @@ class OrderController extends Controller
                 'metode_pembayaran' =>
                     $request->metode_pembayaran,
 
+                /*
+                | Pembayaran menunggu konfirmasi admin
+                */
+
                 'payment_status' =>
                     'Menunggu Konfirmasi',
 
                 'total_harga' =>
                     $total,
+
+                /*
+                | Pesanan menunggu ACC admin
+                */
 
                 'status_pesanan' =>
                     'Pending',
@@ -320,7 +407,9 @@ class OrderController extends Controller
 
             foreach ($cart as $item) {
 
-                $quantity = (int) ($item['quantity'] ?? 0);
+                $quantity = (int) (
+                    $item['quantity'] ?? 0
+                );
 
 
                 /*
@@ -329,14 +418,22 @@ class OrderController extends Controller
                 |--------------------------------------------------------------------------
                 */
 
-                if (($item['type'] ?? 'product') === 'box') {
+                if (
+                    ($item['type'] ?? 'product') === 'box'
+                ) {
 
-                    $box = $boxes[$item['box_id']];
+                    $box = $boxes[
+                        $item['box_id']
+                    ];
+
 
                     $subtotal =
-                        $box->harga * $quantity;
+                        $box->harga *
+                        $quantity;
+
 
                     OrderItem::create([
+
                         'order_id' =>
                             $order->order_id,
 
@@ -353,6 +450,7 @@ class OrderController extends Controller
                             $subtotal,
                     ]);
 
+
                     continue;
                 }
 
@@ -363,13 +461,18 @@ class OrderController extends Controller
                 |--------------------------------------------------------------------------
                 */
 
-                $product =
-                    $products[$item['product_id']];
+                $product = $products[
+                    $item['product_id']
+                ];
+
 
                 $subtotal =
-                    $product->harga * $quantity;
+                    $product->harga *
+                    $quantity;
+
 
                 OrderItem::create([
+
                     'order_id' =>
                         $order->order_id,
 
@@ -390,7 +493,7 @@ class OrderController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | KOSONGKAN CART
+            | SIMPAN TRANSAKSI DATABASE
             |--------------------------------------------------------------------------
             */
 
@@ -398,9 +501,16 @@ class OrderController extends Controller
                 ->where('user_id', Auth::id())
                 ->delete();
 
+            DB::commit();
+
             session()->forget('cart');
 
-            DB::commit();
+
+            /*
+            |--------------------------------------------------------------------------
+            | REDIRECT
+            |--------------------------------------------------------------------------
+            */
 
             return redirect()
                 ->route('shop.allproducts')
@@ -409,9 +519,17 @@ class OrderController extends Controller
                     'Pesanan berhasil dibuat.'
                 );
 
+
         } catch (\Exception $e) {
 
+            /*
+            |--------------------------------------------------------------------------
+            | JIKA GAGAL, BATalkan TRANSAKSI
+            |--------------------------------------------------------------------------
+            */
+
             DB::rollBack();
+
 
             return redirect()
                 ->route('shop.cart')
@@ -442,6 +560,7 @@ class OrderController extends Controller
             ->latest('created_at')
             ->get();
 
+
         return view(
             'user.shop.my_orders',
             compact('orders')
@@ -471,6 +590,7 @@ class OrderController extends Controller
             )
             ->firstOrFail();
 
+
         return view(
             'user.shop.order_detail',
             compact('order')
@@ -494,6 +614,7 @@ class OrderController extends Controller
             ->latest('created_at')
             ->get();
 
+
         return view(
             'admin.shop.orders.index',
             compact('orders')
@@ -516,6 +637,7 @@ class OrderController extends Controller
         ])
             ->findOrFail($id);
 
+
         return view(
             'admin.shop.orders.show',
             compact('order')
@@ -527,28 +649,14 @@ class OrderController extends Controller
     |--------------------------------------------------------------------------
     | ADMIN - ACC / TERIMA ORDER
     |--------------------------------------------------------------------------
-    |
-    | Product biasa:
-    | stok dikurangi sesuai jumlah yang dipesan.
-    |
-    | Smart Child Box:
-    | stok setiap isi box dikurangi berdasarkan:
-    |
-    | jumlah produk dalam box x jumlah box yang dipesan.
-    |--------------------------------------------------------------------------
     */
 
     public function adminAccept($id)
     {
         DB::beginTransaction();
 
-        try {
 
-            /*
-            |--------------------------------------------------------------------------
-            | AMBIL ORDER
-            |--------------------------------------------------------------------------
-            */
+        try {
 
             $order = Order::with([
                 'items.product',
@@ -560,13 +668,16 @@ class OrderController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | CEGAH ORDER DI-ACC 2X
+            | CEGAH ACC 2X
             |--------------------------------------------------------------------------
             */
 
-            if ($order->status_pesanan !== 'Pending') {
+            if (
+                $order->status_pesanan !== 'Pending'
+            ) {
 
                 DB::rollBack();
+
 
                 return redirect()
                     ->route('admin.orders.index')
@@ -579,11 +690,13 @@ class OrderController extends Controller
 
             /*
             |--------------------------------------------------------------------------
-            | PROSES SETIAP ITEM
+            | PROSES ITEM PESANAN
             |--------------------------------------------------------------------------
             */
 
-            foreach ($order->items as $item) {
+            foreach (
+                $order->items as $item
+            ) {
 
                 /*
                 |--------------------------------------------------------------------------
@@ -591,18 +704,28 @@ class OrderController extends Controller
                 |--------------------------------------------------------------------------
                 */
 
-                if ($item->product_id !== null) {
+                if (
+                    $item->product_id !== null
+                ) {
 
                     $product = Product::lockForUpdate()
-                        ->find($item->product_id);
+                        ->find(
+                            $item->product_id
+                        );
+
 
                     if (!$product) {
+
                         throw new \Exception(
                             'Produk tidak ditemukan.'
                         );
                     }
 
-                    if ($product->stok < $item->jumlah) {
+
+                    if (
+                        $product->stok <
+                        $item->jumlah
+                    ) {
 
                         throw new \Exception(
                             'Stok ' .
@@ -612,15 +735,13 @@ class OrderController extends Controller
                     }
 
 
-                    /*
-                    | KURANGI STOK
-                    */
-
                     $product->stok =
                         $product->stok -
                         $item->jumlah;
 
+
                     $product->save();
+
 
                     continue;
                 }
@@ -632,47 +753,44 @@ class OrderController extends Controller
                 |--------------------------------------------------------------------------
                 */
 
-                if ($item->box_id !== null) {
+                if (
+                    $item->box_id !== null
+                ) {
 
                     $box = SmartChildBox::with([
                         'items.product'
                     ])
                         ->lockForUpdate()
-                        ->find($item->box_id);
+                        ->find(
+                            $item->box_id
+                        );
+
 
                     if (!$box) {
+
                         throw new \Exception(
                             'Smart Child Box tidak ditemukan.'
                         );
                     }
 
 
-                    /*
-                    |--------------------------------------------------------------------------
-                    | CEK DAN KURANGI STOK SEMUA ISI BOX
-                    |--------------------------------------------------------------------------
-                    */
-
-                    foreach ($box->items as $boxItem) {
+                    foreach (
+                        $box->items as $boxItem
+                    ) {
 
                         $product = Product::lockForUpdate()
-                            ->find($boxItem->product_id);
+                            ->find(
+                                $boxItem->product_id
+                            );
+
 
                         if (!$product) {
+
                             throw new \Exception(
                                 'Produk isi box tidak ditemukan.'
                             );
                         }
 
-
-                        /*
-                        | Contoh:
-                        |
-                        | Isi Box = 1 produk
-                        | User beli = 2 Box
-                        |
-                        | Stok dikurangi = 1 x 2 = 2
-                        */
 
                         $jumlahDibutuhkan =
                             $boxItem->jumlah *
@@ -692,13 +810,10 @@ class OrderController extends Controller
                         }
 
 
-                        /*
-                        | KURANGI STOK
-                        */
-
                         $product->stok =
                             $product->stok -
                             $jumlahDibutuhkan;
+
 
                         $product->save();
                     }
@@ -712,30 +827,30 @@ class OrderController extends Controller
             |--------------------------------------------------------------------------
             */
 
+            $order->payment_status =
+                'Dikonfirmasi';
+
             $order->status_pesanan =
                 'Diproses';
 
             $order->save();
 
 
-            /*
-            |--------------------------------------------------------------------------
-            | COMMIT
-            |--------------------------------------------------------------------------
-            */
-
             DB::commit();
+
 
             return redirect()
                 ->route('admin.orders.index')
                 ->with(
                     'success',
-                    'Pesanan berhasil diterima dan sedang diproses.'
+                    'Pesanan berhasil diterima. Pembayaran dikonfirmasi dan pesanan sedang diproses.'
                 );
+
 
         } catch (\Exception $e) {
 
             DB::rollBack();
+
 
             return redirect()
                 ->route('admin.orders.index')
@@ -758,13 +873,9 @@ class OrderController extends Controller
         $order = Order::findOrFail($id);
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | CEGAH ORDER YANG SUDAH DIPROSES
-        |--------------------------------------------------------------------------
-        */
-
-        if ($order->status_pesanan !== 'Pending') {
+        if (
+            $order->status_pesanan !== 'Pending'
+        ) {
 
             return redirect()
                 ->route('admin.orders.index')
@@ -775,11 +886,8 @@ class OrderController extends Controller
         }
 
 
-        /*
-        |--------------------------------------------------------------------------
-        | UPDATE STATUS
-        |--------------------------------------------------------------------------
-        */
+        $order->payment_status =
+            'Ditolak';
 
         $order->status_pesanan =
             'Ditolak';
@@ -792,6 +900,84 @@ class OrderController extends Controller
             ->with(
                 'success',
                 'Pesanan berhasil ditolak.'
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN - KIRIM ORDER
+    |--------------------------------------------------------------------------
+    */
+
+    public function adminShip($id)
+    {
+        $order = Order::findOrFail($id);
+
+
+        if (
+            $order->status_pesanan !== 'Diproses'
+        ) {
+
+            return redirect()
+                ->route('admin.orders.index')
+                ->with(
+                    'error',
+                    'Pesanan belum siap untuk dikirim.'
+                );
+        }
+
+
+        $order->status_pesanan =
+            'Dikirim';
+
+        $order->save();
+
+
+        return redirect()
+            ->route('admin.orders.index')
+            ->with(
+                'success',
+                'Pesanan berhasil dikirim.'
+            );
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN - SELESAIKAN ORDER
+    |--------------------------------------------------------------------------
+    */
+
+    public function adminComplete($id)
+    {
+        $order = Order::findOrFail($id);
+
+
+        if (
+            $order->status_pesanan !== 'Dikirim'
+        ) {
+
+            return redirect()
+                ->route('admin.orders.index')
+                ->with(
+                    'error',
+                    'Pesanan belum dikirim.'
+                );
+        }
+
+
+        $order->status_pesanan =
+            'Selesai';
+
+        $order->save();
+
+
+        return redirect()
+            ->route('admin.orders.index')
+            ->with(
+                'success',
+                'Pesanan berhasil diselesaikan.'
             );
     }
 }
