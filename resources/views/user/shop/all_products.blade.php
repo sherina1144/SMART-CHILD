@@ -280,30 +280,32 @@
            PRODUCT GRID
            ===================================================== */
 
-        .all-products-grid {
-            display: grid;
+            .all-products-grid {
+                display: flex;
 
-            grid-template-columns: repeat(4, 1fr);
+                flex-wrap: wrap;
 
-            gap: 20px;
-        }
+                gap: 20px;
+            }
 
 
         /* =====================================================
            PRODUCT CARD
            ===================================================== */
 
-        .all-product-card {
-            background: var(--white);
+            .all-product-card {
+                width: calc((100% - 60px) / 4);
 
-            border: 1px solid rgba(49, 92, 80, .08);
+                background: var(--white);
 
-            border-radius: 18px;
+                border: 1px solid rgba(49, 92, 80, .08);
 
-            overflow: hidden;
+                border-radius: 18px;
 
-            transition: .25s ease;
-        }
+                overflow: hidden;
+
+                transition: .25s ease;
+            }
 
 
         .all-product-card:hover {
@@ -619,23 +621,21 @@
            RESPONSIVE
            ===================================================== */
 
-        @media (max-width: 1000px) {
+            @media (max-width: 1000px) {
 
-            .all-products-grid {
-                grid-template-columns: repeat(3, 1fr);
+                .all-product-card {
+                    width: calc((100% - 40px) / 3);
+                }
+
             }
 
-        }
 
+            @media (max-width: 750px) {
 
-        @media (max-width: 750px) {
+                .all-product-card {
+                    width: calc((100% - 20px) / 2);
+                }
 
-            .all-products-topbar {
-                flex-direction: column;
-
-                align-items: flex-start;
-
-                gap: 15px;
             }
 
 
@@ -643,21 +643,23 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
-        }
+        
 
 
         @media (max-width: 500px) {
 
-            .all-products-grid {
-                grid-template-columns: 1fr;
+            .all-product-card {
+                width: 100%;
             }
+
+        }
 
 
             .all-products-hero h1 {
                 font-size: 28px;
             }
 
-        }
+        
 
         /* notifikasi pesanan */
         .order-success-notification {

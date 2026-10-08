@@ -42,7 +42,14 @@ class ShopDevelopmentController extends Controller
         if (request('development')) {
             $query->where(
                 'kategori_perkembangan',
-                request('development')
+                ucfirst(request('development'))
+            );
+        }
+
+        if (request('age')) {
+            $query->where(
+                'kategori_usia',
+                request('age') . ' Tahun'
             );
         }
 

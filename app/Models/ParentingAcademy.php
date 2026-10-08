@@ -16,8 +16,11 @@ class ParentingAcademy extends Model
         'slug',
         'description',
         'category',
+        'duration',
+        'instructor',
         'thumbnail',
         'video_url',
+        'type', 
         'status',
     ];
 }

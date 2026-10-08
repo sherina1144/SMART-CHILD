@@ -277,8 +277,22 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/contact/store', [ContactController::class, 'store'])
         ->name('contact.store');
 
+    // Community Routes
     Route::get('/community', [CommunityController::class, 'index'])
-        ->name('community');
+        ->name('community.index');
+
+    // PINDAHKAN KE ATAS: Rute statis harus sebelum rute berparameter ({thread})
+    Route::get('/community/all', [CommunityController::class, 'allThreads'])
+        ->name('community.all');
+
+    Route::post('/community/thread', [CommunityController::class, 'storeThread'])
+        ->name('community.storeThread');
+
+    Route::get('/community/{thread}', [CommunityController::class, 'show'])
+        ->name('community.show');
+
+    Route::post('/community/{thread}/reply', [CommunityController::class, 'storeReply'])
+        ->name('community.storeReply');
 });
 
 
@@ -322,15 +336,45 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
 
-        /*
-        |--------------------------------------------------------------------------
-        | ADMIN DASHBOARD
-        |--------------------------------------------------------------------------
-        */
-
+        // Dashboard
         Route::get('/dashboard', function () {
-            return view('layout.dashboard_admin');
+
+            $totalDokter = \App\Models\Doctor::count();
+            $totalProduk = \App\Models\Product::count();
+            $totalPesanan = \App\Models\Order::count();
+            $totalKonsultasi = \App\Models\Consultation::count();
+            $totalPartnership = \App\Models\Partnership::count();
+
+            return view('admin.dashboard', compact(
+                'totalDokter',
+                'totalProduk',
+                'totalPesanan',
+                'totalKonsultasi',
+                'totalPartnership'
+            ));
+
         })->name('dashboard');
+
+
+        // =====================================================
+        // NOTIFICATIONS
+        // =====================================================
+
+        Route::get('/notifications', function () {
+
+            $pesananMenunggu = \App\Models\Order::where(
+                'payment_status',
+                'Menunggu Konfirmasi'
+            )
+            ->latest('created_at')
+            ->get();
+
+            return view(
+                'admin.notifications',
+                compact('pesananMenunggu')
+            );
+
+        })->name('notifications');
 
 
         /*
@@ -414,6 +458,12 @@ Route::middleware(['auth', 'role:admin'])
 
                 Route::patch('/{id}/reject', [OrderController::class, 'adminReject'])
                     ->name('reject');
+
+                Route::patch('/{id}/ship', [OrderController::class, 'adminShip'])
+                    ->name('ship');
+
+                Route::patch('/{id}/complete', [OrderController::class, 'adminComplete'])
+                    ->name('complete');
             });
 
 
@@ -487,6 +537,21 @@ Route::middleware(['auth', 'role:admin'])
 
         /*
         |--------------------------------------------------------------------------
+        | ADMIN NEWSLETTER (DIPISAH AGAR BERSIH & TIDAK BENTROK)
+        |--------------------------------------------------------------------------
+        */
+
+        Route::get('/newsletter', [NewsletterController::class, 'index'])
+            ->name('newsletter.index');
+
+        Route::delete('/newsletter/{id}', [NewsletterController::class, 'destroy'])
+            ->name('newsletter.destroy');
+
+        Route::post('/newsletter/store', [NewsletterController::class, 'store'])->name('newsletter.store');
+
+
+        /*
+        |--------------------------------------------------------------------------
         | ADMIN PARENTING ACADEMY
         |--------------------------------------------------------------------------
         */
@@ -498,9 +563,7 @@ Route::middleware(['auth', 'role:admin'])
                 Route::get('/', [ParentingAcademyController::class, 'indexAdmin'])
                     ->name('index');
 
-
                 // CRUD Academy
-
                 Route::get('/academy/create', [ParentingAcademyController::class, 'createAcademy'])
                     ->name('academy.create');
 
@@ -516,9 +579,7 @@ Route::middleware(['auth', 'role:admin'])
                 Route::delete('/academy/{id}/destroy', [ParentingAcademyController::class, 'destroyAcademy'])
                     ->name('academy.destroy');
 
-
                 // CRUD Video
-
                 Route::get('/video/create', [ParentingAcademyController::class, 'createVideo'])
                     ->name('video.create');
 
@@ -534,6 +595,7 @@ Route::middleware(['auth', 'role:admin'])
                 Route::delete('/video/{id}/destroy', [ParentingAcademyController::class, 'destroyVideo'])
                     ->name('video.destroy');
             });
+
     });
 
 

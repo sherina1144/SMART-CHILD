@@ -10,9 +10,12 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('newsletters', function (Blueprint $table) {
+        Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique(); // Mencegah email yang sama mendaftar dua kali
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            // Sesuaikan kolom lain yang dibutuhkan oleh keranjang kamu, contoh:
+            $table->unsignedBigInteger('product_id')->nullable();
+            $table->integer('quantity')->default(1);
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('newsletters');
+        Schema::dropIfExists('cart_items');
     }
 };
