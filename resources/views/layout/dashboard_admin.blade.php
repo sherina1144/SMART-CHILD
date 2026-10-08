@@ -8,13 +8,15 @@
     <title>{{ $title ?? 'Admin Dashboard - SmartChild' }}</title>
 
     <!-- Fonts & Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
 
     <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet">
 
 
     <!-- =====================================================
@@ -43,7 +45,6 @@
 
         .sidebar {
             width: 260px;
-
             background-color: #253D32;
             color: #ffffff;
 
@@ -159,7 +160,7 @@
 
 
         /* =====================================================
-           SIDEBAR BADGE PESANAN
+           SIDEBAR BADGE
         ===================================================== */
 
         .nav-link-with-badge {
@@ -193,6 +194,8 @@
 
             font-size: 10px;
             font-weight: 700;
+
+            flex-shrink: 0;
         }
 
 
@@ -565,6 +568,7 @@
             }
 
         }
+
     </style>
 
 </head>
@@ -607,8 +611,10 @@
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.dashboard') }}"
-                        class="nav-link {{ Request::is('admin/dashboard*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('admin.dashboard') }}"
+                        class="nav-link {{ Request::is('admin/dashboard*') ? 'active' : '' }}"
+                    >
 
                         <i class="fa-solid fa-chart-pie"></i>
 
@@ -634,8 +640,10 @@
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.doctor.add') }}"
-                        class="nav-link {{ Request::is('admin/doctor*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('admin.doctor.add') }}"
+                        class="nav-link {{ Request::is('admin/doctor*') ? 'active' : '' }}"
+                    >
 
                         <i class="fa-solid fa-user-doctor"></i>
 
@@ -646,16 +654,48 @@
                 </li>
 
 
-                <!-- CONSULTATION -->
+                <!-- =================================================
+                     CONSULTATION
+                ================================================== -->
+
+                @php
+                    $totalKonsultasiMenunggu =
+                        \App\Models\Consultation::where(
+                            'status_konsultasi',
+                            'Scheduled'
+                        )->count();
+                @endphp
+
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.consultation.index') }}"
-                        class="nav-link {{ Request::is('admin/consultations*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('admin.consultation.index') }}"
+                        class="nav-link nav-link-with-badge {{ Request::is('admin/consultations*') ? 'active' : '' }}"
+                    >
 
-                        <i class="fa-solid fa-calendar-check"></i>
+                        <span class="nav-link-content">
 
-                        Book Consultation
+                            <i class="fa-solid fa-calendar-check"></i>
+
+                            Book Consultation
+
+                        </span>
+
+
+                        @if($totalKonsultasiMenunggu > 0)
+
+                            <span class="sidebar-badge">
+
+                                {{
+                                    $totalKonsultasiMenunggu > 99
+                                        ? '99+'
+                                        : $totalKonsultasiMenunggu
+                                }}
+
+                            </span>
+
+                        @endif
 
                     </a>
 
@@ -677,8 +717,10 @@
 
                 <li class="nav-item">
 
-                    <a href="{{ url('/admin/products') }}"
-                        class="nav-link {{ Request::is('admin/products*') ? 'active' : '' }}">
+                    <a
+                        href="{{ url('/admin/products') }}"
+                        class="nav-link {{ Request::is('admin/products*') ? 'active' : '' }}"
+                    >
 
                         <i class="fa-solid fa-box-open"></i>
 
@@ -693,8 +735,10 @@
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.smartbox.index') }}"
-                        class="nav-link {{ Request::is('admin/smart-child-box*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('admin.smartbox.index') }}"
+                        class="nav-link {{ Request::is('admin/smart-child-box*') ? 'active' : '' }}"
+                    >
 
                         <i class="fa-solid fa-boxes-stacked"></i>
 
@@ -705,7 +749,18 @@
                 </li>
 
 
-                <!-- PESANAN -->
+                <!-- =================================================
+                     PESANAN
+                ================================================== -->
+
+                @php
+                    $pesananMenunggu =
+                        \App\Models\Order::where(
+                            'payment_status',
+                            'Menunggu Konfirmasi'
+                        )->count();
+                @endphp
+
 
                 <li class="nav-item">
 
@@ -722,17 +777,17 @@
 
                         </span>
 
-                        @php
-                            $pesananMenunggu = \App\Models\Order::where(
-                                'payment_status',
-                                'Menunggu Konfirmasi'
-                            )->count();
-                        @endphp
 
                         @if($pesananMenunggu > 0)
 
                             <span class="sidebar-badge">
-                                {{ $pesananMenunggu > 99 ? '99+' : $pesananMenunggu }}
+
+                                {{
+                                    $pesananMenunggu > 99
+                                        ? '99+'
+                                        : $pesananMenunggu
+                                }}
+
                             </span>
 
                         @endif
@@ -757,8 +812,10 @@
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.parenting.index') }}"
-                        class="nav-link {{ Request::is('admin/parenting*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('admin.parenting.index') }}"
+                        class="nav-link {{ Request::is('admin/parenting*') ? 'active' : '' }}"
+                    >
 
                         <i class="fa-solid fa-graduation-cap"></i>
 
@@ -768,15 +825,24 @@
 
                 </li>
 
+
                 <!-- NEWSLETTER -->
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.newsletter.index') }}" class="nav-link">
-                        <i class="fa-solid fa-envelope"></i> Newsletter
+                    <a
+                        href="{{ route('admin.newsletter.index') }}"
+                        class="nav-link"
+                    >
+
+                        <i class="fa-solid fa-envelope"></i>
+
+                        Newsletter
+
                     </a>
 
                 </li>
+
 
                 <!-- =================================================
                      LAINNYA
@@ -789,16 +855,48 @@
                 </li>
 
 
-                <!-- PARTNERSHIPS -->
+                <!-- =================================================
+                     PARTNERSHIPS
+                ================================================== -->
+
+                @php
+                    $totalPartnershipMenunggu =
+                        \App\Models\Partnership::where(
+                            'status',
+                            'Process'
+                        )->count();
+                @endphp
+
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.partnership') }}"
-                        class="nav-link {{ Request::is('admin/partnerships*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('admin.partnership') }}"
+                        class="nav-link nav-link-with-badge {{ Request::is('admin/partnerships*') ? 'active' : '' }}"
+                    >
 
-                        <i class="fa-solid fa-handshake"></i>
+                        <span class="nav-link-content">
 
-                        Partnerships
+                            <i class="fa-solid fa-handshake"></i>
+
+                            Partnerships
+
+                        </span>
+
+
+                        @if($totalPartnershipMenunggu > 0)
+
+                            <span class="sidebar-badge">
+
+                                {{
+                                    $totalPartnershipMenunggu > 99
+                                        ? '99+'
+                                        : $totalPartnershipMenunggu
+                                }}
+
+                            </span>
+
+                        @endif
 
                     </a>
 
@@ -809,8 +907,10 @@
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.contact') }}"
-                        class="nav-link {{ Request::is('admin/contact*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('admin.contact') }}"
+                        class="nav-link {{ Request::is('admin/contact*') ? 'active' : '' }}"
+                    >
 
                         <i class="fa-solid fa-envelope"></i>
 
@@ -827,7 +927,6 @@
         </div>
 
 
-
         <!-- =====================================================
              SIDEBAR FOOTER
         ===================================================== -->
@@ -837,19 +936,40 @@
 
             <!-- USER PROFILE -->
 
-            <a href="{{ Route::has('profile.show') ? route('profile.show') : (Route::has('profile') ? route('profile') : url('/profile')) }}"
-                class="user-profile">
+            <a
+                href="{{ Route::has('profile.show')
+                    ? route('profile.show')
+                    : (Route::has('profile')
+                        ? route('profile')
+                        : url('/profile')) }}"
+                class="user-profile"
+            >
 
-                <div class="avatar" style="overflow: hidden; padding: 0;">
+                <div
+                    class="avatar"
+                    style="overflow: hidden; padding: 0;"
+                >
 
                     @if(Auth::user()->foto ?? false)
 
-                        <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Avatar"
-                            style="width: 100%; height: 100%; object-fit: cover;">
+                        <img
+                            src="{{ asset('storage/' . Auth::user()->foto) }}"
+                            alt="Avatar"
+                            style="width: 100%; height: 100%; object-fit: cover;"
+                        >
 
                     @else
 
-                        {{ strtoupper(substr(Auth::user()->nama ?? (Auth::user()->name ?? 'A'), 0, 1)) }}
+                        {{
+                            strtoupper(
+                                substr(
+                                    Auth::user()->nama
+                                    ?? (Auth::user()->name ?? 'A'),
+                                    0,
+                                    1
+                                )
+                            )
+                        }}
 
                     @endif
 
@@ -859,11 +979,22 @@
                 <div class="user-info">
 
                     <h5>
-                        {{ Auth::user()->nama ?? (Auth::user()->name ?? 'Admin') }}
+
+                        {{
+                            Auth::user()->nama
+                            ?? (Auth::user()->name ?? 'Admin')
+                        }}
+
                     </h5>
 
+
                     <p>
-                        {{ Auth::user()->email ?? 'admin@smartchild.id' }}
+
+                        {{
+                            Auth::user()->email
+                            ?? 'admin@smartchild.id'
+                        }}
+
                     </p>
 
                 </div>
@@ -871,14 +1002,19 @@
             </a>
 
 
-
             <!-- LOGOUT -->
 
-            <form action="{{ route('logout') }}" method="POST">
+            <form
+                action="{{ route('logout') }}"
+                method="POST"
+            >
 
                 @csrf
 
-                <button type="submit" class="btn-logout">
+                <button
+                    type="submit"
+                    class="btn-logout"
+                >
 
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
 
@@ -893,7 +1029,6 @@
 
 
     </aside>
-
 
 
     <!-- =====================================================
@@ -924,14 +1059,37 @@
             <div class="navbar-right">
 
 
-                <!-- NOTIFICATION -->
+                <!-- =================================================
+                     NOTIFICATION
+                ================================================== -->
 
                 @php
 
-                    $totalNotifikasi = \App\Models\Order::where(
-                        'payment_status',
-                        'Menunggu Konfirmasi'
-                    )->count();
+                    $totalPesananNotifikasi =
+                        \App\Models\Order::where(
+                            'payment_status',
+                            'Menunggu Konfirmasi'
+                        )->count();
+
+
+                    $totalKonsultasiNotifikasi =
+                        \App\Models\Consultation::where(
+                            'status_konsultasi',
+                            'Scheduled'
+                        )->count();
+
+
+                    $totalPartnershipNotifikasi =
+                        \App\Models\Partnership::where(
+                            'status',
+                            'Process'
+                        )->count();
+
+
+                    $totalNotifikasi =
+                        $totalPesananNotifikasi
+                        + $totalKonsultasiNotifikasi
+                        + $totalPartnershipNotifikasi;
 
                 @endphp
 
@@ -949,7 +1107,11 @@
 
                         <span class="notification-badge">
 
-                            {{ $totalNotifikasi > 99 ? '99+' : $totalNotifikasi }}
+                            {{
+                                $totalNotifikasi > 99
+                                    ? '99+'
+                                    : $totalNotifikasi
+                            }}
 
                         </span>
 
@@ -958,10 +1120,14 @@
                 </a>
 
 
-                <!-- ADMIN PROFILE -->
+                <!-- =================================================
+                     ADMIN PROFILE
+                ================================================== -->
 
                 <a
-                    href="{{ Route::has('profile.show') ? route('profile.show') : url('/profile') }}"
+                    href="{{ Route::has('profile.show')
+                        ? route('profile.show')
+                        : url('/profile') }}"
                     class="navbar-profile"
                 >
 
@@ -976,14 +1142,16 @@
 
                         @else
 
-                            {{ strtoupper(
-                                substr(
-                                    Auth::user()->nama
-                                    ?? (Auth::user()->name ?? 'A'),
-                                    0,
-                                    1
+                            {{
+                                strtoupper(
+                                    substr(
+                                        Auth::user()->nama
+                                        ?? (Auth::user()->name ?? 'A'),
+                                        0,
+                                        1
+                                    )
                                 )
-                            ) }}
+                            }}
 
                         @endif
 
@@ -994,7 +1162,8 @@
 
                         <span class="navbar-user-name">
 
-                            {{ Auth::user()->nama
+                            {{
+                                Auth::user()->nama
                                 ?? (Auth::user()->name ?? 'Admin')
                             }}
 
@@ -1032,12 +1201,13 @@
     </div>
 
 
-
     <!-- =====================================================
          BOOTSTRAP 5 JS
     ===================================================== -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    ></script>
 
 
 </body>

@@ -353,14 +353,54 @@ Route::middleware(['auth', 'role:admin'])
             $pesananMenunggu = \App\Models\Order::where(
                 'payment_status',
                 'Menunggu Konfirmasi'
-            )
-            ->latest('created_at')
-            ->get();
+            )->get();
 
-            return view(
-                'admin.notifications',
-                compact('pesananMenunggu')
-            );
+            $konsultasiMenunggu = \App\Models\Consultation::where(
+                'status_konsultasi',
+                'Scheduled'
+            )->get();
+
+            $partnershipMenunggu = \App\Models\Partnership::where(
+                'status',
+                'Process'
+            )->get();
+
+            $notifications = collect();
+
+            foreach ($pesananMenunggu as $order) {
+                $notifications->push([
+                    'type' => 'order',
+                    'data' => $order,
+                    'created_at' => $order->created_at,
+                ]);
+            }
+
+            foreach ($konsultasiMenunggu as $consultation) {
+                $notifications->push([
+                    'type' => 'consultation',
+                    'data' => $consultation,
+                    'created_at' => $consultation->created_at,
+                ]);
+            }
+
+            foreach ($partnershipMenunggu as $partnership) {
+                $notifications->push([
+                    'type' => 'partnership',
+                    'data' => $partnership,
+                    'created_at' => $partnership->created_at,
+                ]);
+            }
+
+            $notifications = $notifications
+                ->sortByDesc('created_at')
+                ->values();
+
+            return view('admin.notifications', compact(
+                'notifications',
+                'pesananMenunggu',
+                'konsultasiMenunggu',
+                'partnershipMenunggu'
+            ));
 
         })->name('notifications');
 
