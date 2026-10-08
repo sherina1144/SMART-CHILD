@@ -19,6 +19,7 @@ class PartnershipController extends Controller
     // Menampilkan form pendaftaran
     public function create(Request $request)
     {
+        // Mengambil nilai type dari URL, dengan fallback 'School'
         $type = $request->query('type', 'School'); 
         return view('user.partnership.form_partnership', compact('type'));
     }
@@ -28,6 +29,7 @@ class PartnershipController extends Controller
     {
         $request->validate([
             'nama_instansi' => ['required', 'string', 'max:150'],
+            // Disesuaikan kembali dengan ENUM database (hanya menerima 'School' atau 'Business')
             'tipe_partner'  => ['required', 'in:School,Business'],
             'kontak_person' => ['required', 'string', 'max:100'],
             'email'         => ['required', 'email', 'max:100'],
@@ -44,7 +46,7 @@ class PartnershipController extends Controller
         ]);
 
         return redirect()->route('user.partnership')
-                         ->with('success', 'Pendaftaran partnership berhasil dikirim!');
+                     ->with('success', 'Pendaftaran partnership berhasil dikirim!');
     }
 
     // [ADMIN] Menampilkan semua daftar partnership yang masuk

@@ -232,15 +232,18 @@
 
     <!-- HERO BANNER WRAPPER -->
     <div class="hero-wrapper">
-        <div class="hero-banner">
-            <div class="hero-left">
-                <h1>Bussines<br>Partner</h1>
-                <p>Bersama Smart Child, ciptakan peluang dan kolaborasi yang memberikan dampak positif bagia nak dan keluarga</p>
-                
-                <a href="{{ route('partnership.form', ['type' => 'Business']) }}class="btn-become-partner">
-                    Become a Partner <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                </a>
-            </div>
+    <div class="hero-banner">
+        <div class="hero-left">
+            <h1>Business<br>Partner</h1>
+            <p>Bersama Smart Child, ciptakan peluang dan kolaborasi yang memberikan dampak positif bagi anak dan keluarga</p>
+            
+            {{-- Perbaikan: Tambahkan tutup kurung siku ] yang benar dan pisahkan class-nya --}}
+            <a href="{{ route('partnership.form', ['type' => 'Business']) }}" class="btn-become-partner">
+                Become a Partner <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </a>
+        </div>
+    </div>
+</div>
 
             <div class="hero-right">
                 <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80" alt="Business Partner">
