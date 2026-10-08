@@ -36,6 +36,14 @@
                             placeholder="Contoh: Nutrisi, Kesehatan, Psikologi" required>
                     </div>
 
+                    <!-- Medan Pautan / Link yang Baru Ditambah -->
+                    <div class="mb-3">
+                        <label for="link" class="form-label fw-semibold">Pautan / Link Buku Panduan</label>
+                        <input type="url" class="form-control" id="link" name="link" value="{{ old('link') }}"
+                            placeholder="Contoh: https://example.com/buku-panduan.pdf">
+                        <div class="form-text text-muted">Masukkan URL pautan bacaan atau fail buku panduan.</div>
+                    </div>
+
                     <div class="mb-3">
                         <label for="description" class="form-label fw-semibold">Deskripsi / Ringkasan Panduan</label>
                         <textarea class="form-control" id="description" name="description" rows="5"

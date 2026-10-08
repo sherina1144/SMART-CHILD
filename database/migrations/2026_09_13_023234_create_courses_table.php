@@ -17,6 +17,8 @@ return new class extends Migration {
             $table->enum('category', ['nutrisi', 'tumbuh kembang', 'kesehatan', 'psikologi']);
             $table->string('image');
             $table->text('excerpt');
+            // Tambahkan kolom link di sini, disamakan seperti video_url
+            $table->string('link')->nullable();
             $table->timestamps();
         });
     }

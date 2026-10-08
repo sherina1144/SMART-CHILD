@@ -11,10 +11,17 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->string('slug')->unique();
+            $table->enum('category', ['nutrisi', 'tumbuh kembang', 'kesehatan', 'psikologi']);
+            $table->string('thumbnail');
             $table->text('description');
-            $table->string('category')->nullable(); // Contoh: Tips Tumbuh Kembang, Psikologi Anak, Nutrisi
-            $table->string('thumbnail')->nullable(); // Untuk path gambar/poster
-            $table->string('video_url')->nullable(); // Jika materinya berupa video
+
+            // Kolom duration dibuat nullable karena artikel tidak butuh durasi video
+            $table->string('duration')->nullable();
+
+            // Kolom link untuk URL eksternal / Google Drive / artikel
+            $table->string('link')->nullable();
+
+            $table->enum('type', ['article', 'video'])->default('article');
             $table->enum('status', ['draft', 'published'])->default('published');
             $table->timestamps();
         });
@@ -22,6 +29,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('parenting_academy');
+        Schema::dropIfExists('parenting_academies');
     }
 };

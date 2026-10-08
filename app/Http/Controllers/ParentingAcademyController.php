@@ -89,22 +89,28 @@ class ParentingAcademyController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
+            'category' => 'required|string',
             'description' => 'required',
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'link' => 'nullable|url', // Validasi untuk link artikel/panduan
         ]);
 
-        $thumbnailPath = $request->file('thumbnail')->store('parenting/academies', 'public');
+        $data = $request->all();
 
-        ParentingAcademy::create([
-            'title' => $request->title,
-            'slug' => Str::slug($request->title) . '-' . time(), // Ditambahkan slug agar konsisten
-            'category' => $request->category,
-            'description' => $request->description,
-            'thumbnail' => $thumbnailPath,
-            'type' => 'article', // <-- Ditambahkan secara eksplisit
-            'status' => 'published',
-        ]);
+        // Upload thumbnail jika ada
+        if ($request->hasFile('thumbnail')) {
+            $data['thumbnail'] = $request->file('thumbnail')->store('parenting/academies', 'public');
+        }
+
+        // Set slug dan type default jika belum ada
+        $data['slug'] = Str::slug($request->title) . '-' . time();
+        $data['type'] = 'article'; // atau disesuaikan dengan form kamu
+
+        // Berikan nilai default kosong untuk duration jika berupa artikel
+        $data['duration'] = $request->duration ?? null;
+        $data['link'] = $request->link ?? null;
+
+        ParentingAcademy::create($data);
 
         return redirect()->route('admin.parenting.index')->with('success', 'Buku panduan berhasil ditambahkan!');
     }

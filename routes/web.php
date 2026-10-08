@@ -493,11 +493,13 @@ Route::middleware(['auth', 'role:admin'])
         |--------------------------------------------------------------------------
         */
 
-        Route::get('/newsletter', [NewsletterController::class, 'indexAdmin'])
+        Route::get('/newsletter', [NewsletterController::class, 'index'])
             ->name('newsletter.index');
 
         Route::delete('/newsletter/{id}', [NewsletterController::class, 'destroy'])
             ->name('newsletter.destroy');
+
+        Route::post('/newsletter/store', [NewsletterController::class, 'store'])->name('newsletter.store');
 
 
         /*
