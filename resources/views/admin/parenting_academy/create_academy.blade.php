@@ -4,7 +4,7 @@
     <div class="container-fluid px-4 py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="fw-bold text-dark">Tambah Buku Panduan Parenting</h2>
-            <a href="{{ route('admin.parenting.index') }}" class="btn btn-secondary btn-sm">
+            <a href="{{ route('admin.parenting.academy.index') }}" class="btn btn-secondary btn-sm">
                 <i class="fa-solid fa-arrow-left me-1"></i> Kembali
             </a>
         </div>
@@ -21,7 +21,7 @@
 
         <div class="card shadow-sm border-0">
             <div class="card-body p-4">
-                <form action="{{ route('admin.parenting.academy.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.parenting.academy.academy.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <div class="mb-3">
@@ -34,6 +34,13 @@
                         <label for="category" class="form-label fw-semibold">Kategori</label>
                         <input type="text" class="form-control" id="category" name="category" value="{{ old('category') }}"
                             placeholder="Contoh: Nutrisi, Kesehatan, Psikologi" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="duration" class="form-label fw-semibold">Estimasi Waktu Baca / Durasi</label>
+                        <input type="text" class="form-control" id="duration" name="duration" value="{{ old('duration') }}"
+                            placeholder="Contoh: 5 Menit Baca atau 3 Bab" required>
+                        <div class="form-text text-muted">Masukkan estimasi waktu atau bab membaca buku panduan.</div>
                     </div>
 
                     <!-- Medan Pautan / Link yang Baru Ditambah -->
@@ -58,8 +65,8 @@
                     </div>
 
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ route('admin.parenting.index') }}" class="btn btn-light">Batal</a>
-                        <button type="submit" class="btn btn-success px-4">Simpan Panduan</button>
+                        <a href="{{ route('admin.parenting.academy.index') }}" class="btn btn-light">Batal</a> <button
+                            type="submit" class="btn btn-success px-4">Simpan Panduan</button>
                     </div>
                 </form>
             </div>

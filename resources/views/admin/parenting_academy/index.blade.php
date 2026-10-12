@@ -18,7 +18,7 @@
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold text-success"><i class="fa-solid fa-book-open me-2"></i> Daftar Buku Panduan &
                     Artikel</h5>
-                <a href="{{ route('admin.parenting.academy.create') }}" class="btn btn-success btn-sm">
+                <a href="{{ route('admin.parenting.academy.academy.create') }}" class="btn btn-success btn-sm">
                     <i class="fa-solid fa-plus me-1"></i> Tambah Panduan
                 </a>
             </div>
@@ -45,11 +45,11 @@
                                             class="badge bg-success bg-opacity-10 text-success px-2 py-1">{{ $item->category }}</span>
                                     </td>
                                     <td>
-                                        <!-- Perbaikan Route Edit & Delete Artikel -->
-                                        <a href="{{ route('admin.parenting.academy.edit', $item->id) }}"
+                                        <a href="{{ route('admin.parenting.academy.academy.edit', $item->id) }}"
                                             class="btn btn-warning btn-sm text-white">Edit</a>
-                                        <form action="{{ route('admin.parenting.academy.destroy', $item->id) }}" method="POST"
-                                            class="d-inline" onsubmit="return confirm('Yakin ingin menghapus panduan ini?')">
+                                        <form action="{{ route('admin.parenting.academy.academy.destroy', $item->id) }}"
+                                            method="POST" class="d-inline"
+                                            onsubmit="return confirm('Yakin ingin menghapus panduan ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
@@ -68,12 +68,11 @@
         </div>
 
         <!-- SECTION 2: VIDEO REKOMENDASI -->
-        <div class="card shadow-sm border-0">
+        <div class="card shadow-sm mb-5 border-0">
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-video me-2 text-warning"></i> Daftar Video
                     Rekomendasi</h5>
-                <!-- Tombol Tambah Video -->
-                <a href="{{ route('admin.parenting.video.create') }}" class="btn btn-dark btn-sm">
+                <a href="{{ route('admin.parenting.academy.video.create') }}" class="btn btn-dark btn-sm">
                     <i class="fa-solid fa-plus me-1"></i> Tambah Video
                 </a>
             </div>
@@ -108,11 +107,11 @@
                                             {{ $vid->instructor }}</span>
                                     </td>
                                     <td>
-                                        <!-- Perbaikan Route Edit & Delete Video (Mengarah ke route academy karena tabelnya disatukan) -->
-                                        <a href="{{ route('admin.parenting.academy.edit', $vid->id) }}"
+                                        <a href="{{ route('admin.parenting.academy.video.edit', $vid->id) }}"
                                             class="btn btn-warning btn-sm text-white">Edit</a>
-                                        <form action="{{ route('admin.parenting.academy.destroy', $vid->id) }}" method="POST"
-                                            class="d-inline" onsubmit="return confirm('Yakin ingin menghapus video ini?')">
+                                        <form action="{{ route('admin.parenting.academy.video.destroy', $vid->id) }}"
+                                            method="POST" class="d-inline"
+                                            onsubmit="return confirm('Yakin ingin menghapus video ini?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
@@ -129,5 +128,69 @@
                 </div>
             </div>
         </div>
+
+        <!-- SECTION 3: WEBINAR & KELAS ONLINE -->
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-chalkboard-user me-2 text-danger"></i> Daftar
+                    Webinar & Kelas Online</h5>
+                <a href="{{ route('admin.parenting.academy.webinar.create') }}" class="btn btn-danger btn-sm">
+                    <i class="fa-solid fa-plus me-1"></i> Tambah Webinar
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Thumbnail</th>
+                                <th>Judul Webinar</th>
+                                <th>Jadwal & Narasumber</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($webinars ?? [] as $web)
+                                <tr>
+                                    <td>
+                                        <img src="{{ asset('storage/' . $web->thumbnail) }}" alt="{{ $web->title }}"
+                                            class="rounded" style="width: 70px; height: 50px; object-fit: cover;">
+                                    </td>
+                                    <td class="fw-semibold">
+                                        {{ $web->title }}<br>
+                                        <a href="{{ $web->link }}" target="_blank"
+                                            class="small text-primary text-decoration-none"><i
+                                                class="fa-solid fa-link me-1"></i> Lihat Tautan</a>
+                                    </td>
+                                    <td>
+                                        <span class="d-block text-muted small"><i class="fa-regular fa-calendar me-1"></i>
+                                            {{ $web->duration }}</span>
+                                        <span class="d-block text-muted small"><i class="fa-solid fa-user-tie me-1"></i>
+                                            {{ $web->instructor }}</span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('admin.parenting.academy.webinar.edit', $web->id) }}"
+                                            class="btn btn-warning btn-sm text-white">Edit</a>
+                                        <form action="{{ route('admin.parenting.academy.webinar.destroy', $web->id) }}"
+                                            method="POST" class="d-inline"
+                                            onsubmit="return confirm('Yakin ingin menghapus webinar ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">Belum ada data webinar atau kelas
+                                        online.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
 @endsection
