@@ -9,6 +9,7 @@ use App\Models\Newsletter;
 use App\Models\Doctor;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class ParentingAcademyController extends Controller
 {
@@ -21,7 +22,6 @@ class ParentingAcademyController extends Controller
     {
         $category = $request->get('category', 'Semua Materi');
 
-        // Mengambil daftar kategori unik dari tabel tunggal ParentingAcademy berdasarkan tipe 'article' dan 'video'
         $categoriesFromAcademy = ParentingAcademy::where('status', 'published')
             ->where('type', 'article')
             ->whereNotNull('category')
@@ -34,29 +34,58 @@ class ParentingAcademyController extends Controller
 
         $categories = $categoriesFromAcademy->merge($categoriesFromVideo)->unique()->sort()->values();
 
-        // Query untuk Artikel (Courses) dipanggil dari ParentingAcademy dengan type 'article'
-        $coursesQuery = ParentingAcademy::where('status', 'published')->where('type', 'article');
-        if ($category && $category !== 'Semua Materi') {
-            $coursesQuery->where('category', $category);
-        }
-        $courses = $coursesQuery->latest()->get();
+        // --- FITUR TOPIC TERPOPULER ---
+        if ($request->has('popular') && $request->popular == 'true') {
+            $mostPopularCategory = ParentingAcademy::where('status', 'published')
+                ->whereNotNull('category')
+                ->select('category', DB::raw('count(*) as total'))
+                ->groupBy('category')
+                ->orderBy('total', 'desc')
+                ->value('category');
 
-        // Query untuk Video dipanggil dari ParentingAcademy dengan type 'video'
+            if ($mostPopularCategory) {
+                $category = $mostPopularCategory;
+            }
+        }
+
+        // Query Buku Panduan / Artikel
+        $academiesQuery = ParentingAcademy::where('status', 'published')->where('type', 'article');
+        if ($category && $category !== 'Semua Materi') {
+            $academiesQuery->where('category', $category);
+        }
+        $academies = $academiesQuery->latest()->get();
+
+        // Query Video Panduan
         $videosQuery = ParentingAcademy::where('status', 'published')->where('type', 'video');
         if ($category && $category !== 'Semua Materi') {
             $videosQuery->where('category', $category);
         }
         $videos = $videosQuery->latest()->get();
 
-        // Data dokter/expert
+        // Query Webinar & Kelas Online Mendatang
+        $webinarsQuery = ParentingAcademy::where('status', 'published')->where('type', 'webinar');
+        if ($category && $category !== 'Semua Materi') {
+            $webinarsQuery->where('category', $category);
+        }
+        $webinars = $webinarsQuery->latest()->get();
+
         $experts = Doctor::all();
 
-        return view('user.services.parenting_academy', compact('courses', 'videos', 'categories', 'category', 'experts'));
+        return view('user.services.parenting_academy', compact('academies', 'videos', 'webinars', 'categories', 'category', 'experts'));
     }
 
     public function subscribe(Request $request)
     {
         return back()->with('success', 'Berhasil berlangganan Parenting Academy!');
+    }
+
+    public function show($id)
+    {
+        $academy = ParentingAcademy::where('status', 'published')
+            ->where('type', 'article')
+            ->findOrFail($id);
+
+        return view('user.services.parenting_academy_detail', compact('academy'));
     }
 
     /*
@@ -66,17 +95,13 @@ class ParentingAcademyController extends Controller
     */
     public function indexAdmin()
     {
-        // Ambil data yang tipenya article untuk tabel Buku Panduan
+        // Ambil data artikel, video, dan webinar
         $academies = ParentingAcademy::where('type', 'article')->latest()->get();
-
-        // Ambil data yang tipenya video dari tabel yang sama (ParentingAcademy)
         $videos = ParentingAcademy::where('type', 'video')->latest()->get();
-
-        // 2. Ambil data newsletter terbaru
+        $webinars = ParentingAcademy::where('type', 'webinar')->latest()->get();
         $newsletters = Newsletter::latest()->get();
 
-        // 3. Tambahkan $newsletters ke dalam compact
-        return view('admin.parenting_academy.index', compact('academies', 'videos', 'newsletters'));
+        return view('admin.parenting_academy.index', compact('academies', 'videos', 'webinars', 'newsletters'));
     }
 
     // --- CRUD BUKU PANDUAN / ARTIKEL ---
@@ -92,27 +117,24 @@ class ParentingAcademyController extends Controller
             'category' => 'required|string',
             'description' => 'required',
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'link' => 'nullable|url', // Validasi untuk link artikel/panduan
+            'link' => 'nullable|url',
+            'duration' => 'required|string',
         ]);
 
         $data = $request->all();
 
-        // Upload thumbnail jika ada
         if ($request->hasFile('thumbnail')) {
             $data['thumbnail'] = $request->file('thumbnail')->store('parenting/academies', 'public');
         }
 
-        // Set slug dan type default jika belum ada
         $data['slug'] = Str::slug($request->title) . '-' . time();
-        $data['type'] = 'article'; // atau disesuaikan dengan form kamu
-
-        // Berikan nilai default kosong untuk duration jika berupa artikel
-        $data['duration'] = $request->duration ?? null;
-        $data['link'] = $request->link ?? null;
+        $data['type'] = 'article';
+        $data['instructor'] = '-';
+        $data['status'] = 'published';
 
         ParentingAcademy::create($data);
 
-        return redirect()->route('admin.parenting.index')->with('success', 'Buku panduan berhasil ditambahkan!');
+        return redirect()->route('admin.parenting.academy.index')->with('success', 'Buku panduan berhasil ditambahkan!');
     }
 
     public function editAcademy($id)
@@ -130,6 +152,7 @@ class ParentingAcademyController extends Controller
             'category' => 'required|string|max:255',
             'description' => 'required',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'link' => 'nullable|url',
         ]);
 
         if ($request->hasFile('thumbnail')) {
@@ -143,9 +166,10 @@ class ParentingAcademyController extends Controller
             'title' => $request->title,
             'category' => $request->category,
             'description' => $request->description,
+            'link' => $request->link,
         ]);
 
-        return redirect()->route('admin.parenting.index')->with('success', 'Buku panduan berhasil diperbarui!');
+        return redirect()->route('admin.parenting.academy.index')->with('success', 'Buku panduan berhasil diperbarui!');
     }
 
     public function destroyAcademy($id)
@@ -187,16 +211,15 @@ class ParentingAcademyController extends Controller
             'instructor' => $request->instructor,
             'thumbnail' => $thumbnailPath,
             'video_url' => $request->video_url,
-            'type' => 'video', // <-- PASTIKAN BARIS INI ADA DI DALAM storeVideo
+            'type' => 'video',
             'status' => 'published',
         ]);
 
-        return redirect()->route('admin.parenting.index')->with('success', 'Video berhasil ditambahkan ke Parenting Academy!');
+        return redirect()->route('admin.parenting.academy.index')->with('success', 'Video berhasil ditambahkan ke Parenting Academy!');
     }
 
     public function editVideo($id)
     {
-        // Ubah dari Video:: menjadi ParentingAcademy dengan filter type video
         $video = ParentingAcademy::where('type', 'video')->findOrFail($id);
         return view('admin.parenting_academy.edit_video', compact('video'));
     }
@@ -229,7 +252,7 @@ class ParentingAcademyController extends Controller
             'video_url' => $request->video_url,
         ]);
 
-        return redirect()->route('admin.parenting.index')->with('success', 'Video panduan berhasil diperbarui!');
+        return redirect()->route('admin.parenting.academy.index')->with('success', 'Video panduan berhasil diperbarui!');
     }
 
     public function destroyVideo($id)
@@ -241,5 +264,89 @@ class ParentingAcademyController extends Controller
         $video->delete();
 
         return back()->with('success', 'Video berhasil dihapus!');
+    }
+
+    // --- CRUD WEBINAR & KELAS ONLINE ---
+    public function createWebinar()
+    {
+        return view('admin.parenting_academy.create_webinar');
+    }
+
+    public function storeWebinar(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'category' => 'required|string',
+            'duration' => 'required|string',
+            'instructor' => 'required|string',
+            'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'link' => 'required|url',
+        ]);
+
+        $thumbnailPath = $request->file('thumbnail')->store('parenting/webinars', 'public');
+
+        ParentingAcademy::create([
+            'title' => $request->title,
+            'slug' => Str::slug($request->title) . '-' . time(),
+            'description' => $request->description ?? '-',
+            'category' => $request->category,
+            'duration' => $request->duration,
+            'instructor' => $request->instructor,
+            'thumbnail' => $thumbnailPath,
+            'link' => $request->link,
+            'type' => 'webinar',
+            'status' => 'published',
+        ]);
+
+        return redirect()->route('admin.parenting.academy.index')->with('success', 'Webinar / Kelas Online berhasil ditambahkan!');
+    }
+
+    public function editWebinar($id)
+    {
+        $webinar = ParentingAcademy::where('type', 'webinar')->findOrFail($id);
+        return view('admin.parenting_academy.edit_webinar', compact('webinar'));
+    }
+
+    public function updateWebinar(Request $request, $id)
+    {
+        $webinar = ParentingAcademy::where('type', 'webinar')->findOrFail($id);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'category' => 'required|string|max:255',
+            'duration' => 'required|string',
+            'instructor' => 'required|string',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'link' => 'required|url',
+        ]);
+
+        if ($request->hasFile('thumbnail')) {
+            if ($webinar->thumbnail) {
+                Storage::disk('public')->delete($webinar->thumbnail);
+            }
+            $webinar->thumbnail = $request->file('thumbnail')->store('parenting/webinars', 'public');
+        }
+
+        $webinar->update([
+            'title' => $request->title,
+            'category' => $request->category,
+            'duration' => $request->duration,
+            'instructor' => $request->instructor,
+            'link' => $request->link,
+            'description' => $request->description ?? $webinar->description,
+        ]);
+
+        return redirect()->route('admin.parenting.academy.index')->with('success', 'Webinar berhasil diperbarui!');
+    }
+
+    public function destroyWebinar($id)
+    {
+        $webinar = ParentingAcademy::where('type', 'webinar')->findOrFail($id);
+        if ($webinar->thumbnail) {
+            Storage::disk('public')->delete($webinar->thumbnail);
+        }
+        $webinar->delete();
+
+        return back()->with('success', 'Webinar berhasil dihapus!');
     }
 }

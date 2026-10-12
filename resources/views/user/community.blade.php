@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-it<html lang="id">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
@@ -490,7 +490,9 @@ it<html lang="id">
                     edukasi terpandu. Menghubungkan ribuan ibu dan ayah se-Indonesia.
                 </p>
                 <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
-                    <a href="#" class="btn-emerald">
+                    <a href="https://wa.me/6288215086777?text={{ urlencode('Halo SmartChild, saya ingin bergabung dengan Komunitas Orang Tua Hebat.') }}"
+                        target="_blank" class="btn-gabung-komunitas"
+                        style="background-color: #1e4d3b; color: #ffffff; padding: 0.85rem 1.5rem; border-radius: 9999px; font-weight: 700; text-decoration: none; display: inline-block; transition: background-color 0.2s ease;">
                         Gabung Komunitas
                     </a>
                     <a href="{{ route('community.all') }}" class="btn-outline-emerald">
@@ -638,38 +640,6 @@ it<html lang="id">
 
 
         <!-- =========================
-          WEBINAR & KELAS ONLINE MENDATANG
-        ========================== -->
-        <section class="container-max" style="padding-top: 4rem; padding-bottom: 4rem;">
-            <div class="section-header-center">
-                <h2 class="section-title">Webinar & Kelas Online Mendatang</h2>
-                <p class="section-desc">Edukasi eksklusif tatap muka interaktif secara langsung via konferensi video</p>
-            </div>
-
-            <div class="grid-3">
-                @foreach($webinars as $webinar)
-                    <div class="webinar-card">
-                        <div>
-                            <img src="{{ $webinar->image ?? 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=600' }}"
-                                alt="Webinar" class="webinar-img">
-                            <div class="webinar-body">
-                                <span class="webinar-schedule">{{ $webinar->schedule }}</span>
-                                <h3 class="webinar-title">{{ $webinar->title }}</h3>
-                                <p class="webinar-speaker">Narasumber: {{ $webinar->speaker }}</p>
-                            </div>
-                        </div>
-                        <div class="webinar-footer">
-                            <a href="#" class="btn-webinar-daftar">
-                                Daftar Sekarang
-                            </a>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </section>
-
-
-        <!-- =========================
           KISAH SUKSES ORANG TUA
         ========================== -->
         <section class="testimonial-section">
@@ -696,7 +666,9 @@ it<html lang="id">
                 Temukan kenyamanan berbagi ilmu pola asuh dan berjejaring bersama orang tua di seluruh wilayah Nusantara
                 secara gratis.
             </p>
-            <a href="#" class="btn-emerald" style="padding: 0.875rem 2rem;">
+            <a href="https://wa.me/6288215086777?text={{ urlencode('Halo SmartChild, saya ingin bergabung dengan Komunitas Orang Tua Hebat.') }}"
+                target="_blank" class="btn-gabung-komunitas"
+                style="background-color: #1e4d3b; color: #ffffff; padding: 0.85rem 1.5rem; border-radius: 9999px; font-weight: 700; text-decoration: none; display: inline-block; transition: background-color 0.2s ease;">
                 Daftar Komunitas Sekarang
             </a>
         </section>

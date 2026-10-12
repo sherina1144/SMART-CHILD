@@ -208,6 +208,10 @@ Route::prefix('services')
         Route::get('/parenting-academy', [ParentingAcademyController::class, 'index'])
             ->name('parenting_academy');
 
+        // Rute Detail Buku Panduan / Artikel Berdasarkan ID (Diperbaiki tanpa dobel /services)
+        Route::get('/parenting-academy/{id}', [ParentingAcademyController::class, 'show'])
+            ->name('parenting_academy.show');
+
         Route::post('/parenting-academy/subscribe', [ParentingAcademyController::class, 'subscribe'])
             ->name('parenting_academy.subscribe');
     });
@@ -281,7 +285,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/community', [CommunityController::class, 'index'])
         ->name('community.index');
 
-    // PINDAHKAN KE ATAS: Rute statis harus sebelum rute berparameter ({thread})
     Route::get('/community/all', [CommunityController::class, 'allThreads'])
         ->name('community.all');
 
@@ -489,7 +492,7 @@ Route::middleware(['auth', 'role:admin'])
 
         /*
         |--------------------------------------------------------------------------
-        | ADMIN NEWSLETTER (DIPISAH AGAR BERSIH & TIDAK BENTROK)
+        | ADMIN NEWSLETTER
         |--------------------------------------------------------------------------
         */
 
@@ -499,17 +502,18 @@ Route::middleware(['auth', 'role:admin'])
         Route::delete('/newsletter/{id}', [NewsletterController::class, 'destroy'])
             ->name('newsletter.destroy');
 
-        Route::post('/newsletter/store', [NewsletterController::class, 'store'])->name('newsletter.store');
+        Route::post('/newsletter/store', [NewsletterController::class, 'store'])
+            ->name('newsletter.store');
 
 
         /*
-        |--------------------------------------------------------------------------
-        | ADMIN PARENTING ACADEMY
-        |--------------------------------------------------------------------------
-        */
+         |--------------------------------------------------------------------------
+         | ADMIN PARENTING ACADEMY
+         |--------------------------------------------------------------------------
+         */
 
         Route::prefix('parenting-academy')
-            ->name('parenting.')
+            ->name('parenting.academy.')
             ->group(function () {
 
                 Route::get('/', [ParentingAcademyController::class, 'indexAdmin'])
@@ -546,6 +550,22 @@ Route::middleware(['auth', 'role:admin'])
 
                 Route::delete('/video/{id}/destroy', [ParentingAcademyController::class, 'destroyVideo'])
                     ->name('video.destroy');
+
+                // --- CRUD WEBINAR & KELAS ONLINE ---
+                Route::get('/webinar/create', [ParentingAcademyController::class, 'createWebinar'])
+                    ->name('webinar.create');
+
+                Route::post('/webinar/store', [ParentingAcademyController::class, 'storeWebinar'])
+                    ->name('webinar.store');
+
+                Route::get('/webinar/{id}/edit', [ParentingAcademyController::class, 'editWebinar'])
+                    ->name('webinar.edit');
+
+                Route::put('/webinar/{id}/update', [ParentingAcademyController::class, 'updateWebinar'])
+                    ->name('webinar.update');
+
+                Route::delete('/webinar/{id}/destroy', [ParentingAcademyController::class, 'destroyWebinar'])
+                    ->name('webinar.destroy');
             });
 
     });

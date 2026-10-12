@@ -266,6 +266,11 @@
             padding: 2rem 0;
         }
 
+        /* SECTION WEBINAR & KELAS ONLINE */
+        .webinar-section {
+            margin-bottom: 5rem;
+        }
+
         /* SECTION VIDEO */
         .video-section {
             margin-bottom: 5rem;
@@ -348,7 +353,7 @@
             font-size: 0.75rem;
         }
 
-        /* SECTION EXPERTS (Disesuaikan dengan Referensi Gambar) */
+        /* SECTION EXPERTS */
         .experts-section {
             margin-bottom: 4rem;
         }
@@ -415,7 +420,7 @@
             max-width: 32rem;
         }
 
-        /* NEWSLETTER SECTION (Disesuaikan dengan Referensi Gambar) */
+        /* NEWSLETTER SECTION */
         .newsletter-section {
             background: linear-gradient(to bottom, transparent, #FFF3EC);
             padding: 5rem 1.5rem;
@@ -487,6 +492,10 @@
         .newsletter-btn:hover {
             background-color: #153629;
         }
+
+        html {
+            scroll-behavior: smooth;
+        }
     </style>
 </head>
 
@@ -504,7 +513,7 @@
                 <p class="hero-desc">Akses ribuan materi edukasi terkurasi, kursus interaktif, dan panduan praktis yang
                     dibuat langsung oleh pakar psikologi anak dan dokter anak.</p>
                 <div class="hero-buttons">
-                    <a href="#kursus" class="btn-orange">Lihat Semua Kursus</a>
+                    <a href="#webinar-section" class="btn-orange">Lihat Semua Kursus</a>
                     <a href="{{ route('services.book_consultation') }}" class="btn-outline-white">Hubungi Konselor</a>
                 </div>
             </div>
@@ -549,27 +558,74 @@
                         @endif
                     @endforeach
                 </div>
-                <a href="#" class="popular-link">Lihat Topik Terpopuler</a>
+                <a href="{{ route('services.parenting_academy', ['popular' => 'true']) }}" class="popular-link">
+                    Lihat Topik Terpopuler
+                </a>
             </div>
 
             <!-- Course Cards Grid -->
             <div id="kursus" class="grid-3" style="margin-bottom: 4rem;">
-                @forelse($courses as $course)
-                    <div class="course-card">
-                        <img src="{{ asset('storage/' . $course->thumbnail) }}" alt="{{ $course->title }}"
-                            class="course-img">
+                @forelse($academies as $item)
+                    <a href="{{ route('services.parenting_academy.show', $item->id) }}" class="course-card"
+                        style="text-decoration: none; color: inherit;">
+                        <img src="{{ asset('storage/' . $item->thumbnail) }}" alt="{{ $item->title }}" class="course-img">
                         <div class="course-body">
-                            <span class="category-badge">{{ $course->category }}</span>
-                            <h3 class="course-title">{{ $course->title }}</h3>
-                            <p class="course-excerpt">{{ $course->excerpt }}</p>
+                            <span class="category-badge">{{ $item->category }}</span>
+                            <h3 class="course-title">{{ $item->title }}</h3>
+                            <p class="course-excerpt">{{ $item->excerpt }}</p>
                         </div>
-                    </div>
+                    </a>
                 @empty
                     <p class="empty-state">Belum ada materi untuk kategori ini.</p>
                 @endforelse
             </div>
 
-            <!-- Video Panduan Praktis -->
+            <!-- Webinar & Kelas Online Mendatang -->
+            <div id="webinar-section" class="webinar-section">
+                <div class="section-header" style="text-align: center; margin-bottom: 3rem;">
+                    <h2 class="section-title">Webinar & Kelas Online Mendatang</h2>
+                    <p class="section-desc">Edukasi eksklusif tatap muka interaktif secara langsung via konferensi video
+                    </p>
+                </div>
+                <div class="grid-3">
+                    @forelse($webinars ?? [] as $webinar)
+                        <div class="course-card"
+                            style="display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <img src="{{ asset('storage/' . $webinar->thumbnail) }}" alt="{{ $webinar->title }}"
+                                    class="course-img">
+                                <div class="course-body">
+                                    <span
+                                        style="display: block; color: #f26d5b; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.5rem;">
+                                        {{ $webinar->duration ?? 'Jadwal segera diumumkan' }}
+                                    </span>
+                                    <h3 class="course-title"
+                                        style="font-size: 1.1rem; line-height: 1.4; margin-bottom: 0.5rem;">
+                                        {{ $webinar->title }}
+                                    </h3>
+                                    <p style="color: #6B7280; font-size: 0.85rem; margin-bottom: 1.5rem;">
+                                        Narasumber: {{ $webinar->instructor ?? 'Tim Ahli SmartChild' }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div style="padding: 0 1.5rem 1.5rem 1.5rem;">
+                                <a href="{{ $webinar->link ?? '#' }}" target="_blank"
+                                    style="display: block; text-align: center; background-color: transparent; border: 1px solid #1e4d3b; color: #1e4d3b; padding: 0.75rem; border-radius: 9999px; font-weight: 700; text-decoration: none; font-size: 0.9rem; transition: all 0.2s ease;"
+                                    onmouseover="this.style.backgroundColor='#1e4d3b'; this.style.color='#ffffff';"
+                                    onmouseout="this.style.backgroundColor='transparent'; this.style.color='#1e4d3b';">
+                                    Daftar Sekarang
+                                </a>
+                            </div>
+                        </div>
+                    @empty
+                        <p class="empty-state"
+                            style="grid-column: span 3; text-align: center; color: #9CA3AF; padding: 2rem 0;">
+                            Belum ada jadwal webinar atau kelas online untuk saat ini.
+                        </p>
+                    @endforelse
+                </div>
+            </div>
+
             <!-- Video Panduan Praktis -->
             <div class="video-section">
                 <div class="section-header">
@@ -584,7 +640,6 @@
                                     class="video-thumb">
 
                                 @if($video->video_url)
-                                    <!-- Pastikan atribut href-nya memanggil variabel $video->video_url -->
                                     <a href="{{ $video->video_url }}" target="_blank" class="play-button"
                                         title="Tonton Video">▶</a>
                                 @else
@@ -593,9 +648,7 @@
                                 @endif
                             </div>
                             <div class="video-info" style="padding: 1.25rem;">
-                                <!-- Badge Kategori Video yang Sama Persis dengan Course -->
                                 <span class="category-badge">{{ $video->category }}</span>
-
                                 <h4 class="video-title">{{ $video->title }}</h4>
                                 <p class="video-meta">Durasi: {{ $video->duration }} • Bersama {{ $video->instructor }}</p>
                             </div>
@@ -608,8 +661,7 @@
                 </div>
             </div>
 
-            <!-- Dibimbing Oleh Expert Terpercaya (Sesuai Referensi Gambar) -->
-            <!-- Bagian Expert Terpercaya -->
+            <!-- Dibimbing Oleh Expert Terpercaya -->
             <div class="expert-section" style="margin-top: 4rem; margin-bottom: 4rem;">
                 <div class="section-header" style="text-align: center; margin-bottom: 2.5rem;">
                     <h2 class="section-title" style="font-size: 1.75rem; font-weight: bold; color: #1F2937;">Dibimbing
@@ -618,20 +670,17 @@
                         praktisi berpengalaman dan bersertifikasi</p>
                 </div>
 
-                <!-- Grid untuk Card Expert (Berjajar 2 Kolom) -->
                 <div class="grid-2"
                     style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
                     @forelse($experts as $expert)
                         <div class="expert-card"
                             style="background: #ffffff; border: 1px solid #E5E7EB; border-radius: 16px; padding: 2rem; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-                            <!-- Foto Profil Expert -->
                             <div class="expert-img-wrapper" style="margin-bottom: 1.25rem;">
                                 <img src="{{ $expert->photo ? asset('storage/' . $expert->photo) : asset('images/default-avatar.png') }}"
                                     alt="{{ $expert->name }}"
                                     style="width: 90px; height: 90px; border-radius: 50%; object-fit: cover; margin: 0 auto; border: 3px solid #F3F4F6;">
                             </div>
 
-                            <!-- Nama & Spesialisasi -->
                             <h4 style="font-size: 1.15rem; font-weight: bold; color: #1F2937; margin-bottom: 0.25rem;">
                                 {{ $expert->name }}
                             </h4>
@@ -639,7 +688,6 @@
                                 {{ $expert->specialization }}
                             </p>
 
-                            <!-- Deskripsi / Bio Singkat -->
                             <p style="font-size: 0.9rem; color: #4B5563; line-height: 1.5;">
                                 {{ $expert->bio ?? $expert->description }}
                             </p>
@@ -653,7 +701,7 @@
 
         </section>
 
-        <!-- Newsletter Section (Sesuai Referensi Gambar) -->
+        <!-- Newsletter Section -->
         <section class="newsletter-section">
             <div class="newsletter-container">
                 <h2 class="newsletter-title">Dapatkan Tips & Panduan Mingguan</h2>
@@ -661,15 +709,10 @@
                     dari tim ahli medis SmartChild langsung ke inbox Anda.</p>
                 <form action="{{ route('newsletter.store') }}" method="POST" class="newsletter-form">
                     @csrf
-                    <!-- Input untuk Nama Lengkap (menggunakan kelas CSS input yang sama) -->
                     <input type="text" name="name" required placeholder="Nama Lengkap Anda" class="newsletter-input"
                         value="{{ old('name') }}">
-
-                    <!-- Input untuk Email -->
                     <input type="email" name="email" required placeholder="Alamat Email Anda" class="newsletter-input"
                         value="{{ old('email') }}">
-
-                    <!-- Tombol Langganan -->
                     <button type="submit" class="newsletter-btn">Langganan</button>
                 </form>
             </div>
