@@ -5,14 +5,19 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Pesanan Saya - Smart Child</title>
+
 
     <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     >
+
 
     <style>
 
@@ -23,6 +28,7 @@
             --dark-green: #315C50;
             --white: #FFFFFF;
             --soft-gray: #667085;
+            --border: #E8E4DC;
         }
 
 
@@ -283,6 +289,159 @@
 
 
         /* =====================================================
+           TRACKER
+        ===================================================== */
+
+        .order-tracker {
+            padding: 24px;
+
+            border-top: 1px solid rgba(49, 92, 80, .07);
+            border-bottom: 1px solid rgba(49, 92, 80, .07);
+
+            background: #FFFEFC;
+        }
+
+
+        .tracker-title {
+            margin-bottom: 22px;
+
+            color: var(--dark-green);
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+
+        .tracker {
+            position: relative;
+
+            display: flex;
+
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+
+        .tracker-line {
+            position: absolute;
+
+            top: 15px;
+            left: 10%;
+            right: 10%;
+
+            height: 2px;
+
+            background: var(--border);
+
+            z-index: 0;
+        }
+
+
+        .tracker-step {
+            position: relative;
+
+            width: 25%;
+
+            text-align: center;
+
+            z-index: 1;
+        }
+
+
+        .tracker-circle {
+            width: 30px;
+            height: 30px;
+
+            margin: 0 auto 9px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: var(--border);
+
+            color: #98A2B3;
+
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+
+        .tracker-step.completed .tracker-circle {
+            background: var(--sage-green);
+
+            color: var(--white);
+        }
+
+
+        .tracker-step.active .tracker-circle {
+            background: var(--dark-green);
+
+            color: var(--white);
+
+            box-shadow:
+                0 0 0 5px rgba(111, 175, 155, .15);
+        }
+
+
+        .tracker-label {
+            color: #98A2B3;
+
+            font-size: 9px;
+
+            line-height: 1.5;
+        }
+
+
+        .tracker-step.completed .tracker-label {
+            color: var(--dark-green);
+
+            font-weight: 600;
+        }
+
+
+        .tracker-step.active .tracker-label {
+            color: var(--dark-green);
+
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           REJECTED
+        ===================================================== */
+
+        .tracker-rejected {
+            padding: 20px 24px;
+
+            border-top: 1px solid rgba(49, 92, 80, .07);
+            border-bottom: 1px solid rgba(49, 92, 80, .07);
+
+            background: #FFF8F7;
+        }
+
+
+        .tracker-rejected-title {
+            margin-bottom: 7px;
+
+            color: #B42318;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+
+        .tracker-rejected-text {
+            color: var(--soft-gray);
+
+            font-size: 10px;
+        }
+
+
+        /* =====================================================
            ORDER FOOTER
         ===================================================== */
 
@@ -445,6 +604,30 @@
                 text-align: left;
             }
 
+
+            .order-tracker {
+                padding: 20px 12px;
+            }
+
+
+            .tracker-line {
+                left: 9%;
+                right: 9%;
+            }
+
+
+            .tracker-circle {
+                width: 26px;
+                height: 26px;
+
+                font-size: 9px;
+            }
+
+
+            .tracker-label {
+                font-size: 8px;
+            }
+
         }
 
     </style>
@@ -485,6 +668,24 @@
 
             @forelse ($orders as $order)
 
+
+                @php
+
+                    $statusOrder = [
+                        'Pending' => 1,
+                        'Diproses' => 2,
+                        'Dikirim' => 3,
+                        'Selesai' => 4,
+                    ];
+
+                    $currentStep =
+                        $statusOrder[
+                            $order->status_pesanan
+                        ] ?? 0;
+
+                @endphp
+
+
                 <div class="order-card">
 
 
@@ -501,7 +702,13 @@
                             </div>
 
                             <div class="order-date">
-                                {{ \Carbon\Carbon::parse($order->created_at)->format('d M Y, H:i') }}
+                                {{
+                                    \Carbon\Carbon::parse(
+                                        $order->created_at
+                                    )->format(
+                                        'd M Y, H:i'
+                                    )
+                                }}
                             </div>
 
                         </div>
@@ -534,6 +741,189 @@
 
 
                     {{-- =================================================
+                         TRACKER
+                    ================================================= --}}
+
+                    @if(
+                        $order->status_pesanan
+                        !== 'Ditolak'
+                    )
+
+                        <div class="order-tracker">
+
+                            <div class="tracker-title">
+                                Perkembangan Pesanan
+                            </div>
+
+
+                            <div class="tracker">
+
+                                <div class="tracker-line"></div>
+
+
+                                {{-- STEP 1 --}}
+
+                                <div
+                                    class="
+                                        tracker-step
+                                        {{ $currentStep >= 1 ? 'completed' : '' }}
+                                        {{ $currentStep == 1 ? 'active' : '' }}
+                                    "
+                                >
+
+                                    <div class="tracker-circle">
+
+                                        @if($currentStep > 1)
+
+                                            ✓
+
+                                        @else
+
+                                            1
+
+                                        @endif
+
+                                    </div>
+
+
+                                    <div class="tracker-label">
+                                        Pesanan<br>Dikonfirmasi
+                                    </div>
+
+                                </div>
+
+
+                                {{-- STEP 2 --}}
+
+                                <div
+                                    class="
+                                        tracker-step
+                                        {{ $currentStep >= 2 ? 'completed' : '' }}
+                                        {{ $currentStep == 2 ? 'active' : '' }}
+                                    "
+                                >
+
+                                    <div class="tracker-circle">
+
+                                        @if($currentStep > 2)
+
+                                            ✓
+
+                                        @else
+
+                                            2
+
+                                        @endif
+
+                                    </div>
+
+
+                                    <div class="tracker-label">
+                                        Sedang<br>Diproses
+                                    </div>
+
+                                </div>
+
+
+                                {{-- STEP 3 --}}
+
+                                <div
+                                    class="
+                                        tracker-step
+                                        {{ $currentStep >= 3 ? 'completed' : '' }}
+                                        {{ $currentStep == 3 ? 'active' : '' }}
+                                    "
+                                >
+
+                                    <div class="tracker-circle">
+
+                                        @if($currentStep > 3)
+
+                                            ✓
+
+                                        @else
+
+                                            3
+
+                                        @endif
+
+                                    </div>
+
+
+                                    <div class="tracker-label">
+                                        Pesanan<br>Dikirim
+                                    </div>
+
+                                </div>
+
+
+                                {{-- STEP 4 --}}
+
+                                <div
+                                    class="
+                                        tracker-step
+                                        {{ $currentStep >= 4 ? 'completed' : '' }}
+                                        {{ $currentStep == 4 ? 'active' : '' }}
+                                    "
+                                >
+
+                                    <div class="tracker-circle">
+
+                                        @if($currentStep >= 4)
+
+                                            ✓
+
+                                        @else
+
+                                            4
+
+                                        @endif
+
+                                    </div>
+
+
+                                    <div class="tracker-label">
+                                        Pesanan<br>Selesai
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    @else
+
+
+                        {{-- PESANAN DITOLAK --}}
+
+                        <div class="tracker-rejected">
+
+                            <div class="tracker-rejected-title">
+
+                                <i
+                                    class="fa-solid fa-circle-xmark"
+                                    style="margin-right: 5px;"
+                                ></i>
+
+                                Pesanan Ditolak
+
+                            </div>
+
+
+                            <div class="tracker-rejected-text">
+
+                                Pesanan ini tidak dapat diproses oleh admin.
+
+                            </div>
+
+                        </div>
+
+                    @endif
+
+
+                    {{-- =================================================
                          ORDER ITEMS
                     ================================================= --}}
 
@@ -541,108 +931,149 @@
 
                         @foreach ($order->items as $item)
 
-                        {{-- =================================================
-                            SMART CHILD BOX
-                        ================================================= --}}
 
-                        @if ($item->box)
+                            {{-- SMART CHILD BOX --}}
 
-                            <div class="order-item">
+                            @if ($item->box)
 
-                                <div class="order-item-image">
+                                <div class="order-item">
 
-                                    @if ($item->box->gambar)
+                                    <div class="order-item-image">
 
-                                        <img
-                                            src="{{ asset('images/' . $item->box->gambar) }}"
-                                            alt="{{ $item->box->nama_box }}"
-                                        >
+                                        @if ($item->box->gambar)
 
-                                    @else
+                                            <img
+                                                src="{{ asset('images/' . $item->box->gambar) }}"
+                                                alt="{{ $item->box->nama_box }}"
+                                            >
 
-                                        <div class="order-item-no-image">
-                                            Gambar belum tersedia
+                                        @else
+
+                                            <div class="order-item-no-image">
+                                                Gambar belum tersedia
+                                            </div>
+
+                                        @endif
+
+                                    </div>
+
+
+                                    <div class="order-item-info">
+
+                                        <div class="order-item-name">
+                                            {{ $item->box->nama_box }}
                                         </div>
 
-                                    @endif
+                                        <div class="order-item-quantity">
 
-                                </div>
+                                            {{ $item->jumlah }}
 
+                                            ×
 
-                                <div class="order-item-info">
+                                            Rp
+                                            {{
+                                                number_format(
+                                                    $item->box->harga,
+                                                    0,
+                                                    ',',
+                                                    '.'
+                                                )
+                                            }}
 
-                                    <div class="order-item-name">
-                                        {{ $item->box->nama_box }}
-                                    </div>
-
-                                    <div class="order-item-quantity">
-                                        {{ $item->jumlah }}
-                                        ×
-                                        Rp {{ number_format($item->box->harga, 0, ',', '.') }}
-                                    </div>
-
-                                </div>
-
-
-                                <div class="order-item-subtotal">
-                                    Rp {{ number_format($item->subtotal, 0, ',', '.') }}
-                                </div>
-
-                            </div>
-
-
-                        {{-- =================================================
-                            PRODUCT BIASA
-                        ================================================= --}}
-
-                        @elseif ($item->product)
-
-                            <div class="order-item">
-
-                                <div class="order-item-image">
-
-                                    @if ($item->product->gambar)
-
-                                        <img
-                                            src="{{ asset('images/' . $item->product->gambar) }}"
-                                            alt="{{ $item->product->nama_produk }}"
-                                        >
-
-                                    @else
-
-                                        <div class="order-item-no-image">
-                                            Gambar belum tersedia
                                         </div>
 
-                                    @endif
-
-                                </div>
-
-
-                                <div class="order-item-info">
-
-                                    <div class="order-item-name">
-                                        {{ $item->product->nama_produk }}
                                     </div>
 
-                                    <div class="order-item-quantity">
-                                        {{ $item->jumlah }}
-                                        ×
-                                        Rp {{ number_format($item->product->harga, 0, ',', '.') }}
+
+                                    <div class="order-item-subtotal">
+
+                                        Rp
+                                        {{
+                                            number_format(
+                                                $item->subtotal,
+                                                0,
+                                                ',',
+                                                '.'
+                                            )
+                                        }}
+
                                     </div>
 
                                 </div>
 
 
-                                <div class="order-item-subtotal">
-                                    Rp {{ number_format($item->subtotal, 0, ',', '.') }}
+                            {{-- PRODUCT BIASA --}}
+
+                            @elseif ($item->product)
+
+                                <div class="order-item">
+
+                                    <div class="order-item-image">
+
+                                        @if ($item->product->gambar)
+
+                                            <img
+                                                src="{{ asset('images/' . $item->product->gambar) }}"
+                                                alt="{{ $item->product->nama_produk }}"
+                                            >
+
+                                        @else
+
+                                            <div class="order-item-no-image">
+                                                Gambar belum tersedia
+                                            </div>
+
+                                        @endif
+
+                                    </div>
+
+
+                                    <div class="order-item-info">
+
+                                        <div class="order-item-name">
+                                            {{ $item->product->nama_produk }}
+                                        </div>
+
+                                        <div class="order-item-quantity">
+
+                                            {{ $item->jumlah }}
+
+                                            ×
+
+                                            Rp
+                                            {{
+                                                number_format(
+                                                    $item->product->harga,
+                                                    0,
+                                                    ',',
+                                                    '.'
+                                                )
+                                            }}
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="order-item-subtotal">
+
+                                        Rp
+                                        {{
+                                            number_format(
+                                                $item->subtotal,
+                                                0,
+                                                ',',
+                                                '.'
+                                            )
+                                        }}
+
+                                    </div>
+
                                 </div>
 
-                            </div>
+                            @endif
 
-                        @endif
-
-                    @endforeach
+                        @endforeach
 
                     </div>
 
@@ -678,16 +1109,26 @@
                             </div>
 
                             <div class="order-total-price">
-                                Rp {{ number_format($order->total_harga, 0, ',', '.') }}
+
+                                Rp
+                                {{
+                                    number_format(
+                                        $order->total_harga,
+                                        0,
+                                        ',',
+                                        '.'
+                                    )
+                                }}
+
                             </div>
 
                         </div>
-
 
                     </div>
 
 
                 </div>
+
 
             @empty
 

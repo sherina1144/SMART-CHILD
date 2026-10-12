@@ -8,15 +8,21 @@
     <title>{{ $title ?? 'Admin Dashboard - SmartChild' }}</title>
 
     <!-- Fonts & Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
 
     <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet">
 
-    <!-- CSS Layout Admin -->
+
+    <!-- =====================================================
+         CSS LAYOUT ADMIN
+    ====================================================== -->
+
     <style>
         * {
             box-sizing: border-box;
@@ -29,7 +35,6 @@
             font-family: 'Poppins', sans-serif;
             background-color: #F8FAF9;
             color: #2D3748;
-            display: flex;
             min-height: 100vh;
         }
 
@@ -42,6 +47,7 @@
             width: 260px;
             background-color: #253D32;
             color: #ffffff;
+
             padding: 24px 20px;
 
             display: flex;
@@ -49,9 +55,12 @@
             justify-content: space-between;
 
             position: fixed;
+            top: 0;
+            left: 0;
+
             height: 100vh;
 
-            z-index: 100;
+            z-index: 1000;
 
             overflow-y: auto;
         }
@@ -71,6 +80,7 @@
 
             display: flex;
             align-items: center;
+
             gap: 10px;
         }
 
@@ -146,6 +156,46 @@
             letter-spacing: 0.8px;
 
             margin: 22px 8px 8px;
+        }
+
+
+        /* =====================================================
+           SIDEBAR BADGE
+        ===================================================== */
+
+        .nav-link-with-badge {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            width: 100%;
+        }
+
+        .nav-link-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-badge {
+            min-width: 20px;
+            height: 20px;
+
+            padding: 0 6px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background-color: #F39C50;
+            color: #ffffff;
+
+            border-radius: 20px;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            flex-shrink: 0;
         }
 
 
@@ -276,14 +326,196 @@
 
 
         /* =====================================================
-           MAIN CONTENT
+           MAIN AREA
         ===================================================== */
 
         .main-wrapper {
             margin-left: 260px;
 
-            flex: 1;
+            min-height: 100vh;
 
+            background-color: #F8FAF9;
+        }
+
+
+        /* =====================================================
+           ADMIN NAVBAR
+        ===================================================== */
+
+        .admin-navbar {
+            height: 76px;
+
+            background-color: #ffffff;
+
+            border-bottom: 1px solid #E8E4DC;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 40px;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 900;
+        }
+
+
+        /* =====================================================
+           NAVBAR TITLE
+        ===================================================== */
+
+        .navbar-title {
+            font-size: 22px;
+            font-weight: 700;
+
+            color: #315C50;
+        }
+
+
+        /* =====================================================
+           NAVBAR RIGHT
+        ===================================================== */
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+
+            gap: 22px;
+        }
+
+
+        /* =====================================================
+           NOTIFICATION
+        ===================================================== */
+
+        .notification-btn {
+            position: relative;
+
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background-color: #FFF9F2;
+
+            color: #315C50;
+
+            text-decoration: none;
+
+            font-size: 18px;
+
+            transition: all 0.2s;
+        }
+
+        .notification-btn:hover {
+            background-color: #EAF3EF;
+            color: #315C50;
+        }
+
+
+        /* =====================================================
+           NOTIFICATION BADGE
+        ===================================================== */
+
+        .notification-badge {
+            position: absolute;
+
+            top: -3px;
+            right: -3px;
+
+            min-width: 19px;
+            height: 19px;
+
+            padding: 0 5px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background-color: #F4A89A;
+
+            color: #ffffff;
+
+            border-radius: 20px;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            border: 2px solid #ffffff;
+        }
+
+
+        /* =====================================================
+           ADMIN NAVBAR PROFILE
+        ===================================================== */
+
+        .navbar-profile {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+
+            text-decoration: none;
+        }
+
+        .navbar-avatar {
+            width: 40px;
+            height: 40px;
+
+            border-radius: 50%;
+
+            background-color: #EAF3EF;
+
+            color: #315C50;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 15px;
+
+            overflow: hidden;
+        }
+
+        .navbar-avatar img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+        .navbar-user-info {
+            display: flex;
+            flex-direction: column;
+
+            line-height: 1.3;
+        }
+
+        .navbar-user-name {
+            font-size: 13px;
+            font-weight: 700;
+
+            color: #315C50;
+        }
+
+        .navbar-user-role {
+            font-size: 10px;
+
+            color: #667085;
+        }
+
+
+        /* =====================================================
+           PAGE CONTENT
+        ===================================================== */
+
+        .page-content {
             padding: 40px;
         }
 
@@ -300,10 +532,43 @@
 
             .main-wrapper {
                 margin-left: 220px;
+            }
+
+            .admin-navbar {
+                padding: 0 25px;
+            }
+
+            .page-content {
                 padding: 25px;
             }
 
         }
+
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 200px;
+            }
+
+            .main-wrapper {
+                margin-left: 200px;
+            }
+
+            .admin-navbar {
+                padding: 0 18px;
+            }
+
+            .navbar-user-info {
+                display: none;
+            }
+
+            .page-content {
+                padding: 20px;
+            }
+
+        }
+
     </style>
 
 </head>
@@ -346,8 +611,10 @@
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.dashboard') }}"
-                        class="nav-link {{ Request::is('admin/dashboard*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('admin.dashboard') }}"
+                        class="nav-link {{ Request::is('admin/dashboard*') ? 'active' : '' }}"
+                    >
 
                         <i class="fa-solid fa-chart-pie"></i>
 
@@ -356,7 +623,6 @@
                     </a>
 
                 </li>
-
 
 
                 <!-- =================================================
@@ -374,8 +640,10 @@
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.doctor.add') }}"
-                        class="nav-link {{ Request::is('admin/doctor*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('admin.doctor.add') }}"
+                        class="nav-link {{ Request::is('admin/doctor*') ? 'active' : '' }}"
+                    >
 
                         <i class="fa-solid fa-user-doctor"></i>
 
@@ -386,21 +654,52 @@
                 </li>
 
 
-                <!-- CONSULTATION -->
+                <!-- =================================================
+                     CONSULTATION
+                ================================================== -->
+
+                @php
+                    $totalKonsultasiMenunggu =
+                        \App\Models\Consultation::where(
+                            'status_konsultasi',
+                            'Scheduled'
+                        )->count();
+                @endphp
+
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.consultation.index') }}"
-                        class="nav-link {{ Request::is('admin/consultations*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('admin.consultation.index') }}"
+                        class="nav-link nav-link-with-badge {{ Request::is('admin/consultations*') ? 'active' : '' }}"
+                    >
 
-                        <i class="fa-solid fa-calendar-check"></i>
+                        <span class="nav-link-content">
 
-                        Book Consultation
+                            <i class="fa-solid fa-calendar-check"></i>
+
+                            Book Consultation
+
+                        </span>
+
+
+                        @if($totalKonsultasiMenunggu > 0)
+
+                            <span class="sidebar-badge">
+
+                                {{
+                                    $totalKonsultasiMenunggu > 99
+                                        ? '99+'
+                                        : $totalKonsultasiMenunggu
+                                }}
+
+                            </span>
+
+                        @endif
 
                     </a>
 
                 </li>
-
 
 
                 <!-- =================================================
@@ -418,8 +717,10 @@
 
                 <li class="nav-item">
 
-                    <a href="{{ url('/admin/products') }}"
-                        class="nav-link {{ Request::is('admin/products*') ? 'active' : '' }}">
+                    <a
+                        href="{{ url('/admin/products') }}"
+                        class="nav-link {{ Request::is('admin/products*') ? 'active' : '' }}"
+                    >
 
                         <i class="fa-solid fa-box-open"></i>
 
@@ -434,8 +735,10 @@
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.smartbox.index') }}"
-                        class="nav-link {{ Request::is('admin/smart-child-box*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('admin.smartbox.index') }}"
+                        class="nav-link {{ Request::is('admin/smart-child-box*') ? 'active' : '' }}"
+                    >
 
                         <i class="fa-solid fa-boxes-stacked"></i>
 
@@ -446,21 +749,52 @@
                 </li>
 
 
-                <!-- PESANAN -->
+                <!-- =================================================
+                     PESANAN
+                ================================================== -->
+
+                @php
+                    $pesananMenunggu =
+                        \App\Models\Order::where(
+                            'payment_status',
+                            'Menunggu Konfirmasi'
+                        )->count();
+                @endphp
+
 
                 <li class="nav-item">
 
-                    <a href="{{ url('/admin/orders') }}"
-                        class="nav-link {{ Request::is('admin/orders*') ? 'active' : '' }}">
+                    <a
+                        href="{{ url('/admin/orders') }}"
+                        class="nav-link nav-link-with-badge {{ Request::is('admin/orders*') ? 'active' : '' }}"
+                    >
 
-                        <i class="fa-solid fa-receipt"></i>
+                        <span class="nav-link-content">
 
-                        Pesanan
+                            <i class="fa-solid fa-receipt"></i>
+
+                            Pesanan
+
+                        </span>
+
+
+                        @if($pesananMenunggu > 0)
+
+                            <span class="sidebar-badge">
+
+                                {{
+                                    $pesananMenunggu > 99
+                                        ? '99+'
+                                        : $pesananMenunggu
+                                }}
+
+                            </span>
+
+                        @endif
 
                     </a>
 
                 </li>
-
 
 
                 <!-- =================================================
@@ -478,8 +812,15 @@
 
                 <li class="nav-item">
 
+
                     <a href="{{ route('admin.parenting.academy.index') }}"
                         class="nav-link {{ Request::is('admin/parenting*') ? 'active' : '' }}">
+
+                    <a
+                        href="{{ route('admin.parenting.index') }}"
+                        class="nav-link {{ Request::is('admin/parenting*') ? 'active' : '' }}"
+                    >
+
 
                         <i class="fa-solid fa-graduation-cap"></i>
 
@@ -489,12 +830,20 @@
 
                 </li>
 
+
                 <!-- NEWSLETTER -->
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.newsletter.index') }}" class="nav-link">
-                        <i class="fa-solid fa-envelope"></i> Newsletter
+                    <a
+                        href="{{ route('admin.newsletter.index') }}"
+                        class="nav-link"
+                    >
+
+                        <i class="fa-solid fa-envelope"></i>
+
+                        Newsletter
+
                     </a>
 
                 </li>
@@ -511,16 +860,48 @@
                 </li>
 
 
-                <!-- PARTNERSHIPS -->
+                <!-- =================================================
+                     PARTNERSHIPS
+                ================================================== -->
+
+                @php
+                    $totalPartnershipMenunggu =
+                        \App\Models\Partnership::where(
+                            'status',
+                            'Process'
+                        )->count();
+                @endphp
+
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.partnership') }}"
-                        class="nav-link {{ Request::is('admin/partnerships*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('admin.partnership') }}"
+                        class="nav-link nav-link-with-badge {{ Request::is('admin/partnerships*') ? 'active' : '' }}"
+                    >
 
-                        <i class="fa-solid fa-handshake"></i>
+                        <span class="nav-link-content">
 
-                        Partnerships
+                            <i class="fa-solid fa-handshake"></i>
+
+                            Partnerships
+
+                        </span>
+
+
+                        @if($totalPartnershipMenunggu > 0)
+
+                            <span class="sidebar-badge">
+
+                                {{
+                                    $totalPartnershipMenunggu > 99
+                                        ? '99+'
+                                        : $totalPartnershipMenunggu
+                                }}
+
+                            </span>
+
+                        @endif
 
                     </a>
 
@@ -531,8 +912,10 @@
 
                 <li class="nav-item">
 
-                    <a href="{{ route('admin.contact') }}"
-                        class="nav-link {{ Request::is('admin/contact*') ? 'active' : '' }}">
+                    <a
+                        href="{{ route('admin.contact') }}"
+                        class="nav-link {{ Request::is('admin/contact*') ? 'active' : '' }}"
+                    >
 
                         <i class="fa-solid fa-envelope"></i>
 
@@ -549,7 +932,6 @@
         </div>
 
 
-
         <!-- =====================================================
              SIDEBAR FOOTER
         ===================================================== -->
@@ -559,19 +941,40 @@
 
             <!-- USER PROFILE -->
 
-            <a href="{{ Route::has('profile.show') ? route('profile.show') : (Route::has('profile') ? route('profile') : url('/profile')) }}"
-                class="user-profile">
+            <a
+                href="{{ Route::has('profile.show')
+                    ? route('profile.show')
+                    : (Route::has('profile')
+                        ? route('profile')
+                        : url('/profile')) }}"
+                class="user-profile"
+            >
 
-                <div class="avatar" style="overflow: hidden; padding: 0;">
+                <div
+                    class="avatar"
+                    style="overflow: hidden; padding: 0;"
+                >
 
                     @if(Auth::user()->foto ?? false)
 
-                        <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Avatar"
-                            style="width: 100%; height: 100%; object-fit: cover;">
+                        <img
+                            src="{{ asset('storage/' . Auth::user()->foto) }}"
+                            alt="Avatar"
+                            style="width: 100%; height: 100%; object-fit: cover;"
+                        >
 
                     @else
 
-                        {{ strtoupper(substr(Auth::user()->nama ?? (Auth::user()->name ?? 'A'), 0, 1)) }}
+                        {{
+                            strtoupper(
+                                substr(
+                                    Auth::user()->nama
+                                    ?? (Auth::user()->name ?? 'A'),
+                                    0,
+                                    1
+                                )
+                            )
+                        }}
 
                     @endif
 
@@ -581,11 +984,22 @@
                 <div class="user-info">
 
                     <h5>
-                        {{ Auth::user()->nama ?? (Auth::user()->name ?? 'Admin') }}
+
+                        {{
+                            Auth::user()->nama
+                            ?? (Auth::user()->name ?? 'Admin')
+                        }}
+
                     </h5>
 
+
                     <p>
-                        {{ Auth::user()->email ?? 'admin@smartchild.id' }}
+
+                        {{
+                            Auth::user()->email
+                            ?? 'admin@smartchild.id'
+                        }}
+
                     </p>
 
                 </div>
@@ -593,14 +1007,19 @@
             </a>
 
 
-
             <!-- LOGOUT -->
 
-            <form action="{{ route('logout') }}" method="POST">
+            <form
+                action="{{ route('logout') }}"
+                method="POST"
+            >
 
                 @csrf
 
-                <button type="submit" class="btn-logout">
+                <button
+                    type="submit"
+                    class="btn-logout"
+                >
 
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
 
@@ -617,24 +1036,183 @@
     </aside>
 
 
-
     <!-- =====================================================
-         KONTEN HALAMAN
+         MAIN CONTENT
     ===================================================== -->
 
-    <main class="main-wrapper">
+    <div class="main-wrapper">
 
-        @yield('content')
 
-    </main>
+        <!-- =================================================
+            NAVBAR
+        ================================================== -->
 
+        <header class="admin-navbar">
+
+
+            <!-- PAGE TITLE -->
+
+            <div class="navbar-title">
+
+                @yield('page-title', 'Dashboard')
+
+            </div>
+
+
+            <!-- RIGHT SIDE -->
+
+            <div class="navbar-right">
+
+
+                <!-- =================================================
+                     NOTIFICATION
+                ================================================== -->
+
+                @php
+
+                    $totalPesananNotifikasi =
+                        \App\Models\Order::where(
+                            'payment_status',
+                            'Menunggu Konfirmasi'
+                        )->count();
+
+
+                    $totalKonsultasiNotifikasi =
+                        \App\Models\Consultation::where(
+                            'status_konsultasi',
+                            'Scheduled'
+                        )->count();
+
+
+                    $totalPartnershipNotifikasi =
+                        \App\Models\Partnership::where(
+                            'status',
+                            'Process'
+                        )->count();
+
+
+                    $totalNotifikasi =
+                        $totalPesananNotifikasi
+                        + $totalKonsultasiNotifikasi
+                        + $totalPartnershipNotifikasi;
+
+                @endphp
+
+
+                <a
+                    href="{{ route('admin.notifications') }}"
+                    class="notification-btn"
+                    title="Notifikasi"
+                >
+
+                    <i class="fa-regular fa-bell"></i>
+
+
+                    @if($totalNotifikasi > 0)
+
+                        <span class="notification-badge">
+
+                            {{
+                                $totalNotifikasi > 99
+                                    ? '99+'
+                                    : $totalNotifikasi
+                            }}
+
+                        </span>
+
+                    @endif
+
+                </a>
+
+
+                <!-- =================================================
+                     ADMIN PROFILE
+                ================================================== -->
+
+                <a
+                    href="{{ Route::has('profile.show')
+                        ? route('profile.show')
+                        : url('/profile') }}"
+                    class="navbar-profile"
+                >
+
+                    <div class="navbar-avatar">
+
+                        @if(Auth::user()->foto ?? false)
+
+                            <img
+                                src="{{ asset('storage/' . Auth::user()->foto) }}"
+                                alt="Avatar"
+                            >
+
+                        @else
+
+                            {{
+                                strtoupper(
+                                    substr(
+                                        Auth::user()->nama
+                                        ?? (Auth::user()->name ?? 'A'),
+                                        0,
+                                        1
+                                    )
+                                )
+                            }}
+
+                        @endif
+
+                    </div>
+
+
+                    <div class="navbar-user-info">
+
+                        <span class="navbar-user-name">
+
+                            {{
+                                Auth::user()->nama
+                                ?? (Auth::user()->name ?? 'Admin')
+                            }}
+
+                        </span>
+
+
+                        <span class="navbar-user-role">
+
+                            Administrator
+
+                        </span>
+
+                    </div>
+
+                </a>
+
+
+            </div>
+
+
+        </header>
+
+
+        <!-- =================================================
+            PAGE CONTENT
+        ================================================== -->
+
+        <main class="page-content">
+
+            @yield('content')
+
+        </main>
+
+
+    </div>
 
 
     <!-- =====================================================
          BOOTSTRAP 5 JS
     ===================================================== -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    ></script>
 
 
 </body>

@@ -327,15 +327,85 @@ Route::middleware(['auth', 'role:admin'])
     ->name('admin.')
     ->group(function () {
 
-        /*
-        |--------------------------------------------------------------------------
-        | ADMIN DASHBOARD
-        |--------------------------------------------------------------------------
-        */
-
+        // Dashboard
         Route::get('/dashboard', function () {
-            return view('layout.dashboard_admin');
+
+            $totalDokter = \App\Models\Doctor::count();
+            $totalProduk = \App\Models\Product::count();
+            $totalPesanan = \App\Models\Order::count();
+            $totalKonsultasi = \App\Models\Consultation::count();
+            $totalPartnership = \App\Models\Partnership::count();
+
+            return view('admin.dashboard', compact(
+                'totalDokter',
+                'totalProduk',
+                'totalPesanan',
+                'totalKonsultasi',
+                'totalPartnership'
+            ));
+
         })->name('dashboard');
+
+
+        // =====================================================
+        // NOTIFICATIONS
+        // =====================================================
+
+        Route::get('/notifications', function () {
+
+            $pesananMenunggu = \App\Models\Order::where(
+                'payment_status',
+                'Menunggu Konfirmasi'
+            )->get();
+
+            $konsultasiMenunggu = \App\Models\Consultation::where(
+                'status_konsultasi',
+                'Scheduled'
+            )->get();
+
+            $partnershipMenunggu = \App\Models\Partnership::where(
+                'status',
+                'Process'
+            )->get();
+
+            $notifications = collect();
+
+            foreach ($pesananMenunggu as $order) {
+                $notifications->push([
+                    'type' => 'order',
+                    'data' => $order,
+                    'created_at' => $order->created_at,
+                ]);
+            }
+
+            foreach ($konsultasiMenunggu as $consultation) {
+                $notifications->push([
+                    'type' => 'consultation',
+                    'data' => $consultation,
+                    'created_at' => $consultation->created_at,
+                ]);
+            }
+
+            foreach ($partnershipMenunggu as $partnership) {
+                $notifications->push([
+                    'type' => 'partnership',
+                    'data' => $partnership,
+                    'created_at' => $partnership->created_at,
+                ]);
+            }
+
+            $notifications = $notifications
+                ->sortByDesc('created_at')
+                ->values();
+
+            return view('admin.notifications', compact(
+                'notifications',
+                'pesananMenunggu',
+                'konsultasiMenunggu',
+                'partnershipMenunggu'
+            ));
+
+        })->name('notifications');
 
 
         /*
@@ -419,6 +489,12 @@ Route::middleware(['auth', 'role:admin'])
 
                 Route::patch('/{id}/reject', [OrderController::class, 'adminReject'])
                     ->name('reject');
+
+                Route::patch('/{id}/ship', [OrderController::class, 'adminShip'])
+                    ->name('ship');
+
+                Route::patch('/{id}/complete', [OrderController::class, 'adminComplete'])
+                    ->name('complete');
             });
 
 
