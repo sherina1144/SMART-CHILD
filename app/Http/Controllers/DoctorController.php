@@ -197,30 +197,43 @@ class DoctorController extends Controller
     // Halaman Dashboard Dokter
     public function dashboard()
     {
-        // Ambil data dokter berdasarkan user yang sedang login
         $doctor = Doctor::with(['schedules', 'user'])->where('user_id', auth()->id())->first();
+        
+        $pendingCount = 0;
+        $completedCount = 0;
 
-        return view('dokter.dashboard', compact('doctor')); 
+        if ($doctor) {
+            $pendingCount = \App\Models\Consultation::where('doctor_id', $doctor->doctor_id)
+                ->whereIn('status_konsultasi', ['Confirmed', 'confirmed', 'Process', 'process'])
+                ->count();
+
+            $completedCount = \App\Models\Consultation::where('doctor_id', $doctor->doctor_id)
+                ->whereIn('status_konsultasi', ['Completed', 'completed', 'Selesai', 'selesai'])
+                ->count();
+        }
+
+        // Ambil juga untuk sidebar
+        $doctorPendingCount = $this->getDoctorPendingCount();
+
+        return view('dokter.dashboard', compact('doctor', 'pendingCount', 'completedCount', 'doctorPendingCount'));
     }
 
     // Halaman Daftar Konsultasi Pasien untuk Dokter
     public function consultations()
     {
-        // Ambil data dokter berdasarkan user yang sedang login
         $doctor = Doctor::with(['schedules', 'user'])->where('user_id', auth()->id())->first();
-
         $consultations = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
 
         if ($doctor) {
-            // Ambil konsultasi khusus dokter ini yang statusnya 'Confirmed', 'Completed', atau 'Selesai'
             $consultations = \App\Models\Consultation::where('doctor_id', $doctor->doctor_id)
                 ->whereIn('status_konsultasi', ['Confirmed', 'Completed', 'Selesai', 'selesai'])
                 ->latest()
                 ->paginate(10);
         }
 
-        // Arahkan ke view khusus dokter, BUKAN admin.daftar_consultation
-        return view('dokter.consultations', compact('doctor', 'consultations'));
+        $doctorPendingCount = $this->getDoctorPendingCount();
+
+        return view('dokter.consultations', compact('doctor', 'consultations', 'doctorPendingCount'));
     }
 
     // Halaman Jadwal Praktik untuk Dokter
@@ -270,5 +283,17 @@ class DoctorController extends Controller
     public function index()
     {
         return $this->dashboard();
+    }
+
+    private function getDoctorPendingCount()
+    {
+        if (!auth()->check()) return 0;
+
+        $doctor = Doctor::where('user_id', auth()->id())->first();
+        if (!$doctor) return 0;
+
+        return \App\Models\Consultation::where('doctor_id', $doctor->doctor_id)
+            ->whereIn('status_konsultasi', ['Confirmed', 'confirmed', 'Process', 'process'])
+            ->count();
     }
 }

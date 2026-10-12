@@ -310,9 +310,8 @@ Route::middleware(['auth', 'role:dokter'])
     ->name('doctor.')
     ->group(function () {
 
-        Route::get('/dashboard', function () {
-            return view('layout.dashboard_dokter');
-        })->name('dashboard');
+        // Diubah dari function() langsung ke DoctorController@dashboard
+        Route::get('/dashboard', [DoctorController::class, 'dashboard'])->name('dashboard');
 
         Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
     });
