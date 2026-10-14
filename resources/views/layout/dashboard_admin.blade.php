@@ -811,8 +811,6 @@
                 <!-- PARENTING ACADEMY -->
 
                 <li class="nav-item">
-
-
                     <a
                         href="{{ route('admin.parenting.academy.index') }}"
                         class="nav-link {{ Request::is('admin/parenting*') ? 'active' : '' }}"
