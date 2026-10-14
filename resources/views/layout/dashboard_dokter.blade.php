@@ -253,15 +253,22 @@
                     </a>
                 </li>
 
-                <!-- MENU PRAKTIK -->
-                <li class="nav-section">PRAKTIK & PASIEN</li>
+               <li class="nav-section">PRAKTIK & PASIEN</li>
 
-                <li class="nav-item">
-                    <a href="{{ route('dokter.consultations') }}" class="nav-link {{ Request::is('dokter/consultations*') ? 'active' : '' }}">
-                        <i class="fa-solid fa-calendar-check"></i>
-                        Konsultasi Pasien
-                    </a>
-                </li>
+<li class="nav-item">
+    <a href="{{ route('dokter.consultations') }}" class="nav-link {{ Request::is('dokter/consultations*') ? 'active' : '' }}" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Konsultasi Pasien</span>
+        </div>
+
+        @if(isset($doctorPendingCount) && $doctorPendingCount > 0)
+            <span class="badge" style="background-color: #F39C50; color: white; padding: 2px 7px; border-radius: 50px; font-size: 10px; font-weight: 600;">
+                {{ $doctorPendingCount }}
+            </span>
+        @endif
+    </a>
+</li>
 
             </ul>
         </div>

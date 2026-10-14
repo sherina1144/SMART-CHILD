@@ -18,8 +18,8 @@
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold text-success"><i class="fa-solid fa-book-open me-2"></i> Daftar Buku Panduan &
                     Artikel</h5>
-                <a href="{{ route('admin.parenting.academy.academy.create') }}" class="btn btn-success btn-sm">
-                    <i class="fa-solid fa-plus me-1"></i> Tambah Panduan
+                <a href="{{ url('admin/parenting-academy/academy/create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Tambah Buku Panduan/Artikel
                 </a>
             </div>
             <div class="card-body">
@@ -45,9 +45,9 @@
                                             class="badge bg-success bg-opacity-10 text-success px-2 py-1">{{ $item->category }}</span>
                                     </td>
                                     <td>
-                                        <a href="{{ route('admin.parenting.academy.academy.edit', $item->id) }}"
-                                            class="btn btn-warning btn-sm text-white">Edit</a>
-                                        <form action="{{ route('admin.parenting.academy.academy.destroy', $item->id) }}"
+                                        <a href="{{ url('admin/parenting-academy/academy/' . $item->id . '/edit') }}"
+                                            class="btn btn-warning">Edit</a>
+                                        <form action="{{ url('admin/parenting-academy/academy/' . $item->id . '/destroy') }}"
                                             method="POST" class="d-inline"
                                             onsubmit="return confirm('Yakin ingin menghapus panduan ini?')">
                                             @csrf
@@ -72,7 +72,7 @@
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-video me-2 text-warning"></i> Daftar Video
                     Rekomendasi</h5>
-                <a href="{{ route('admin.parenting.academy.video.create') }}" class="btn btn-dark btn-sm">
+                <a href="{{ url('admin/parenting-academy/video/create') }}" class="btn btn-dark btn-sm">
                     <i class="fa-solid fa-plus me-1"></i> Tambah Video
                 </a>
             </div>
@@ -108,7 +108,7 @@
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.parenting.academy.video.edit', $vid->id) }}"
-                                            class="btn btn-warning btn-sm text-white">Edit</a>
+                                            class="btn btn-warning">Edit</a>
                                         <form action="{{ route('admin.parenting.academy.video.destroy', $vid->id) }}"
                                             method="POST" class="d-inline"
                                             onsubmit="return confirm('Yakin ingin menghapus video ini?')">
@@ -134,7 +134,7 @@
             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-chalkboard-user me-2 text-danger"></i> Daftar
                     Webinar & Kelas Online</h5>
-                <a href="{{ route('admin.parenting.academy.webinar.create') }}" class="btn btn-danger btn-sm">
+                <a href="{{ url('admin/parenting-academy/webinar/create') }}" class="btn btn-danger btn-sm">
                     <i class="fa-solid fa-plus me-1"></i> Tambah Webinar
                 </a>
             </div>
@@ -170,7 +170,7 @@
                                     </td>
                                     <td>
                                         <a href="{{ route('admin.parenting.academy.webinar.edit', $web->id) }}"
-                                            class="btn btn-warning btn-sm text-white">Edit</a>
+                                            class="btn btn-warning">Edit</a>
                                         <form action="{{ route('admin.parenting.academy.webinar.destroy', $web->id) }}"
                                             method="POST" class="d-inline"
                                             onsubmit="return confirm('Yakin ingin menghapus webinar ini?')">

@@ -134,7 +134,7 @@ class ParentingAcademyController extends Controller
 
         ParentingAcademy::create($data);
 
-        return redirect()->route('admin.parenting.academy.index')->with('success', 'Buku panduan berhasil ditambahkan!');
+        return redirect()->route('parenting.index')->with('success', 'Buku panduan berhasil ditambahkan!');
     }
 
     public function editAcademy($id)
@@ -169,7 +169,7 @@ class ParentingAcademyController extends Controller
             'link' => $request->link,
         ]);
 
-        return redirect()->route('admin.parenting.academy.index')->with('success', 'Buku panduan berhasil diperbarui!');
+        return redirect(url('admin/parenting-academy'))->with('success', 'Buku panduan berhasil diperbarui!');
     }
 
     public function destroyAcademy($id)
@@ -215,7 +215,7 @@ class ParentingAcademyController extends Controller
             'status' => 'published',
         ]);
 
-        return redirect()->route('admin.parenting.academy.index')->with('success', 'Video berhasil ditambahkan ke Parenting Academy!');
+        return redirect()->route('parenting.index')->with('success', 'Video berhasil ditambahkan ke Parenting Academy!');
     }
 
     public function editVideo($id)
@@ -252,7 +252,7 @@ class ParentingAcademyController extends Controller
             'video_url' => $request->video_url,
         ]);
 
-        return redirect()->route('admin.parenting.academy.index')->with('success', 'Video panduan berhasil diperbarui!');
+        return redirect()->route('parenting.index')->with('success', 'Video panduan berhasil diperbarui!');
     }
 
     public function destroyVideo($id)
@@ -298,7 +298,7 @@ class ParentingAcademyController extends Controller
             'status' => 'published',
         ]);
 
-        return redirect()->route('admin.parenting.academy.index')->with('success', 'Webinar / Kelas Online berhasil ditambahkan!');
+        return redirect()->route('parenting.index')->with('success', 'Webinar / Kelas Online berhasil ditambahkan!');
     }
 
     public function editWebinar($id)
@@ -336,7 +336,7 @@ class ParentingAcademyController extends Controller
             'description' => $request->description ?? $webinar->description,
         ]);
 
-        return redirect()->route('admin.parenting.academy.index')->with('success', 'Webinar berhasil diperbarui!');
+        return redirect()->route('parenting.index')->with('success', 'Webinar berhasil diperbarui!');
     }
 
     public function destroyWebinar($id)

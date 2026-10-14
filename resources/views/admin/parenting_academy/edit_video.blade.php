@@ -4,7 +4,7 @@
 <div class="container-fluid px-4 py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold text-dark">Edit Video Parenting</h2>
-        <a href="{{ route('admin.parenting.index') }}" class="btn btn-secondary btn-sm">
+        <a href="{{ route('admin.parenting.academy.index') }}" class="btn btn-secondary btn-sm">
             <i class="fa-solid fa-arrow-left me-1"></i> Kembali
         </a>
     </div>
@@ -21,7 +21,7 @@
 
     <div class="card shadow-sm border-0">
         <div class="card-body p-4">
-            <form action="{{ route('admin.parenting.video.update', $video->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.parenting.academy.video.update', $video->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-2">
-                    <a href="{{ route('admin.parenting.index') }}" class="btn btn-light">Batal</a>
+                    <a href="{{ route('admin.parenting.academy.index') }}" class="btn btn-light">Batal</a>
                     <button type="submit" class="btn btn-success px-4">Simpan Perubahan</button>
                 </div>
             </form>
