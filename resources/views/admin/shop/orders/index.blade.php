@@ -218,7 +218,7 @@
                                 )
 
                                     <span class="status pending">
-                                        Pending
+                                        Menunggu
                                     </span>
 
 
@@ -325,7 +325,7 @@
                                                 class="btn-accept"
                                                 onclick="return confirm('Terima pesanan ini?')"
                                             >
-                                                ACC
+                                                Konfirmasi
                                             </button>
 
                                         </form>
