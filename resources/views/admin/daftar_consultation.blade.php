@@ -1,4 +1,10 @@
-@extends('layout.dashboard_admin')
+@php
+    $layout = auth()->check() && auth()->user()->role === 'dokter' 
+        ? 'layout.dashboard_dokter' // Ganti string ini sesuai nama layout dokter lo (misal: layouts.dokter atau layout.dashboard_dokter)
+        : 'layout.dashboard_admin';
+@endphp
+
+@extends($layout)
 
 @section('content')
 <style>
@@ -116,26 +122,30 @@
                                 <span class="badge" style="background-color: #def7ec; color: #03543f;">Confirmed</span>
                             @elseif(in_array(strtolower($item->status_konsultasi), ['refunded', 'cancelled', 'cancel']))
                                 <span class="badge" style="background-color: #fde8e8; color: #9b1c1c;">Cancelled</span>
+                            @elseif(in_array(strtolower($item->status_konsultasi), ['completed', 'selesai']))
+                                <span class="badge" style="background-color: #e1effe; color: #1e429f;">Selesai</span>
                             @else
                                 <span class="badge" style="background-color: #fef3c7; color: #92400e;">Process</span>
                             @endif
 
-                            {{-- Tombol Aksi Admin untuk Mengubah Status --}}
-                            <div style="margin-top: 8px; display: flex; gap: 5px;">
-                                <form action="{{ route('admin.consultation.updateStatus', $item->id ?? $item->consultation_id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <input type="hidden" name="status" value="confirmed">
-                                    <button type="submit" style="padding: 3px 8px; font-size: 10px; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer;">Confirm</button>
-                                </form>
+                            {{-- Tombol Aksi Admin (Hanya muncul jika BELUM selesai) --}}
+                            @if(!in_array(strtolower($item->status_konsultasi), ['completed', 'selesai']))
+                                <div style="margin-top: 8px; display: flex; gap: 5px;">
+                                    <form action="{{ route('admin.consultation.updateStatus', $item->id ?? $item->consultation_id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="hidden" name="status" value="confirmed">
+                                        <button type="submit" style="padding: 3px 8px; font-size: 10px; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer;">Confirm</button>
+                                    </form>
 
-                                <form action="{{ route('admin.consultation.updateStatus', $item->id ?? $item->consultation_id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <input type="hidden" name="status" value="cancel">
-                                    <button type="submit" style="padding: 3px 8px; font-size: 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
-                                </form>
-                            </div>
+                                    <form action="{{ route('admin.consultation.updateStatus', $item->id ?? $item->consultation_id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="hidden" name="status" value="cancel">
+                                        <button type="submit" style="padding: 3px 8px; font-size: 10px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                                    </form>
+                                </div>
+                            @endif
                         </td>
                     </tr>
                 @empty

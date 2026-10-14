@@ -87,6 +87,18 @@
     <form action="{{ route('admin.doctor.update', $doctor->doctor_id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+        <div class="form-group">
+    <label>Pautan Akun Login User</label>
+    <select name="user_id" required>
+        <option value="">-- Pilih Akun User untuk Dokter Ini --</option>
+        @foreach($usersDokter as $usr)
+            <option value="{{ $usr->user_id }}" {{ old('user_id', $doctor->user_id) == $usr->user_id ? 'selected' : '' }}>
+                {{ $usr->nama }} ({{ $usr->email }})
+            </option>
+        @endforeach
+    </select>
+    <small style="color: #718096; font-size: 12px;">Pastikan akun user ini memiliki role 'dokter'.</small>
+</div>
 
         <div class="form-group">
             <label>Nama Lengkap & Gelar</label>

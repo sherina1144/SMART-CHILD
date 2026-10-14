@@ -182,13 +182,15 @@
                     </div>
                     
                     <!-- Status Pesanan -->
-                    <div class="consultation-footer">
+                   <div class="consultation-footer">
                         <span style="font-size: 13px; color: #4a6b5d;">Status Pesanan:</span>
                         <div>
                             @if(strtolower($item->status_konsultasi) == 'confirmed')
                                 <span class="badge" style="background: #def7ec; color: #03543f;">Confirm</span>
                             @elseif(in_array(strtolower($item->status_konsultasi), ['cancelled', 'cancel', 'refunded']))
                                 <span class="badge" style="background: #fde8e8; color: #9b1c1c;">Cancel</span>
+                            @elseif(in_array(strtolower($item->status_konsultasi), ['completed', 'selesai']))
+                                <span class="badge" style="background: #e1effe; color: #1e429f;">Selesai</span>
                             @else
                                 <span class="badge" style="background: #fef3c7; color: #92400e;">Process</span>
                             @endif
