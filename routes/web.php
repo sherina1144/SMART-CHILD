@@ -208,7 +208,6 @@ Route::prefix('services')
         Route::get('/parenting-academy', [ParentingAcademyController::class, 'index'])
             ->name('parenting_academy');
 
-        // Rute Detail Buku Panduan / Artikel Berdasarkan ID (Diperbaiki tanpa dobel /services)
         Route::get('/parenting-academy/{id}', [ParentingAcademyController::class, 'show'])
             ->name('parenting_academy.show');
 
@@ -350,7 +349,7 @@ Route::middleware(['auth', 'role:admin'])
         // =====================================================
         // NOTIFICATIONS
         // =====================================================
-
+    
         Route::get('/notifications', function () {
 
             $pesananMenunggu = \App\Models\Order::where(
@@ -643,7 +642,6 @@ Route::middleware(['auth', 'role:admin'])
                 Route::delete('/webinar/{id}/destroy', [ParentingAcademyController::class, 'destroyWebinar'])
                     ->name('webinar.destroy');
             });
-
     });
 
 
