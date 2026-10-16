@@ -171,7 +171,7 @@ class ParentingAcademyController extends Controller
         ParentingAcademy::create($data);
 
         return redirect()
-            ->route('parenting.index')
+            ->route('admin.parenting.academy.index')
             ->with('success', 'Buku panduan berhasil ditambahkan!');
     }
 
