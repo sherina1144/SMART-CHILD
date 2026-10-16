@@ -402,30 +402,53 @@
                 </div>
 
                 <!-- KOLOM KANAN: MAPS TEMUI KAMI -->
-                <div class="map-column">
-                    <h3 class="content-title">Temui kami</h3>
-                    <div style="height: 18px;"></div>
+<div class="map-column">
+    <h3 class="content-title">Temui kami</h3>
+    <div style="height: 18px;"></div>
 
-                    <div class="map-card">
-                        <iframe 
-                            src="{{ $setting->maps_embed_url ?? '' }}" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
-                        
-                        <div class="map-info-footer">
-                            <div class="map-icon">
-                                <i class="fa-solid fa-door-open"></i>
-                            </div>
-                            <div class="map-text">
-                                <h5>Smart Child Indonesia</h5>
-                                <p>{{ $setting->lokasi ?? '' }}</p>
-                                <a href="https://maps.google.com" target="_blank">Lihat di Google Maps <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="map-card">
+        <!-- Menampilkan Peta Iframe secara Aman -->
+        @if(!empty($setting->maps_embed_url))
+            @php
+                $embed = $setting->maps_embed_url;
+            @endphp
+            
+            @if(str_contains($embed, '<iframe'))
+                {!! $embed !!}
+            @else
+                <iframe 
+                    src="{{ $embed }}" 
+                    width="100%" 
+                    height="100%" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            @endif
+        @else
+            <!-- Fallback jika maps_embed_url kosong di database -->
+            <div style="width: 100%; height: 220px; background: #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #718096; font-size: 13px; text-align: center; padding: 20px;">
+                <i class="fa-solid fa-map-location-dot" style="font-size: 28px; margin-bottom: 8px;"><span>Peta belum diatur oleh admin di database</span></i>
+            </div>
+        @endif
+        
+        <div class="map-info-footer">
+            <div class="map-icon">
+                <i class="fa-solid fa-door-open"></i>
+            </div>
+            <div class="map-text">
+                <h5>Smart Child Indonesia</h5>
+                <p>{{ $setting->lokasi ?? '' }}</p>
+                
+                <!-- Link Google Maps gabungan nama instansi + lokasi agar pencarian akurat -->
+                <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode('Smart Child Indonesia ' . ($setting->lokasi ?? '')) }}" target="_blank" style="display: inline-block; text-decoration: none; color: #253D32; font-weight: 600;">
+                    Lihat di Google Maps <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 10px;"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
             </div>
 

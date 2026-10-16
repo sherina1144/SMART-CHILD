@@ -234,43 +234,40 @@
     @include('layout.header')
 
     <!-- HERO BANNER WRAPPER -->
-<div class="hero-wrapper">
-    <div class="hero-banner">
-        <div class="hero-left">
-            <h1>School<br>Partnership</h1>
-            <p>Bersama Smart Child, ciptakan lingkungan pendidikan yang mendukung tumbuh kembang setiap anak secara optimal.</p>
+    <div class="hero-wrapper">
+        <div class="hero-banner">
+            <div class="hero-left">
+                <h1>School<br>Partnership</h1>
+                <p>Bersama Smart Child, ciptakan lingkungan pendidikan yang mendukung tumbuh kembang setiap anak secara optimal.</p>
+                <a href="{{ route('partnership.form', ['type' => 'School']) }}" class="btn-become-partner">
+                    Become a Partner <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
             
-            <a href="{{ route('partnership.form', ['type' => 'School']) }}" class="btn-become-partner">
-                Become a Partner <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-        </div>
-        
-        <div class="hero-right">
-            <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=1200&q=80" alt="School Partnership">
-        </div>
-    </div>
-</div>
-
-<!-- MAIN KONTEN BAWAH -->
-<div class="main-content">
-    <div class="container">
-        
-        <div class="section-title">
-            <h2>Why Partner with Smart Child?</h2>
-            <p>Kami datang untuk mendukung sekolah dalam memahami dan mendampingi perkembangan anak dengan lebih baik</p>
-        </div>
-
-        <div class="why-grid">
-            <div class="why-card">
-                <div class="why-icon"><i class="fa-solid fa-brain"></i></div>
-                <div class="why-info">
-                    <h4>Child Development</h4>
-                    <p>Mendukung pemantauan dan pemahaman perkembangan serta kebutuhan anak</p>
-                </div>
+            <div class="hero-right">
+                <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=1200&q=80" alt="School Partnership">
             </div>
         </div>
     </div>
-</div>
+
+    <!-- MAIN KONTEN BAWAH -->
+    <div class="main-content">
+        <div class="container">
+            
+            <!-- Why Partner Section -->
+            <div class="section-title">
+                <h2>Why Partner with Smart Child?</h2>
+                <p>Kami datang untuk mendukung sekolah dalam memahami dan mendampingi perkembangan anak dengan lebih baik</p>
+            </div>
+
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="why-icon"><i class="fa-solid fa-brain"></i></div>
+                    <div class="why-info">
+                        <h4>Child Development</h4>
+                        <p>Mendukung pemantauan dan pemahaman perkembangan serta kebutuhan anak</p>
+                    </div>
+                </div>
 
                 <div class="why-card">
                     <div class="why-icon"><i class="fa-regular fa-comment-dots"></i></div>
@@ -289,6 +286,7 @@
                 </div>
             </div>
 
+            <!-- Program Opportunities Section -->
             <div class="section-title">
                 <h2>Our Partnership Program</h2>
                 <p>Program kerja sama yang dapat dipilih sesuai kebutuhan sekolah anda</p>
