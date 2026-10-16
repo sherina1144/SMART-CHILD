@@ -123,7 +123,6 @@
         font-family: inherit;
         font-size: 12px;
         box-shadow: none;
-        transition: border-color .2s ease, box-shadow .2s ease;
     }
 
     .webinar-page .form-control:focus {
@@ -137,37 +136,38 @@
     }
 
     .webinar-page textarea.form-control {
-        min-height: 110px;
+        min-height: 115px;
+        line-height: 1.6;
         resize: vertical;
-        line-height: 1.7;
     }
 
     .webinar-page input[type="file"].form-control {
+        width: 100%;
+        height: 46px;
         min-height: 46px;
-        padding: 5px;
+        padding: 5px 10px;
+        box-sizing: border-box;
         color: #66766D;
-        line-height: 1.5;
+        font-size: 12px;
+        line-height: normal;
     }
 
     .webinar-page input[type="file"]::file-selector-button {
         height: 34px;
         margin: 0 12px 0 0;
         padding: 0 12px;
+        vertical-align: middle;
         border: none;
         border-radius: 6px;
         background: #EDF5EF;
         color: #315C50;
-        font-family: inherit;
         font-size: 11px;
         font-weight: 600;
         cursor: pointer;
     }
 
-    .webinar-page input[type="file"]::file-selector-button:hover {
-        background: #DCECE0;
-    }
-
     .webinar-page .form-text {
+        display: block;
         margin-top: 7px;
         color: #849189;
         font-size: 11px;
@@ -175,6 +175,7 @@
     }
 
     .webinar-page .invalid-feedback {
+        display: block;
         font-size: 11px;
     }
 
@@ -186,6 +187,23 @@
         background: #FFF2F2;
         color: #B83232;
         font-size: 12px;
+    }
+
+    .webinar-current-banner {
+        display: inline-block;
+        margin-bottom: 12px;
+        padding: 6px;
+        border: 1px solid #E5ECE7;
+        border-radius: 10px;
+        background: #FAFCFA;
+    }
+
+    .webinar-current-banner img {
+        display: block;
+        width: 180px;
+        height: 110px;
+        border-radius: 6px;
+        object-fit: cover;
     }
 
     .webinar-actions {
@@ -235,23 +253,6 @@
         color: #FFFFFF;
     }
 
-    .webinar-current-banner {
-        display: inline-block;
-        margin-bottom: 12px;
-        padding: 6px;
-        border: 1px solid #E5ECE7;
-        border-radius: 10px;
-        background: #FAFCFA;
-    }
-
-    .webinar-current-banner img {
-        display: block;
-        width: 150px;
-        height: 95px;
-        border-radius: 6px;
-        object-fit: cover;
-    }
-
     @media (max-width: 768px) {
         .webinar-page {
             padding: 20px 12px;
@@ -283,6 +284,12 @@
     }
 </style>
 
+@php
+    $schedule = $webinar->schedule
+        ? \Carbon\Carbon::parse($webinar->schedule)
+        : null;
+@endphp
+
 <div class="webinar-page">
 
     {{-- HEADER --}}
@@ -301,10 +308,7 @@
     {{-- ERROR VALIDASI --}}
     @if ($errors->any())
         <div class="webinar-alert">
-            <strong>
-                <i class="fa-solid fa-circle-exclamation me-1"></i>
-                Periksa kembali data berikut:
-            </strong>
+            <strong>Periksa kembali data berikut:</strong>
 
             <ul class="mb-0 mt-2 ps-3">
                 @foreach ($errors->all() as $error)
@@ -314,7 +318,6 @@
         </div>
     @endif
 
-    {{-- FORM EDIT --}}
     <div class="webinar-card">
 
         <div class="webinar-card-header">
@@ -324,7 +327,7 @@
 
             <div>
                 <h3>Informasi Webinar</h3>
-                <p>Perbarui detail kegiatan, narasumber, jadwal, dan tautan akses.</p>
+                <p>Perbarui judul, kategori, deskripsi, narasumber, jadwal, dan tautan akses.</p>
             </div>
         </div>
 
@@ -348,7 +351,7 @@
                         id="title"
                         name="title"
                         value="{{ old('title', $webinar->title) }}"
-                        placeholder="Contoh: Mengurai Tantrum Anak Tanpa Teriak"
+                        placeholder="Masukkan judul webinar"
                         required
                     >
 
@@ -357,49 +360,65 @@
                     @enderror
                 </div>
 
-                {{-- KATEGORI DAN NARASUMBER --}}
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <label for="category" class="form-label">Kategori</label>
+                {{-- KATEGORI --}}
+                <div class="mb-4">
+                    <label for="category" class="form-label">Kategori Webinar</label>
 
-                        <input
-                            type="text"
-                            class="form-control @error('category') is-invalid @enderror"
-                            id="category"
-                            name="category"
-                            value="{{ old('category', $webinar->category ?? '') }}"
-                            placeholder="Contoh: Psikologi / Nutrisi"
-                            required
-                        >
+                    <input
+                        type="text"
+                        class="form-control @error('category') is-invalid @enderror"
+                        id="category"
+                        name="category"
+                        value="{{ old('category', $webinar->category ?? '') }}"
+                        placeholder="Masukkan kategori webinar"
+                        required
+                    >
 
-                        @error('category')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-6 mb-4">
-                        <label for="instructor" class="form-label">Narasumber</label>
-
-                        <input
-                            type="text"
-                            class="form-control @error('instructor') is-invalid @enderror"
-                            id="instructor"
-                            name="instructor"
-                            value="{{ old('instructor', $webinar->instructor ?? '') }}"
-                            placeholder="Contoh: Fahmi Hidayat, M.Psi"
-                            required
-                        >
-
-                        @error('instructor')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                    @error('category')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
-                {{-- DURASI DAN JADWAL --}}
-                <div class="row">
+                {{-- DESKRIPSI --}}
+                <div class="mb-4">
+                    <label for="description" class="form-label">Deskripsi Webinar</label>
 
-                    <div class="col-md-4 mb-4">
+                    <textarea
+                        class="form-control @error('description') is-invalid @enderror"
+                        id="description"
+                        name="description"
+                        rows="4"
+                        placeholder="Masukkan deskripsi webinar"
+                        required
+                    >{{ old('description', $webinar->description ?? '') }}</textarea>
+
+                    @error('description')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- NARASUMBER --}}
+                <div class="mb-4">
+                    <label for="instructor" class="form-label">Narasumber</label>
+
+                    <input
+                        type="text"
+                        class="form-control @error('instructor') is-invalid @enderror"
+                        id="instructor"
+                        name="instructor"
+                        value="{{ old('instructor', $webinar->speaker) }}"
+                        placeholder="Masukkan nama narasumber"
+                        required
+                    >
+
+                    @error('instructor')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- TANGGAL DAN WAKTU --}}
+                <div class="row">
+                    <div class="col-md-6 mb-4">
                         <label for="webinar_date" class="form-label">
                             <i class="fa-regular fa-calendar me-1"></i>
                             Tanggal Pelaksanaan
@@ -407,16 +426,19 @@
 
                         <input
                             type="date"
-                            class="form-control"
+                            class="form-control @error('webinar_date') is-invalid @enderror"
                             id="webinar_date"
-                            value="{{ old('webinar_date', $webinar->event_date ? \Carbon\Carbon::parse($webinar->event_date)->format('Y-m-d') : '') }}"
+                            name="webinar_date"
+                            value="{{ old('webinar_date', $schedule?->format('Y-m-d')) }}"
                             required
                         >
 
-                        <div class="form-text">Pilih tanggal pelaksanaan webinar.</div>
+                        @error('webinar_date')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
-                    <div class="col-md-4 mb-4">
+                    <div class="col-md-6 mb-4">
                         <label for="webinar_time" class="form-label">
                             <i class="fa-regular fa-clock me-1"></i>
                             Waktu Pelaksanaan
@@ -424,29 +446,20 @@
 
                         <input
                             type="time"
-                            class="form-control"
+                            class="form-control @error('webinar_time') is-invalid @enderror"
                             id="webinar_time"
-                            value="{{ old('webinar_time', $webinar->event_date ? \Carbon\Carbon::parse($webinar->event_date)->format('H:i') : '') }}"
+                            name="webinar_time"
+                            value="{{ old('webinar_time', $schedule?->format('H:i')) }}"
                             required
                         >
 
-                        <div class="form-text">Pilih jam mulai webinar.</div>
+                        @error('webinar_time')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
-                {{-- FIELD EVENT DATE UNTUK DIKIRIM KE CONTROLLER --}}
-                <input
-                    type="hidden"
-                    id="event_date"
-                    name="event_date"
-                    value="{{ old('event_date', $webinar->event_date ?? '') }}"
-                >
-
-                @error('event_date')
-                    <div class="text-danger small mb-3">{{ $message }}</div>
-                @enderror
-
-                {{-- TAUTAN --}}
+                {{-- LINK --}}
                 <div class="mb-4">
                     <label for="link" class="form-label">
                         Link Pendaftaran / Zoom / Google Meet
@@ -467,20 +480,21 @@
                     @enderror
                 </div>
 
-                {{-- BANNER --}}
+                {{-- THUMBNAIL --}}
                 <div class="mb-4">
                     <label for="thumbnail" class="form-label">
-                        <i class="fa-regular fa-image me-1"></i>
                         Thumbnail / Banner Webinar
                         <span class="text-muted fw-normal">(Opsional)</span>
                     </label>
 
-                    @if ($webinar->thumbnail)
-                        <div class="webinar-current-banner">
-                            <img
-                                src="{{ asset('storage/' . $webinar->thumbnail) }}"
-                                alt="Banner webinar saat ini"
-                            >
+                    @if ($webinar->image)
+                        <div>
+                            <div class="webinar-current-banner">
+                                <img
+                                    src="{{ asset('storage/' . $webinar->image) }}"
+                                    alt="Banner webinar saat ini"
+                                >
+                            </div>
                         </div>
                     @endif
 
@@ -493,30 +507,11 @@
                     >
 
                     <div class="form-text">
-                        Biarkan kosong jika tidak ingin mengganti banner. Format JPG, JPEG, atau PNG; maksimal 2 MB.
+                        Biarkan kosong jika tidak ingin mengganti banner.
+                        Format JPG, JPEG, atau PNG; maksimal 2 MB.
                     </div>
 
                     @error('thumbnail')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                {{-- DESKRIPSI --}}
-                <div class="mb-3">
-                    <label for="description" class="form-label">
-                        Deskripsi / Silabus Singkat
-                    </label>
-
-                    <textarea
-                        class="form-control @error('description') is-invalid @enderror"
-                        id="description"
-                        name="description"
-                        rows="4"
-                        placeholder="Tuliskan deskripsi singkat mengenai webinar..."
-                        required
-                    >{{ old('description', $webinar->description ?? '') }}</textarea>
-
-                    @error('description')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -539,22 +534,5 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.getElementById('webinarForm').addEventListener('submit', function (event) {
-        const dateInput = document.getElementById('webinar_date');
-        const timeInput = document.getElementById('webinar_time');
-        const eventDateInput = document.getElementById('event_date');
-
-        if (!dateInput.value || !timeInput.value) {
-            event.preventDefault();
-            alert('Silakan pilih tanggal dan waktu pelaksanaan webinar.');
-            return;
-        }
-
-        // Tanggal dan waktu masuk ke event_date, bukan duration.
-        eventDateInput.value = dateInput.value + ' ' + timeInput.value + ':00';
-    });
-</script>
 
 @endsection

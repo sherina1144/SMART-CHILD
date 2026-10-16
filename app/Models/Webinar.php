@@ -12,5 +12,7 @@ class Webinar extends Model
         'schedule',
         'image',
         'link',
+        'category',
+        'description',
     ];
 }

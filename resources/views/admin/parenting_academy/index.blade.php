@@ -568,25 +568,30 @@
     </div>
 
     {{-- SECTION 3: WEBINAR DAN KELAS ONLINE --}}
+    
     <div class="parenting-section">
 
+        {{-- Header Section --}}
         <div class="section-header">
             <div class="section-title">
                 <div class="section-icon">
                     <i class="fa-solid fa-chalkboard-user"></i>
                 </div>
+
                 <div>
                     <h5>Daftar Webinar & Kelas Online</h5>
                     <p>Kelola jadwal webinar dan informasi narasumber.</p>
                 </div>
             </div>
 
-            <a href="{{ url('admin/parenting-academy/webinar/create') }}" class="btn-add webinar">
+            <a href="{{ url('admin/parenting-academy/webinar/create') }}"
+            class="btn-add webinar">
                 <i class="fa-solid fa-plus"></i>
                 Tambah Webinar
             </a>
         </div>
 
+        {{-- Tabel Webinar --}}
         <div class="section-body">
             <div class="table-responsive">
                 <table class="parenting-table">
@@ -602,10 +607,11 @@
                     <tbody>
                         @forelse($webinars ?? [] as $web)
                             <tr>
+                                {{-- Thumbnail --}}
                                 <td>
-                                    @if($web->thumbnail)
+                                    @if($web->image)
                                         <img
-                                            src="{{ asset('storage/' . $web->thumbnail) }}"
+                                            src="{{ asset('storage/' . $web->image) }}"
                                             alt="{{ $web->title }}"
                                             class="thumbnail">
                                     @else
@@ -615,8 +621,11 @@
                                     @endif
                                 </td>
 
+                                {{-- Judul dan Link --}}
                                 <td>
-                                    <span class="item-title">{{ $web->title }}</span>
+                                    <span class="item-title">
+                                        {{ $web->title }}
+                                    </span>
 
                                     @if($web->link)
                                         <a
@@ -630,18 +639,30 @@
                                     @endif
                                 </td>
 
+                                {{-- Jadwal dan Narasumber --}}
                                 <td>
                                     <div class="item-detail">
                                         <i class="fa-regular fa-calendar"></i>
-                                        <span>{{ $web->duration ?: '-' }}</span>
+
+                                        <span>
+                                            @if($web->schedule)
+                                                {{ \Carbon\Carbon::parse($web->schedule)->format('d/m/Y H:i') }}
+                                            @else
+                                                -
+                                            @endif
+                                        </span>
                                     </div>
 
                                     <div class="item-detail">
                                         <i class="fa-solid fa-user-tie"></i>
-                                        <span>{{ $web->instructor ?: '-' }}</span>
+
+                                        <span>
+                                            {{ $web->speaker ?: '-' }}
+                                        </span>
                                     </div>
                                 </td>
 
+                                {{-- Aksi --}}
                                 <td>
                                     <div class="action-icons">
                                         <a
@@ -682,6 +703,7 @@
                 </table>
             </div>
         </div>
+
     </div>
 
 </div>

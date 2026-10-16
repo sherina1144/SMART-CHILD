@@ -72,7 +72,7 @@ class ParentingAcademyController extends Controller
 
         $videos = $videosQuery->latest()->get();
 
-        // Webinar: mengambil data dari tabel webinars
+        // Webinar dari tabel webinars
         $webinars = Webinar::orderBy('schedule', 'asc')->get();
 
         $experts = Doctor::all();
@@ -126,7 +126,6 @@ class ParentingAcademyController extends Controller
             ->latest()
             ->get();
 
-        // Webinar dari tabel webinars
         $webinars = Webinar::orderBy('schedule', 'asc')->get();
 
         $newsletters = Newsletter::latest()->get();
@@ -360,11 +359,13 @@ class ParentingAcademyController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'category' => 'required|string|max:100',
+            'description' => 'required|string',
             'instructor' => 'required|string|max:255',
             'webinar_date' => 'required|date',
             'webinar_time' => 'required|date_format:H:i',
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'link' => 'required|url|max:255',
+            'link' => 'required|url|max:200',
         ]);
 
         $imagePath = $request->file('thumbnail')
@@ -376,6 +377,8 @@ class ParentingAcademyController extends Controller
 
         Webinar::create([
             'title' => $validated['title'],
+            'category' => $validated['category'],
+            'description' => $validated['description'],
             'speaker' => $validated['instructor'],
             'schedule' => $schedule,
             'image' => $imagePath,
@@ -403,11 +406,13 @@ class ParentingAcademyController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'category' => 'required|string|max:100',
+            'description' => 'required|string',
             'instructor' => 'required|string|max:255',
             'webinar_date' => 'required|date',
             'webinar_time' => 'required|date_format:H:i',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'link' => 'required|url|max:255',
+            'link' => 'required|url|max:200',
         ]);
 
         $schedule = $validated['webinar_date']
@@ -416,6 +421,8 @@ class ParentingAcademyController extends Controller
 
         $data = [
             'title' => $validated['title'],
+            'category' => $validated['category'],
+            'description' => $validated['description'],
             'speaker' => $validated['instructor'],
             'schedule' => $schedule,
             'link' => $validated['link'],

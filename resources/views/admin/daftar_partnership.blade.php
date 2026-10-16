@@ -1,108 +1,321 @@
 @extends('layout.dashboard_admin')
 
 @section('content')
-<div class="container-fluid py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-11">
-            
-            <!-- Header Title -->
-            <div class="d-flex align-items-center justify-content-between mb-4">
-                <div>
-                    <h3 class="fw-bold" style="color: #285B4D;">Daftar Pengajuan Partnership</h3>
-                    <p class="text-muted mb-0">Kelola dan tinjau pengajuan kerjasama dari School dan Business Partner.</p>
-                </div>
+    <div class="container-fluid px-4 py-4">
+        {{-- Header --}}
+        <div class="mb-4">
+            <h2 class="fw-bold mb-1" style="color: #285B4D;">
+                Daftar Pengajuan Partnership
+            </h2>
+
+            <p class="mb-0" style="color: #667085;">
+                Kelola dan tinjau pengajuan kerja sama dari School dan Business Partner.
+            </p>
+        </div>
+
+        {{-- Notifikasi --}}
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close">
+                </button>
             </div>
+        @endif
 
-            <!-- Notifikasi Berhasil -->
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert" style="border-radius: 10px;">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
+        {{-- Tabel Partnership --}}
+        <div class="card border-0 shadow-sm" style="border-radius: 16px; overflow: hidden;">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 partnership-table">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Instansi</th>
+                                <th>Tipe</th>
+                                <th>Kontak PIC</th>
+                                <th>Pesan Kolaborasi</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
 
-            <!-- Tabel Data Partnership -->
-            <div class="card shadow-sm border-0" style="border-radius: 16px; background-color: #ffffff;">
-                <div class="card-body p-4">
-                    
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-light text-uppercase fs-7 text-secondary">
+                        <tbody>
+                            @forelse ($partnerships as $index => $item)
                                 <tr>
-                                    <th>No</th>
-                                    <th>Instansi</th>
-                                    <th>Tipe</th>
-                                    <th>Kontak PIC</th>
-                                    <th>Pesan Kolaborasi</th>
-                                    <th>Status</th>
-                                    <th class="text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($partnerships as $index => $item)
-                                    <tr>
-                                        <td class="fw-semibold text-secondary">{{ $index + 1 }}</td>
-                                        <td>
-                                            <div class="fw-bold text-dark">{{ $item->nama_instansi }}</div>
-                                            <small class="text-muted">{{ $item->email }}</small>
-                                        </td>
-                                        <td>
-                                            <span class="badge {{ $item->tipe_partner == 'School' ? 'bg-info text-dark' : 'bg-warning text-dark' }}">
+                                    {{-- Nomor --}}
+                                    <td class="fw-semibold" style="color: #285B4D;">
+                                        {{ $index + 1 }}
+                                    </td>
+
+                                    {{-- Instansi --}}
+                                    <td>
+                                        <div class="fw-semibold text-dark">
+                                            {{ $item->nama_instansi }}
+                                        </div>
+
+                                        <small class="text-muted">
+                                            {{ $item->email }}
+                                        </small>
+                                    </td>
+
+                                    {{-- Tipe Partner --}}
+                                    <td>
+                                        @if ($item->tipe_partner == 'School')
+                                            <span class="status-badge badge-school">
+                                                School
+                                            </span>
+                                        @else
+                                            <span class="status-badge badge-business">
                                                 {{ $item->tipe_partner }}
                                             </span>
-                                        </td>
-                                        <td>{{ $item->kontak_person }}</td>
-                                        <td>
-                                            <span class="text-muted text-truncate d-inline-block" style="max-width: 200px;" title="{{ $item->pesan }}">
-                                                {{ $item->pesan ?? '-' }}
+                                        @endif
+                                    </td>
+
+                                    {{-- Kontak PIC --}}
+                                    <td>
+                                        {{ $item->kontak_person }}
+                                    </td>
+
+                                    {{-- Pesan Kolaborasi --}}
+                                    <td>
+                                        <span
+                                            class="message-text"
+                                            title="{{ $item->pesan }}"
+                                        >
+                                            {{ $item->pesan ?? '-' }}
+                                        </span>
+                                    </td>
+
+                                    {{-- Status --}}
+                                    <td>
+                                        @if ($item->status == 'Confirmed')
+                                            <span class="status-badge badge-confirmed">
+                                                Dikonfirmasi
                                             </span>
-                                        </td>
-                                        <td>
-                                            @if($item->status == 'Confirmed')
-                                                <span class="badge bg-success px-2 py-1">Confirm</span>
-                                            @elseif($item->status == 'Cancelled')
-                                                <span class="badge bg-danger px-2 py-1">Cancel</span>
-                                            @else
-                                                <span class="badge bg-secondary px-2 py-1">Process</span>
+                                        @elseif ($item->status == 'Cancelled')
+                                            <span class="status-badge badge-cancelled">
+                                                Ditolak
+                                            </span>
+                                        @else
+                                            <span class="status-badge badge-process">
+                                                Proses
+                                            </span>
+                                        @endif
+                                    </td>
+
+                                    {{-- Aksi --}}
+                                    <td>
+                                        <div class="action-buttons">
+                                            @if ($item->status != 'Confirmed')
+                                                <form
+                                                    action="{{ route('admin.partnership.status', $item->partnership_id) }}"
+                                                    method="POST"
+                                                >
+                                                    @csrf
+                                                    @method('PUT')
+
+                                                    <input
+                                                        type="hidden"
+                                                        name="status"
+                                                        value="Confirmed"
+                                                    >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn-action btn-confirm"
+                                                        title="Konfirmasi kerja sama"
+                                                    >
+                                                        Konfirmasi
+                                                    </button>
+                                                </form>
                                             @endif
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="d-flex justify-content-center gap-1">
-                                                <!-- Form Tombol Confirm -->
-                                                <form action="{{ route('admin.partnership.status', $item->partnership_id) }}" method="POST">
+
+                                            @if ($item->status != 'Cancelled')
+                                                <form
+                                                    action="{{ route('admin.partnership.status', $item->partnership_id) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Yakin ingin menolak pengajuan partnership ini?')"
+                                                >
                                                     @csrf
                                                     @method('PUT')
-                                                    <input type="hidden" name="status" value="Confirmed">
-                                                    <button type="submit" class="btn btn-sm btn-success px-2 py-1" style="border-radius: 6px;" title="Setujui Kerjasama">
-                                                        <i class="fa-solid fa-check"></i> Confirm
+
+                                                    <input
+                                                        type="hidden"
+                                                        name="status"
+                                                        value="Cancelled"
+                                                    >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="btn-action btn-cancel"
+                                                        title="Tolak kerja sama"
+                                                    >
+                                                        Tolak
                                                     </button>
                                                 </form>
-
-                                                <!-- Form Tombol Cancel -->
-                                                <form action="{{ route('admin.partnership.status', $item->partnership_id) }}" method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <input type="hidden" name="status" value="Cancelled">
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger px-2 py-1" style="border-radius: 6px;" title="Tolak Kerjasama">
-                                                        <i class="fa-solid fa-xmark"></i> Cancel
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="7" class="text-center py-4 text-muted">Belum ada pengajuan partnership yang masuk.</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="empty-message">
+                                        <i class="fa-regular fa-folder-open"></i>
+                                        <span>Belum ada pengajuan partnership yang masuk.</span>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
         </div>
     </div>
-</div>
+
+    {{-- Styling Partnership --}}
+    <style>
+        .partnership-table {
+            width: 100%;
+            margin-bottom: 0;
+            color: #315C50;
+            vertical-align: middle;
+        }
+
+        .partnership-table thead th {
+            background-color: #FFF9F2;
+            color: #315C50;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 17px 18px;
+            white-space: nowrap;
+            border-bottom: 1px solid #E8E4DC;
+        }
+
+        .partnership-table tbody td {
+            background-color: #FFFFFF;
+            color: #344054;
+            font-size: 13px;
+            padding: 20px 18px;
+            border-bottom: 1px solid #EAECF0;
+        }
+
+        .partnership-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .partnership-table tbody tr:hover td {
+            background-color: #FCFDFC;
+        }
+
+        .partnership-table .status-badge {
+            display: inline-block;
+            padding: 7px 13px;
+            border-radius: 50px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-school {
+            background-color: #EAF5EF;
+            color: #285B4D;
+        }
+
+        .badge-business {
+            background-color: #FFF2D6;
+            color: #946200;
+        }
+
+        .badge-confirmed {
+            background-color: #EAF5EF;
+            color: #285B4D;
+        }
+
+        .badge-cancelled {
+            background-color: #FDECEC;
+            color: #B42318;
+        }
+
+        .badge-process {
+            background-color: #FFF2D6;
+            color: #946200;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 7px;
+            min-width: 100px;
+        }
+
+        .action-buttons form {
+            margin: 0;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            min-width: 88px;
+            min-height: 33px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 9px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn-action:hover {
+            opacity: 0.85;
+        }
+
+        .btn-confirm {
+            background-color: #70B2A0;
+            color: #FFFFFF;
+        }
+
+        .btn-cancel {
+            background-color: #FDECEC;
+            color: #B42318;
+        }
+
+        .message-text {
+            display: inline-block;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: middle;
+            color: #667085;
+        }
+
+        .empty-message {
+            padding: 40px 20px !important;
+            text-align: center;
+            color: #667085 !important;
+        }
+
+        .empty-message i {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 26px;
+            color: #70B2A0;
+        }
+
+        @media (max-width: 768px) {
+            .partnership-table thead th,
+            .partnership-table tbody td {
+                padding: 14px 12px;
+            }
+        }
+    </style>
 @endsection
