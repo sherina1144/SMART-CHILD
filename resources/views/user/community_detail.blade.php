@@ -1,223 +1,625 @@
+
 @extends('layout.app')
 
 @section('content')
-    <div class="container community-detail-container">
-        <!-- Tombol Kembali -->
-        <div class="mb-4">
-            <a href="{{ route('community.index') }}" class="btn-back">
-                &larr; Kembali ke Komunitas
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<div class="community-detail-page">
+    <div class="community-detail-container">
+
+        {{-- Tombol kembali --}}
+        <div class="detail-navigation">
+            <a href="{{ route('community.index') }}" class="detail-back-button">
+                <span>&larr;</span>
+                Kembali ke Komunitas
             </a>
         </div>
 
-        <!-- Detail Thread -->
-        <div class="thread-card">
-            <span class="thread-category-badge">
-                {{ $thread->category }}
-            </span>
-            <h1 class="thread-main-title">{{ $thread->title }}</h1>
-            <p class="thread-info">
-                Diposting oleh
-                <strong>{{ $thread->user->name ?? $thread->author_name ?? 'Pengguna' }}</strong> pada
-                {{ $thread->created_at->format('d M Y, H:i') }}
-            </p>
+        {{-- Detail Diskusi --}}
+        <article class="thread-detail-card">
+
+            <div class="detail-meta">
+                <span class="detail-category">
+                    {{ $thread->category }}
+                </span>
+
+                <span class="detail-date">
+                    <i class="fa-regular fa-clock"></i>
+                    {{ $thread->created_at->format('d M Y, H:i') }}
+                </span>
+            </div>
+
+            <h1 class="thread-main-title">
+                {{ $thread->title }}
+            </h1>
+
+            <div class="thread-author-info">
+                <div class="detail-author-avatar">
+                    <i class="fa-regular fa-user"></i>
+                </div>
+
+                <div>
+                    <span class="author-caption">Dibagikan oleh</span>
+                    <strong>
+                        {{ $thread->user->name ?? $thread->author_name ?? 'Pengguna' }}
+                    </strong>
+                </div>
+            </div>
+
+            <div class="detail-divider"></div>
 
             <div class="thread-body">
                 {{ $thread->content }}
             </div>
-        </div>
 
-        <!-- Kolom Komentar / Balasan -->
-        <div class="replies-section">
-            <h3 class="replies-heading">Balasan Diskusi</h3>
+        </article>
 
-            <!-- Form Kirim Komentar -->
-            <form action="{{ route('community.storeReply', $thread->id) }}" method="POST" class="reply-form mb-4">
-                @csrf
-                <div class="form-group mb-3">
-                    <textarea name="content" rows="3" placeholder="Tulis tanggapan atau saran Anda..." required
-                        class="form-textarea"></textarea>
+        {{-- Bagian Balasan --}}
+        <section class="replies-section">
+
+            <div class="replies-section-header">
+                <div>
+                    <span class="detail-eyebrow">RUANG DISKUSI</span>
+                    <h2>Balasan Diskusi</h2>
+                    <p>Berikan tanggapan atau berbagi pengalamanmu.</p>
                 </div>
-                <button type="submit" class="btn-submit">Kirim Komentar</button>
+
+                <div class="reply-total">
+                    <i class="fa-regular fa-comments"></i>
+                    {{ $thread->replies->count() }} balasan
+                </div>
+            </div>
+
+            {{-- Form Komentar --}}
+            <form
+                action="{{ route('community.storeReply', $thread->id) }}"
+                method="POST"
+                class="reply-form"
+            >
+                @csrf
+
+                <label for="reply-content" class="form-label">
+                    Tulis Balasan
+                </label>
+
+                <textarea
+                    id="reply-content"
+                    name="content"
+                    rows="4"
+                    placeholder="Tulis tanggapan atau saran yang ingin kamu bagikan..."
+                    required
+                    class="form-textarea"
+                >{{ old('content') }}</textarea>
+
+                @error('content')
+                    <p class="form-error">{{ $message }}</p>
+                @enderror
+
+                <div class="form-footer">
+                    <span class="form-hint">
+                        <i class="fa-regular fa-heart"></i>
+                        Tetap ramah dan saling menghargai.
+                    </span>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fa-regular fa-paper-plane"></i>
+                        Kirim Balasan
+                    </button>
+                </div>
             </form>
 
-            <!-- Daftar Komentar Masuk -->
+            {{-- Daftar Komentar --}}
             <div class="replies-list">
+
                 @forelse($thread->replies as $reply)
-                    <div class="reply-card">
+                    <article class="reply-card">
+
                         <div class="reply-header">
-                            <strong class="reply-author">{{ $reply->user->name ?? $reply->user->nama ?? 'Pengguna' }}</strong>
-                            <span class="reply-time">{{ $reply->created_at->diffForHumans() }}</span>
+                            <div class="reply-author-group">
+                                <div class="reply-avatar">
+                                    <i class="fa-regular fa-user"></i>
+                                </div>
+
+                                <div class="reply-author-info">
+                                    <strong>
+                                        {{ $reply->user->name ?? $reply->user->nama ?? 'Pengguna' }}
+                                    </strong>
+
+                                    <span>Anggota komunitas</span>
+                                </div>
+                            </div>
+
+                            <span class="reply-time">
+                                {{ $reply->created_at->diffForHumans() }}
+                            </span>
                         </div>
-                        <p class="reply-content mb-0">{{ $reply->content }}</p>
-                    </div>
+
+                        <p class="reply-content">{{ $reply->content }}</p>
+
+                    </article>
                 @empty
                     <div class="empty-replies">
-                        Belum ada balasan pada diskusi ini. Jadilah yang pertama memberikan tanggapan!
+                        <div class="empty-replies-icon">
+                            <i class="fa-regular fa-comments"></i>
+                        </div>
+
+                        <h3>Belum Ada Balasan</h3>
+
+                        <p>
+                            Jadilah orang pertama yang memberikan tanggapan
+                            pada diskusi ini.
+                        </p>
                     </div>
                 @endforelse
+
             </div>
-        </div>
+
+        </section>
+
     </div>
+</div>
 
-    <!-- Styling CSS yang sudah diperbaiki -->
-    <style>
-        .community-detail-container {
-            padding: 2rem 1rem;
-            max-width: 850px;
-            margin: 0 auto;
+<style>
+    .community-detail-page {
+        --detail-green: #315C50;
+        --detail-green-dark: #25483D;
+        --detail-sage: #EAF2E9;
+        --detail-border: #E5EBE4;
+        --detail-text: #2F4035;
+        --detail-muted: #879188;
+
+        width: 100%;
+        min-height: 80vh;
+        padding: 38px 24px 65px;
+        background: #F7F9F6;
+        color: var(--detail-text);
+        font-family: 'Poppins', sans-serif;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .community-detail-page *,
+    .community-detail-page *::before,
+    .community-detail-page *::after {
+        box-sizing: border-box;
+    }
+
+    .community-detail-container {
+        width: 100%;
+        max-width: 850px;
+        margin: 0 auto;
+    }
+
+    /* Navigasi */
+    .detail-navigation {
+        margin-bottom: 20px;
+    }
+
+    .detail-back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 14px;
+        border: 1px solid #DCE5DB;
+        border-radius: 9px;
+        background: #FFFFFF;
+        color: var(--detail-green);
+        font-size: 11px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .detail-back-button:hover {
+        border-color: var(--detail-green);
+        background: var(--detail-green);
+        color: #FFFFFF;
+    }
+
+    /* Kartu utama diskusi */
+    .thread-detail-card {
+        padding: 28px 30px;
+        border: 1px solid var(--detail-border);
+        border-radius: 17px;
+        background: #FFFFFF;
+        box-shadow: 0 4px 16px rgba(44, 66, 48, 0.035);
+    }
+
+    .detail-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .detail-category {
+        display: inline-block;
+        max-width: 70%;
+        padding: 6px 12px;
+        border: 1px solid #DDEADD;
+        border-radius: 30px;
+        background: #F0F6EF;
+        color: #527858;
+        font-size: 10px;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .detail-date {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #98A198;
+        font-size: 10px;
+    }
+
+    .thread-main-title {
+        margin: 0 0 18px;
+        color: #293E32;
+        font-family: 'Poppins', sans-serif;
+        font-size: clamp(22px, 3vw, 28px);
+        font-weight: 700;
+        line-height: 1.5;
+        letter-spacing: -0.5px;
+        overflow-wrap: anywhere;
+    }
+
+    .thread-author-info {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+    }
+
+    .detail-author-avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        border-radius: 13px;
+        background: var(--detail-sage);
+        color: #52765A;
+        font-size: 15px;
+    }
+
+    .thread-author-info > div:last-child {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .author-caption {
+        color: #98A198;
+        font-size: 10px;
+    }
+
+    .thread-author-info strong {
+        color: #35463A;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .detail-divider {
+        height: 1px;
+        margin: 23px 0;
+        background: #EEF1EC;
+    }
+
+    .thread-body {
+        color: #59665C;
+        font-size: 13px;
+        line-height: 2;
+        overflow-wrap: anywhere;
+        white-space: pre-line;
+    }
+
+    /* Header balasan */
+    .replies-section {
+        margin-top: 32px;
+    }
+
+    .replies-section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 18px;
+    }
+
+    .detail-eyebrow {
+        color: #64856B;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 1.7px;
+    }
+
+    .replies-section-header h2 {
+        margin: 5px 0;
+        color: #2F4235;
+        font-family: 'Poppins', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .replies-section-header p {
+        margin: 0;
+        color: #879188;
+        font-size: 11px;
+    }
+
+    .reply-total {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        flex-shrink: 0;
+        padding: 8px 11px;
+        border: 1px solid #E0E9DE;
+        border-radius: 9px;
+        background: #FFFFFF;
+        color: #58745C;
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+    /* Form balasan */
+    .reply-form {
+        padding: 22px;
+        border: 1px solid var(--detail-border);
+        border-radius: 15px;
+        background: #FFFFFF;
+        box-shadow: 0 3px 12px rgba(44, 66, 48, 0.025);
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 9px;
+        color: #354A3A;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .form-textarea {
+        display: block;
+        width: 100%;
+        min-height: 110px;
+        padding: 13px 14px;
+        border: 1px solid #DDE5DB;
+        border-radius: 10px;
+        outline: none;
+        background: #FCFDFC;
+        color: #35463A;
+        font-family: 'Poppins', sans-serif;
+        font-size: 12px;
+        line-height: 1.8;
+        resize: vertical;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-textarea::placeholder {
+        color: #A0AAA1;
+    }
+
+    .form-textarea:focus {
+        border-color: #86A98A;
+        box-shadow: 0 0 0 3px rgba(101, 143, 106, 0.12);
+    }
+
+    .form-error {
+        margin: 8px 0 0;
+        color: #C24141;
+        font-size: 11px;
+    }
+
+    .form-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 15px;
+    }
+
+    .form-hint {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #8A968B;
+        font-size: 10px;
+    }
+
+    .btn-submit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border: 1px solid var(--detail-green);
+        border-radius: 9px;
+        background: var(--detail-green);
+        color: #FFFFFF;
+        font-family: 'Poppins', sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+        border-color: var(--detail-green-dark);
+        background: var(--detail-green-dark);
+        transform: translateY(-1px);
+    }
+
+    /* Daftar balasan */
+    .replies-list {
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+        margin-top: 20px;
+    }
+
+    .reply-card {
+        padding: 19px 21px;
+        border: 1px solid var(--detail-border);
+        border-radius: 13px;
+        background: #FFFFFF;
+        transition: border-color 0.2s ease;
+    }
+
+    .reply-card:hover {
+        border-color: #CDDDCB;
+    }
+
+    .reply-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 13px;
+    }
+
+    .reply-author-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .reply-avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 35px;
+        height: 35px;
+        flex-shrink: 0;
+        border-radius: 11px;
+        background: #F0F5EF;
+        color: #628268;
+        font-size: 13px;
+    }
+
+    .reply-author-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .reply-author-info strong {
+        color: #35463A;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .reply-author-info span {
+        color: #98A198;
+        font-size: 10px;
+    }
+
+    .reply-time {
+        color: #98A198;
+        font-size: 10px;
+    }
+
+    .reply-content {
+        margin: 0;
+        color: #647065;
+        font-size: 12px;
+        line-height: 1.9;
+        overflow-wrap: anywhere;
+        white-space: pre-line;
+    }
+
+    /* Kondisi belum ada balasan */
+    .empty-replies {
+        padding: 30px 20px;
+        border: 1px dashed #D6E1D4;
+        border-radius: 14px;
+        background: #FFFFFF;
+        text-align: center;
+    }
+
+    .empty-replies-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 12px;
+        border-radius: 14px;
+        background: var(--detail-sage);
+        color: #547A5C;
+        font-size: 20px;
+    }
+
+    .empty-replies h3 {
+        margin: 0 0 6px;
+        color: #354A3A;
+        font-family: 'Poppins', sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .empty-replies p {
+        margin: 0;
+        color: #879188;
+        font-size: 11px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+        .community-detail-page {
+            padding: 25px 15px 45px;
         }
 
-        .btn-back {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem; /* Diperbaiki dari 0.5Krem */
-            padding: 0.4rem 0.9rem;
-            background-color: #f3f4f6;
-            color: #374151;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .btn-back:hover {
-            background-color: #e5e7eb;
-            color: #1f2937;
-            border-color: #9ca3af;
-        }
-
-        .thread-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .thread-category-badge {
-            background: #ccfbf1;
-            color: #0f766e;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .thread-detail-card {
+            padding: 21px 18px;
+            border-radius: 14px;
         }
 
         .thread-main-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-top: 0.75rem;
-            color: #1c1917;
-        }
-
-        .thread-info {
-            color: #78716c;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
+            font-size: 22px;
         }
 
         .thread-body {
-            margin-top: 1rem;
-            color: #292524;
-            line-height: 1.6;
+            font-size: 12px;
         }
 
-        .replies-section {
-            margin-top: 2rem;
+        .replies-section-header {
+            align-items: flex-start;
         }
 
-        .replies-heading {
-            font-size: 1.25rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            color: #1c1917;
+        .replies-section-header h2 {
+            font-size: 18px;
+        }
+
+        .replies-section-header p {
+            max-width: 240px;
+            line-height: 1.8;
         }
 
         .reply-form {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 17px;
         }
 
-        .form-textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #d6d3d1;
-            border-radius: 0.5rem;
-            outline: none;
-            font-family: inherit;
-            resize: vertical;
-        }
-
-        .form-textarea:focus {
-            border-color: #0d9488;
-            box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.1);
+        .form-footer {
+            align-items: flex-start;
+            flex-direction: column;
         }
 
         .btn-submit {
-            background: #0d9488;
-            color: white;
-            border: none;
-            padding: 0.5rem 1.25rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-submit:hover {
-            background: #0f766e;
-        }
-
-        .replies-list {
-            margin-top: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            width: 100%;
         }
 
         .reply-card {
-            background: #f0fdf4;
-            border-left: 4px solid #0d9488;
-            padding: 1rem 1.5rem;
-            border-radius: 0.5rem 0.75rem 0.75rem 0.5rem;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+            padding: 16px;
         }
+    }
+</style>
 
-        .reply-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.4rem;
-        }
-
-        .reply-author {
-            font-size: 0.875rem;
-            color: #0f766e;
-            font-weight: 600;
-        }
-
-        .reply-time {
-            font-size: 0.75rem;
-            color: #6b7280;
-        }
-
-        .reply-content {
-            color: #1f2937;
-            font-size: 0.875rem;
-            line-height: 1.5;
-        }
-
-        .empty-replies {
-            color: #78716c;
-            font-size: 0.875rem;
-            text-align: center;
-            padding: 1.5rem;
-            background: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-    </style>
 @endsection

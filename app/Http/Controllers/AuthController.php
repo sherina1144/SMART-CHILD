@@ -30,12 +30,14 @@ class AuthController extends Controller
             $role = Auth::user()->role;
 
             if ($role === 'admin') {
-                return redirect()->intended('/admin/dashboard');
-            } elseif ($role === 'dokter') { // <--- SESUAIKAN JADI 'dokter'
-                return redirect()->intended('/doctor/dashboard'); // Pastikan route ini ada
+                return redirect()->route('admin.dashboard');
             }
 
-            return redirect()->intended('/home');
+            if ($role === 'dokter') {
+                return redirect()->route('doctor.dashboard');
+            }
+
+            return redirect()->route('home');
         }
 
         return back()->withErrors([
@@ -54,20 +56,19 @@ class AuthController extends Controller
     {
         $request->validate([
             'nama' => ['required', 'string', 'max:100'],
-            'email' => ['required', 'string', 'email', 'max:100', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:100', 'unique:users,email'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
         ]);
 
-        $user = User::create([
+        User::create([
             'nama' => $request->nama,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'user', 
+            'role' => 'user',
         ]);
 
-        Auth::login($user);
-
-        return redirect()->intended('/');
+        return redirect()->route('login')
+            ->with('success', 'Registrasi berhasil! Silakan login.');
     }
 
     // Logout

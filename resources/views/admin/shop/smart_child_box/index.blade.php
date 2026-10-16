@@ -263,7 +263,6 @@
                             class="btn-edit"
                         >
                             <i class="fa-solid fa-pen"></i>
-                            Edit
                         </a>
 
 
@@ -282,7 +281,6 @@
                                 class="btn-delete"
                             >
                                 <i class="fa-solid fa-trash"></i>
-                                Hapus
                             </button>
 
                         </form>
